@@ -1,0 +1,16 @@
+@media (min-width:1200px){
+    .container{
+        display:grid;
+        grid-template-columns: 25% 50% 25%;
+        grid-template-rows: 150px auto auto;
+        grid-template-areas:
+            "header header header"
+            
+    }
+}
+.header {
+    grid-area: header;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: xx-large;
+    background-color: rgb(248, 243, 236);
+}
