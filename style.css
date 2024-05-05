@@ -1,16 +1,129 @@
-@media (min-width:1200px){
-    .container{
+
+.container{
         display:grid;
-        grid-template-columns: 25% 50% 25%;
-        grid-template-rows: 150px auto auto;
+        grid-template-columns: 100%;
+        grid-template-rows: auto 100px auto 500px 200px;
         grid-template-areas:
-            "header header header"
-            
-    }
+            "header"
+            "navigation"
+            "information" 
+            "list"
+            "footer"         
+}
+body > *{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.main-text{
+    background-image: url(images/cooking.jpg);
+    width: 750px;
+    height: 500px;
+    margin-top: 50px;
+    margin-left: 25%;
+    margin-right: 25%;
+    margin-bottom: 50px;
+}
+#head {
+    text-align: center;
+    color: white;
+    font-size: 46px;
+    text-decoration:solid;
+    padding: 80px;
+    margin-top: 40px;
+}
+#body {
+    text-align: center;
+    color: white;
+    font-size: 30px;
+    text-decoration:solid;
+    margin-top: 20px;
+}
+#inf {
+    text-align: center;
+    color: white;
+    font-size: 20px;
+    padding: 30px;
+    margin-top: 40px;
 }
 .header {
     grid-area: header;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size: xx-large;
-    background-color: rgb(248, 243, 236);
+    font-size: 54px;
+    background-color: #f1eddd;
 }
+.navigation {
+    grid-area: navigation;
+    background-color: white;
+    display: flex;
+}
+.information {
+    grid-area: information;
+    
+}
+.list {  
+    grid-area: list;
+    background-color: red;
+    display: grid;
+    grid-template-columns: 50% 50%;
+        grid-template-rows: 500px;
+        grid-template-areas:
+            "first" "second"
+}
+.footer{
+    grid-area: footer;
+    background-color: brown;
+}
+.firstCol {
+    grid-area: first;
+    background-color: bisque;
+}
+.secondCol {
+    grid-area: second;
+    background-color: blueviolet;
+}
+
+.dropbtn {
+    background-color: #e3dbbc;
+    color: black;
+    padding: 24px;
+    font-size: 24px;
+    border: none;
+    cursor: pointer;
+    width: 300px;
+  }
+  
+.dropdown {
+    position: relative;
+    display: inline-block;
+    flex-wrap: nowrap;	
+    flex-direction: row;
+	flex: 1;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    text-align: center;
+}
+  
+.dropdown-content {
+    display: none;
+    background-color: #f9f9f9;
+    min-width: 130px;
+   
+}
+  
+.dropdown-content a {
+    color: black;
+    padding: 12px 12px;
+    text-decoration: none;
+    display: block;
+}
+  
+.dropdown-content a:hover {background-color: #f1f1f1}
+  
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+  
+.dropdown:hover .dropbtn {
+    background-color: #d5ca9c;
+}
+
