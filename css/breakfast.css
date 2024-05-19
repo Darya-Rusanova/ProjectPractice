@@ -1,0 +1,9 @@
+.main-text{
+    background-image: url(../images/завтрак.jpg);
+    width: 750px;
+    height: 500px;
+    margin-top: 50px;
+    margin-left: 25%;
+    margin-right: 25%;
+    margin-bottom: 50px;
+}

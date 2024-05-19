@@ -15,7 +15,7 @@ body  *{
 }
 
 .main-text{
-    background-image: url(images/cooking.jpg);
+    background-image: url(../images/cooking.jpg);
     width: 750px;
     height: 500px;
     margin-top: 50px;
@@ -51,7 +51,7 @@ body  *{
 .header {
     grid-area: header;
     font-size: 54px;
-    background-color: #f1eddd;
+
 }
 .header a{
     display: block;
@@ -79,6 +79,7 @@ body  *{
     grid-area: footer;
     background-color:#f1eddd;
     margin-top:10px;
+    border-radius: 30px;
 }
 .firstCol {
     grid-area: first;
@@ -167,6 +168,17 @@ body  *{
 #name {
     font-size: large;
     text-decoration: dashed;
+}
+.footer > p {
+    font-size: medium;
+    text-align: right;
+    margin: 10px;
+    padding: 10px;
+
+}
+#footer-contact {
+    font-size: large;
+    font-weight: bold;
 }
 
 
