@@ -2,7 +2,7 @@
 .container{
         display:grid;
         grid-template-columns: 100%;
-        grid-template-rows: auto 100px auto 500px 200px;
+        grid-template-rows: auto 100px auto auto 200px;
         grid-template-areas:
             "header"
             "navigation"
@@ -10,7 +10,7 @@
             "list"
             "footer"         
 }
-body > *{
+body  *{
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
@@ -30,6 +30,7 @@ body > *{
     text-decoration:solid;
     padding: 80px;
     margin-top: 40px;
+    text-shadow: 1px 1px 1px #000;
 }
 #body {
     text-align: center;
@@ -37,6 +38,7 @@ body > *{
     font-size: 30px;
     text-decoration:solid;
     margin-top: 20px;
+    text-shadow: 1px 1px 1px #000;
 }
 #inf {
     text-align: center;
@@ -44,11 +46,17 @@ body > *{
     font-size: 20px;
     padding: 30px;
     margin-top: 40px;
+    text-shadow: 1px 1px 1px #000;
 }
 .header {
     grid-area: header;
     font-size: 54px;
     background-color: #f1eddd;
+}
+.header a{
+    display: block;
+    text-decoration: none;
+    color: black;
 }
 .navigation {
     grid-area: navigation;
@@ -60,32 +68,31 @@ body > *{
     
 }
 .list {  
-    grid-area: list;
-    background-color: red;
+    grid-area: list;  
     display: grid;
     grid-template-columns: 50% 50%;
-        grid-template-rows: 500px;
+        grid-template-rows: auto;
         grid-template-areas:
-            "first" "second"
+            "first second"
 }
 .footer{
     grid-area: footer;
-    background-color: brown;
+    background-color:#f1eddd;
+    margin-top:10px;
 }
 .firstCol {
     grid-area: first;
-    background-color: bisque;
 }
 .secondCol {
     grid-area: second;
-    background-color: blueviolet;
+    
 }
 
 .dropbtn {
     background-color: #e3dbbc;
     color: black;
     padding: 24px;
-    font-size: 24px;
+    font-size: 20px;
     border: none;
     cursor: pointer;
     width: 300px;
@@ -106,7 +113,7 @@ body > *{
 .dropdown-content {
     display: none;
     background-color: #f9f9f9;
-    min-width: 130px;
+    min-width: 200px;
    
 }
   
@@ -124,6 +131,42 @@ body > *{
 }
   
 .dropdown:hover .dropbtn {
+    font-weight: bold;
     background-color: #d5ca9c;
 }
+
+.recipe {
+    cursor: pointer;
+    display: grid;
+    height: 300px;
+    grid-template-columns: 45% 40%;
+        grid-template-rows: auto;
+        grid-template-areas:
+            "img discription"
+}
+.image {
+    padding: 40px;
+    margin: 20px;
+    grid-area: img;
+}
+.discription {
+    grid-area: discription;
+    padding: 40px;
+    margin: 20px;
+    text-align: left;
+    font-size: small;
+    
+}
+.recipe:hover{
+    outline: 3px solid #d5ca9c;
+	border-radius: 20px;
+	outline-offset:-2px;
+	box-shadow: 5px 5px 10px 3px lightgrey;
+}
+
+#name {
+    font-size: large;
+    text-decoration: dashed;
+}
+
 
