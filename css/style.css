@@ -1,53 +1,262 @@
+@media (min-width:1300px){
+    .container{
+            display:grid;
+            grid-template-columns: 50% 50%;
+            grid-template-rows: auto 100px auto auto 200px;
+            grid-template-areas:
+                "header header"
+                "navigation navigation"
+                "information information" 
+                "first second"
+                "footer footer"         
+    }
+    .recipe {
+        cursor: pointer;
+        display: grid;
+        height: 300px;
+        grid-template-columns: 50% 50%;
+            grid-template-rows: auto;
+            grid-template-areas:
+                "img discription"
+    }
 
-.container{
+    .main-text{
+        background-image: url(../images/cooking.jpg);
+        width: 750px;
+        height: 500px;
+        margin-top: 50px;
+        margin-left: 25%;
+        margin-right: 25%;
+        margin-bottom: 50px;
+    }
+    #inf {
+        text-align: center;
+        color: white;
+        font-size: 20px;
+        padding: 30px;
+        margin-top: 40px;
+        text-shadow: 1px 1px 1px #000;
+    }
+    #head {
+        text-align: center;
+        color: white;
+        font-size: 46px;
+        text-decoration:solid;
+        padding: 80px;
+        margin-top: 40px;
+        text-shadow: 1px 1px 1px #000;
+    }
+    #body {
+        text-align: center;
+        color: white;
+        font-size: 30px;
+        text-decoration:solid;
+        margin-top: 20px;
+        text-shadow: 1px 1px 1px #000;
+    }
+    .navigation {
+        grid-area: navigation;
+        background-color: white;
+        display: grid;
+        grid-template-columns: 33% 33% 33%;
+        grid-template-rows: 100px;
+        grid-template-areas:
+            "btn1 btn2 btn3"
+    }
+}
+@media (960px <= width < 1300px){
+    .container{
         display:grid;
         grid-template-columns: 100%;
-        grid-template-rows: auto 100px auto auto 200px;
+        grid-template-rows: auto 100px auto auto auto 200px;
         grid-template-areas:
             "header"
             "navigation"
             "information" 
-            "list"
+            "first"
+            "second"
             "footer"         
+    }
+    .recipe {
+        cursor: pointer;
+        display: grid;
+        height: 300px;
+        grid-template-columns: 50% 50%;
+            grid-template-rows: auto;
+            grid-template-areas:
+                "img discription"
+    }
+
+    .main-text{
+        background-image: url(../images/cooking.jpg);
+        width: 750px;
+        height: 500px;
+        margin-top: 50px;
+        margin-left: 25%;
+        margin-right: 25%;
+        margin-bottom: 50px;
+    }
+    #inf {
+        text-align: center;
+        color: white;
+        font-size: 20px;
+        padding: 30px;
+        margin-top: 40px;
+        text-shadow: 1px 1px 1px #000;
+    }
+    #head {
+        text-align: center;
+        color: white;
+        font-size: 46px;
+        text-decoration:solid;
+        padding: 80px;
+        margin-top: 40px;
+        text-shadow: 1px 1px 1px #000;
+    }
+    #body {
+        text-align: center;
+        color: white;
+        font-size: 30px;
+        text-decoration:solid;
+        margin-top: 20px;
+        text-shadow: 1px 1px 1px #000;
+    }
+    .navigation {
+        grid-area: navigation;
+        background-color: white;
+        display: grid;
+        grid-template-columns: 33% 33% 33%;
+        grid-template-rows: 100px;
+        grid-template-areas:
+            "btn1 btn2 btn3"
+    }
+
+}
+
+@media (500px <= width < 960px){
+    .container{
+            display:grid;
+            grid-template-columns: 50% 50%;
+            grid-template-rows: auto auto auto auto 200px;
+            grid-template-areas:
+                "header header"
+                "navigation information" 
+                "first first"
+                "second second"
+                "footer footer"         
+    }
+
+    .recipe {
+        cursor: pointer;
+        display: grid;
+        grid-template-columns: 50% 50%;
+            grid-template-rows: 300px;
+            grid-template-areas:
+                "img discription"
+    }
+    
+    #inf {
+        text-align: center;
+        color: black;
+        font-size: 20px;
+        padding: 30px;
+        margin-top: 40px;
+    }
+    #head {
+        text-align: center;
+        color: black;
+        font-size: 46px;
+        text-decoration:solid;
+        padding: 80px;
+        margin-top: 40px;
+        
+    }
+    #body {
+        text-align: center;
+        color: black;
+        font-size: 30px;
+        text-decoration:solid;
+        margin-top: 20px;
+        
+    }
+    .navigation {
+        grid-area: navigation;
+        background-color: white;
+        display: grid;
+        grid-template-columns: 100%;
+        grid-template-rows: 250px 250px 250px;
+        grid-template-areas:
+            "btn1"
+            "btn2"
+            "btn3"
+    }
+}
+@media (width < 720px){
+    .container{
+            display:grid;
+            grid-template-columns: 100%;
+            grid-template-rows: auto auto auto auto auto 200px;
+            grid-template-areas:
+                "header"
+                "navigation" 
+                "information"
+                "first"
+                "second"
+                "footer"         
+    }
+
+    .recipe {
+        cursor: pointer;
+        display: grid;
+        grid-template-columns: 100%;
+            grid-template-rows: auto;
+            grid-template-areas:
+                "img"
+                "discription"
+    }
+    
+    #inf {
+        text-align: center;
+        color: black;
+        font-size: 20px;
+        padding: 30px;
+        margin-top: 40px;
+    }
+    #head {
+        text-align: center;
+        color: black;
+        font-size: 46px;
+        text-decoration:solid;
+        padding: 80px;
+        margin-top: 40px;
+        
+    }
+    #body {
+        text-align: center;
+        color: black;
+        font-size: 30px;
+        text-decoration:solid;
+        margin-top: 20px;
+        
+    }
+    .navigation {
+        grid-area: navigation;
+        background-color: white;
+        display: grid;
+        grid-template-columns: 100%;
+        grid-template-rows: 250px 250px 250px;
+        grid-template-areas:
+            "btn1"
+            "btn2"
+            "btn3"
+    }
 }
 body  *{
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-.main-text{
-    background-image: url(../images/cooking.jpg);
-    width: 750px;
-    height: 500px;
-    margin-top: 50px;
-    margin-left: 25%;
-    margin-right: 25%;
-    margin-bottom: 50px;
-}
-#head {
-    text-align: center;
-    color: white;
-    font-size: 46px;
-    text-decoration:solid;
-    padding: 80px;
-    margin-top: 40px;
-    text-shadow: 1px 1px 1px #000;
-}
-#body {
-    text-align: center;
-    color: white;
-    font-size: 30px;
-    text-decoration:solid;
-    margin-top: 20px;
-    text-shadow: 1px 1px 1px #000;
-}
-#inf {
-    text-align: center;
-    color: white;
-    font-size: 20px;
-    padding: 30px;
-    margin-top: 40px;
-    text-shadow: 1px 1px 1px #000;
-}
+
+
 .header {
     grid-area: header;
     font-size: 54px;
@@ -58,23 +267,22 @@ body  *{
     text-decoration: none;
     color: black;
 }
-.navigation {
-    grid-area: navigation;
-    background-color: white;
-    display: flex;
+
+#dropdown1 {
+    grid-area: btn1;
 }
+#dropdown2 {
+    grid-area: btn2;
+}
+#dropdown3 {
+    grid-area: btn3;
+}
+
 .information {
     grid-area: information;
     
 }
-.list {  
-    grid-area: list;  
-    display: grid;
-    grid-template-columns: 50% 50%;
-        grid-template-rows: auto;
-        grid-template-areas:
-            "first second"
-}
+
 .footer{
     grid-area: footer;
     background-color:#f1eddd;
@@ -97,6 +305,7 @@ body  *{
     border: none;
     cursor: pointer;
     width: 300px;
+    border-radius: 20px;
   }
   
 .dropdown {
@@ -115,6 +324,7 @@ body  *{
     display: none;
     background-color: #f9f9f9;
     min-width: 200px;
+    border-radius: 20px;
    
 }
   
@@ -125,7 +335,10 @@ body  *{
     display: block;
 }
   
-.dropdown-content a:hover {background-color: #f1f1f1}
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+    border-radius: 20px;
+}
   
 .dropdown:hover .dropdown-content {
     display: block;
@@ -136,26 +349,15 @@ body  *{
     background-color: #d5ca9c;
 }
 
-.recipe {
-    cursor: pointer;
-    display: grid;
-    height: 300px;
-    grid-template-columns: 45% 40%;
-        grid-template-rows: auto;
-        grid-template-areas:
-            "img discription"
-}
 .image {
     padding: 40px;
-    margin: 20px;
     grid-area: img;
 }
 .discription {
     grid-area: discription;
-    padding: 40px;
-    margin: 20px;
+    padding: 30px;
     text-align: left;
-    font-size: small;
+    font-size: medium;
     
 }
 .recipe:hover{
