@@ -1,4 +1,19 @@
+:root {
+    --color-primary-a0: #ffffff;
+    --color-primary-a10: #ffe6c7;
+    --color-primary-a20: #fcce91;
+    --color-primary-a30: #f4b659;
+    --color-primary-a50: #ea9e0b;
+    --color-primary-a60: #ab7415;
+    --color-primary-a70: #6f4d15;
+    --color-primary-a80: #392811;
+    --color-primary-a90: #000000;
+}
+
 @media (min-width:1300px){
+    .main-text{
+        height: 400px;
+    }
     .container{
             display:grid;
             grid-template-columns: 50% 50%;
@@ -19,41 +34,7 @@
             grid-template-areas:
                 "img discription"
     }
-
-    .main-text{
-        background-image: url(../images/cooking.jpg);
-        width: 750px;
-        height: 500px;
-        margin-top: 50px;
-        margin-left: 25%;
-        margin-right: 25%;
-        margin-bottom: 50px;
-    }
-    #inf {
-        text-align: center;
-        color: white;
-        font-size: 20px;
-        padding: 30px;
-        margin-top: 40px;
-        text-shadow: 1px 1px 1px #000;
-    }
-    #head {
-        text-align: center;
-        color: white;
-        font-size: 46px;
-        text-decoration:solid;
-        padding: 80px;
-        margin-top: 40px;
-        text-shadow: 1px 1px 1px #000;
-    }
-    #body {
-        text-align: center;
-        color: white;
-        font-size: 30px;
-        text-decoration:solid;
-        margin-top: 20px;
-        text-shadow: 1px 1px 1px #000;
-    }
+    
     .navigation {
         grid-area: navigation;
         background-color: white;
@@ -65,6 +46,9 @@
     }
 }
 @media (960px <= width < 1300px){
+    .main-text{
+        height: 400px;
+    }
     .container{
         display:grid;
         grid-template-columns: 100%;
@@ -87,40 +71,8 @@
                 "img discription"
     }
 
-    .main-text{
-        background-image: url(../images/cooking.jpg);
-        width: 750px;
-        height: 500px;
-        margin-top: 50px;
-        margin-left: 25%;
-        margin-right: 25%;
-        margin-bottom: 50px;
-    }
-    #inf {
-        text-align: center;
-        color: white;
-        font-size: 20px;
-        padding: 30px;
-        margin-top: 40px;
-        text-shadow: 1px 1px 1px #000;
-    }
-    #head {
-        text-align: center;
-        color: white;
-        font-size: 46px;
-        text-decoration:solid;
-        padding: 80px;
-        margin-top: 40px;
-        text-shadow: 1px 1px 1px #000;
-    }
-    #body {
-        text-align: center;
-        color: white;
-        font-size: 30px;
-        text-decoration:solid;
-        margin-top: 20px;
-        text-shadow: 1px 1px 1px #000;
-    }
+
+    
     .navigation {
         grid-area: navigation;
         background-color: white;
@@ -133,7 +85,8 @@
 
 }
 
-@media (500px <= width < 960px){
+@media (700px <= width < 960px){
+
     .container{
             display:grid;
             grid-template-columns: 50% 50%;
@@ -155,30 +108,7 @@
                 "img discription"
     }
     
-    #inf {
-        text-align: center;
-        color: black;
-        font-size: 20px;
-        padding: 30px;
-        margin-top: 40px;
-    }
-    #head {
-        text-align: center;
-        color: black;
-        font-size: 46px;
-        text-decoration:solid;
-        padding: 80px;
-        margin-top: 40px;
-        
-    }
-    #body {
-        text-align: center;
-        color: black;
-        font-size: 30px;
-        text-decoration:solid;
-        margin-top: 20px;
-        
-    }
+
     .navigation {
         grid-area: navigation;
         background-color: white;
@@ -191,7 +121,7 @@
             "btn3"
     }
 }
-@media (width < 720px){
+@media (width < 700px){
     .container{
             display:grid;
             grid-template-columns: 100%;
@@ -215,30 +145,7 @@
                 "discription"
     }
     
-    #inf {
-        text-align: center;
-        color: black;
-        font-size: 20px;
-        padding: 30px;
-        margin-top: 40px;
-    }
-    #head {
-        text-align: center;
-        color: black;
-        font-size: 46px;
-        text-decoration:solid;
-        padding: 80px;
-        margin-top: 40px;
-        
-    }
-    #body {
-        text-align: center;
-        color: black;
-        font-size: 30px;
-        text-decoration:solid;
-        margin-top: 20px;
-        
-    }
+    
     .navigation {
         grid-area: navigation;
         background-color: white;
@@ -255,17 +162,17 @@ body  *{
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-
-
 .header {
     grid-area: header;
     font-size: 54px;
+    
 
 }
 .header a{
     display: block;
     text-decoration: none;
     color: black;
+    cursor: pointer;
 }
 
 #dropdown1 {
@@ -279,13 +186,39 @@ body  *{
 }
 
 .information {
-    grid-area: information;
-    
+    grid-area: information;    
+    text-align: center;
+    width: 100%;
+}
+
+.main-text{
+    background-image: url(../images/готовка.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: 30px;
+    border-radius: 20px;
+    text-align: center;
+    color: white;
+    text-shadow: 1px 1px 1px #000;
+    padding: 30px;
+
+}
+
+#inf {
+    font-size: 20px;   
+}
+#head {
+    font-size: 46px;
+    text-decoration:solid;
+}
+#body {
+    font-size: 30px;
+    text-decoration:solid;
 }
 
 .footer{
     grid-area: footer;
-    background-color:#f1eddd;
+    background-color:var(--color-primary-a30);
     margin-top:10px;
     border-radius: 30px;
 }
@@ -298,7 +231,7 @@ body  *{
 }
 
 .dropbtn {
-    background-color: #e3dbbc;
+    background-color: var(--color-primary-a30);
     color: black;
     padding: 24px;
     font-size: 20px;
@@ -322,7 +255,7 @@ body  *{
   
 .dropdown-content {
     display: none;
-    background-color: #f9f9f9;
+    background-color: var(--color-primary-a10);
     min-width: 200px;
     border-radius: 20px;
    
@@ -336,7 +269,7 @@ body  *{
 }
   
 .dropdown-content a:hover {
-    background-color: #f1f1f1;
+    background-color: var(--color-primary-a20);
     border-radius: 20px;
 }
   
@@ -346,7 +279,7 @@ body  *{
   
 .dropdown:hover .dropbtn {
     font-weight: bold;
-    background-color: #d5ca9c;
+    background-color: var(--color-primary-a50);
 }
 
 .image {
@@ -361,7 +294,7 @@ body  *{
     
 }
 .recipe:hover{
-    outline: 3px solid #d5ca9c;
+    outline: 3px solid var(--color-primary-a50);
 	border-radius: 20px;
 	outline-offset:-2px;
 	box-shadow: 5px 5px 10px 3px lightgrey;
