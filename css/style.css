@@ -3,14 +3,31 @@
     --color-primary-a10: #ffe6c7;
     --color-primary-a20: #fcce91;
     --color-primary-a30: #f4b659;
+    --color-primary-a40: #ffffff;
     --color-primary-a50: #ea9e0b;
-    --color-primary-a60: #ab7415;
-    --color-primary-a70: #6f4d15;
-    --color-primary-a80: #392811;
+    --color-primary-a60: lightgrey;
     --color-primary-a90: #000000;
+
+}
+[data-theme="dark"] {  
+    --color-primary-a0: #000000;
+    --color-primary-a10: #574935;
+    --color-primary-a20: #3d3223;
+    --color-primary-a30: #392811;
+    --color-primary-a40: #a5957f;
+    --color-primary-a50: #291c0a;
+    --color-primary-a60: #291c0a;
+    --color-primary-a90: #ffffff;                 
 }
 
 @media (min-width:1300px){
+    .header {
+        display: grid;
+        grid-template-columns: 80% 20%;
+        grid-template-rows: auto;
+        grid-template-areas:
+            "title themes"
+    }
     .main-text{
         height: 400px;
     }
@@ -37,7 +54,6 @@
     
     .navigation {
         grid-area: navigation;
-        background-color: white;
         display: grid;
         grid-template-columns: 33% 33% 33%;
         grid-template-rows: 100px;
@@ -46,6 +62,13 @@
     }
 }
 @media (960px <= width < 1300px){
+    .header {
+        display: grid;
+        grid-template-columns: 70% 30%;
+        grid-template-rows: auto;
+        grid-template-areas:
+            "title themes"
+    }
     .main-text{
         height: 400px;
     }
@@ -75,7 +98,6 @@
     
     .navigation {
         grid-area: navigation;
-        background-color: white;
         display: grid;
         grid-template-columns: 33% 33% 33%;
         grid-template-rows: 100px;
@@ -86,6 +108,13 @@
 }
 
 @media (700px <= width < 960px){
+    .header {
+        display: grid;
+        grid-template-columns: 70% 30%;
+        grid-template-rows: auto;
+        grid-template-areas:
+            "title themes"
+    }
 
     .container{
             display:grid;
@@ -111,7 +140,6 @@
 
     .navigation {
         grid-area: navigation;
-        background-color: white;
         display: grid;
         grid-template-columns: 100%;
         grid-template-rows: 250px 250px 250px;
@@ -122,6 +150,14 @@
     }
 }
 @media (width < 700px){
+    .header {
+        display: grid;
+        grid-template-columns: 100%;
+        grid-template-rows: auto auto;
+        grid-template-areas:
+            "title"
+            "themes"
+    }
     .container{
             display:grid;
             grid-template-columns: 100%;
@@ -148,7 +184,6 @@
     
     .navigation {
         grid-area: navigation;
-        background-color: white;
         display: grid;
         grid-template-columns: 100%;
         grid-template-rows: 250px 250px 250px;
@@ -161,17 +196,34 @@
 body  *{
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
+body {
+    background-color: var(--color-primary-a40);
+}
+.changeTheme > * {
+    background-color: var(--color-primary-a10);
+    color: var(--color-primary-a90);
+    padding: 10px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    width: 200px;
+    border-radius: 10px;
+    grid-area: themes;
+    margin: 10px;
+    text-align: center;
+}
+.title {
+    grid-area:title;
+}
 
 .header {
     grid-area: header;
     font-size: 54px;
-    
-
 }
 .header a{
     display: block;
     text-decoration: none;
-    color: black;
+    color: var(--color-primary-a90);
     cursor: pointer;
 }
 
@@ -199,10 +251,11 @@ body  *{
     border-radius: 20px;
     text-align: center;
     color: white;
-    text-shadow: 1px 1px 1px #000;
+    text-shadow: 1px 1px 1px black;
     padding: 30px;
 
 }
+
 
 #inf {
     font-size: 20px;   
@@ -218,6 +271,7 @@ body  *{
 
 .footer{
     grid-area: footer;
+    color: var(--color-primary-a90);
     background-color:var(--color-primary-a30);
     margin-top:10px;
     border-radius: 30px;
@@ -232,7 +286,7 @@ body  *{
 
 .dropbtn {
     background-color: var(--color-primary-a30);
-    color: black;
+    color: var(--color-primary-a90);
     padding: 24px;
     font-size: 20px;
     border: none;
@@ -262,7 +316,7 @@ body  *{
 }
   
 .dropdown-content a {
-    color: black;
+    color: var(--color-primary-a90);
     padding: 12px 12px;
     text-decoration: none;
     display: block;
@@ -297,7 +351,7 @@ body  *{
     outline: 3px solid var(--color-primary-a50);
 	border-radius: 20px;
 	outline-offset:-2px;
-	box-shadow: 5px 5px 10px 3px lightgrey;
+	box-shadow: 5px 5px 10px 3px var(--color-primary-a60);
 }
 
 #name {
