@@ -1,114 +1,211 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   
+    <link rel="stylesheet" href="../css/semantic.min.css" />
     <link href="../css/chiken.css" type="text/css" rel="stylesheet" media="screen">
     <script src="../js/first.js" type="text/javascript"></script>
     <script src="../js/form.js" type="text/javascript"></script>
-    
+    <script src="../js/comments.js" type="text/javascript"></script>
+
     <link rel="icon" href="../images/icon.png" type="image/png">
     <title>ЧудоБлюдо</title>
 </head>
+
 <body>
+
     <body>
-        <div class = "container">
-            <div class = "header">
-                <a href = "../index.html"><p>ЧУДОБЛЮДО</p></a>
-                <div class = "changeTheme">
-                    <button id = "lightTheme">Светлая тема</button>
-                    <button id = "darkTheme">Темная тема</button>
+        <div class="container">
+
+            <div class="header">
+                <a href="../index.html">
+                    <p>ЧУДОБЛЮДО</p>
+                </a>
+                <div class="changeTheme">
+                    <button id="lightTheme">Светлая тема</button>
+                    <button id="darkTheme">Темная тема</button>
                 </div>
             </div>
-    
-            <div class = "navigation">
-                <div class="dropdown" id = "dropdown1">
-                    <button class="dropbtn" >Выбери прием пищи</button>
+
+            <div class="navigation">
+                <div class="dropdown" id="dropdown1">
+                    <button class="dropbtn">Выбери прием пищи</button>
                     <div class="dropdown-content">
-                      <a href="../navigation/breakfast.html">Завтрак</a>
-                      <a href="../navigation/lanch.html">Обед</a>
-                      <a href="../navigation/dinner.html">Ужин</a>
+                        <a href="../navigation/breakfast.html">Завтрак</a>
+                        <a href="../navigation/lanch.html">Обед</a>
+                        <a href="../navigation/dinner.html">Ужин</a>
                     </div>
                 </div>
-    
-                <div class="dropdown" id = "dropdown2">
-                    <button class="dropbtn" >Выбери кухню</button>
+
+                <div class="dropdown" id="dropdown2">
+                    <button class="dropbtn">Выбери кухню</button>
                     <div class="dropdown-content">
-                      <a href="../navigation/china.html">Китайская кухня</a>
-                      <a href="#">Итальянская кухня</a>
-                      <a href="#">Русская кухня</a>
+                        <a href="../navigation/china.html">Китайская кухня</a>
+                        <a href="#">Итальянская кухня</a>
+                        <a href="#">Русская кухня</a>
                     </div>
                 </div>
-    
-                <div class="dropdown" id = "dropdown3">
-                    <button class="dropbtn" >Выбери тип блюда</button>
+
+                <div class="dropdown" id="dropdown3">
+                    <button class="dropbtn">Выбери тип блюда</button>
                     <div class="dropdown-content">
-                      <a href="../navigation/hot.html">Горячее блюдо</a>
-                      <a href="#">Закуски</a>
-                      <a href="#">Десерт</a>
-                      <a href="#">Напитки</a>
+                        <a href="../navigation/hot.html">Горячее блюдо</a>
+                        <a href="#">Закуски</a>
+                        <a href="#">Десерт</a>
+                        <a href="#">Напитки</a>
                     </div>
                 </div>
             </div>
 
-                <div class = "description">
-                    <img src = "../images/курица.jpeg" width="600px" height="400px" id = "main"/>
-                    <p>Приготовить курицу тушёную в кисло-сладком соусе можно буквально на скорую руку, рецепт выручит и когда гости на пороге, и когда нет возможности стоять долго у плиты. Блюдо получается пикантное и очень вкусное, можно подавать самостоятельно или с отварным рисом на гарнир. Благодаря овощам и соусу, грудка получается сочная и нежная, а на приготовление уйдёт совсем немного времени. </p>
+            <div class="description">
+                <img src="../images/курица.jpeg" width="600px" height="400px" id="main" />
+                <p>Приготовить курицу тушёную в кисло-сладком соусе можно буквально на скорую руку, рецепт выручит и
+                    когда гости на пороге, и когда нет возможности стоять долго у плиты. Блюдо получается пикантное и
+                    очень вкусное, можно подавать самостоятельно или с отварным рисом на гарнир. Благодаря овощам и
+                    соусу, грудка получается сочная и нежная, а на приготовление уйдёт совсем немного времени. </p>
+            </div>
+
+            <div class="gramm">
+                <form>
+                    <div class="field">
+                        <strong><label for="portion">Введите количество порций</label></strong>
+                        <input type="number" placeholder="Количество порций" name="count" id="portion" min="1" />
+                    </div>
+                    <div class="menu">
+                        <p>Куриное филе (граммы)...................
+                        <p id="file"></p>
+                        </p>
+                    </div>
+                    <div class="menu">
+                        <p>Блогарский перец (граммы)..............
+                        <p id="paper"></p>
+                        </p>
+                    </div>
+                    <div class="menu">
+                        <p>Морковь (граммы)............................
+                        <p id="carrot"></p>
+                        </p>
+                    </div>
+                    <div class="menu">
+                        <p>Кетчуп/томатная паста (граммы).......
+                        <p id="tomato"></p>
+                        </p>
+                    </div>
+                    <div class="menu">
+                        <p>Сахар (ст. ложки).............................
+                        <p id="sugar"></p>
+                        </p>
+                    </div>
+                    <div class="menu">
+                        <p>Крахмал (ст. ложки).........................
+                        <p id="krahmal"></p>
+                        </p>
+                    </div>
+                    <div class="menu">
+                        <p>Соевый соус (ст. ложки)...................
+                        <p id="souse"></p>
+                        </p>
+                    </div>
+                    <div class="menu">
+                        <p>Растительное масло (ст. ложки).........
+                        <p id="butter"></p>
+                        </p>
+                    </div>
+                    <div class="menu">
+                        <p>Паприка (чайные ложки)...................
+                        <p id="paprika"></p>
+                        </p>
+                    </div>
+                    <div class="menu">
+                        <p>Соль................................................
+                        <p id="sault"></p>
+                        </p>
+                    </div>
+                    <div class="menu">
+                        <p>Перец черный молотый......................
+                        <p id="blackPaper"></p>
+                        </p>
+                    </div>
+                    <button id="count" type="button">Рассчитать</button>
+                </form>
+            </div>
+
+            <div class="stages">
+                <div class="step" id="step1">
+                    <h3 class="titleStep">ШАГ 1</h3>
+                    <img class="i" src="../images/recipe1/step1.jpg" height="300px" width="450px">
+                    <p class="text">Подготовьте все ингредиенты. </p>
                 </div>
-                <div class = "gramm">
-                    <form>
+                <div class="step" id="step3">
+                    <h3 class="titleStep">ШАГ 3</h3>
+                    <img src="../images/recipe1/step3.jpg" class="i" height="300px" width="450px">
+                    <p class="text">Обжарьте на сильном огне, периодически помешивая, в течение 5 минут. </p>
+                </div>
+                <div class="step" id="step5">
+                    <h3 class="titleStep">ШАГ 5</h3>
+                    <img src="../images/recipe1/step5.jpg" class="i" height="300px" width="450px">
+                    <p class="text">Готовьте помешивая ещё 5 минут. </p>
+                </div>
+                <div class="step" id="step7">
+                    <h3 class="titleStep">ШАГ 7</h3>
+                    <img src="../images/recipe1/step7.jpg" class="i" height="300px" width="450px">
+                    <p class="text">Курица тушёная в кисло-сладком соусе с болгарским перцем готова.</p>
+                </div>
+
+                <div class="step" id="step2">
+                    <h3 class="titleStep">ШАГ 2</h3>
+                    <img src="../images/recipe1/step2.jpg" class="i" height="300px" width="450px">
+                    <p class="text">Куриное филе нарежьте порционными кусочками и выложите в разогретую сковороду с
+                        маслом. </p>
+                </div>
+                <div class="step" id="step4">
+                    <h3 class="titleStep">ШАГ 4</h3>
+                    <img src="../images/recipe1/step4.jpg" class="i" height="300px" width="450px">
+                    <p class="text">Затем добавьте нарезанную произвольно морковь и болгарский перец, нарезанный
+                        небольшой соломкой.</p>
+                </div>
+                <div class="step" id="step6">
+                    <h3 class="titleStep">ШАГ 6</h3>
+                    <img src="../images/recipe1/step6.jpg" class="i" height="300px" width="450px">
+                    <p class="text">Затем добавьте кетчуп, соевый соус, соль и специи. Тушите 2-3 минуты, после чего
+                        добавьте крахмал и сахар. Готовьте до загустения ещё 5 минут.</p>
+                </div>
+
+                <div class="step" id="step8">
+                    <h3 class="titleStep">ШАГ 8</h3>
+                    <img src="../images/recipe1/step8.jpg" class="i" height="300px" width="450px">
+                    <p class="text">Приятного аппетита!</p>
+                </div>
+            </div>
+            <div class = "comments">
+                <div class = "ui huge header">Оставьте отзыв</div>  
+                <form id = "form" class="ui large form">
                         <div class="field">
-                            <strong><label for = "portion">Введите количество порций</label></strong>
-                            <input type="number" placeholder="Количество порций" name = "count" id = "portion" min = "1" />
+                            <label>Имя</label>
+                            <input type="text"  placeholder="Ваше имя" id = "user">
                         </div>
-                        <div class = "menu">
-                            <p >Куриное филе (граммы)...................<p id = "file"></p></p>
+                        <div class="field">
+                            <label>E-mail</label>
+                            <input type="email" placeholder="Ваш email" id="email">
                         </div>
-                        <div class = "menu">
-                            <p>Блогарский перец (граммы)..............<p id = "paper"></p></p>
-                        </div>
-                        <div class = "menu">
-                            <p >Морковь (граммы)............................<p id = "carrot"></p></p>
-                        </div>
-                        <div class = "menu">
-                            <p >Кетчуп/томатная паста (граммы).......<p id = "tomato"></p></p>
-                        </div>
-                        <div class = "menu">
-                            <p>Сахар (ст. ложки).............................<p id = "sugar"></p></p>
-                        </div>
-                        <div class = "menu">
-                            <p>Крахмал (ст. ложки).........................<p id = "krahmal"></p></p>
-                        </div>
-                        <div class = "menu">
-                            <p>Соевый соус (ст. ложки)...................<p id = "souse"></p></p>
-                        </div>
-                        <div class = "menu">
-                            <p>Растительное масло (ст. ложки).........<p id = "butter"></p></p>
-                        </div>
-                        <div class = "menu">
-                            <p>Паприка (чайные ложки)...................<p id = "paprika"></p></p>
-                        </div>
-                        <div class = "menu">
-                            <p>Соль................................................<p id = "sault"></p></p>
-                        </div>
-                        <div class = "menu">
-                            <p>Перец черный молотый......................<p id = "blackPaper"></p></p>
-                        </div>
-                        <button id = "count" type="button">Рассчитать</button>
-                    </form>
+                    <div class="field">
+                        <label>Оставьте отзыв</label>
+                        <textarea rows="4" cols="20" id = "comment"></textarea>
+                    </div>
+                    <button id = "formButton" type = "button">Отправить</button>
+                </form>
+                <div class = "forComments" id = "elements">
                 </div>
-
-            <div class = "stages">
-                
             </div>
 
-            <div class = "footer">
-                <p id = "footer-contact">Контакты для связи</p>
+            <div class="footer">
+                <p id="footer-contact">Контакты для связи</p>
                 <p>Email: dr1305@bk.ru</p>
                 <p>+79-04-121-04-00</p>
             </div>
         </div>
-    
-</body>
+    </body>
+
 </html>
