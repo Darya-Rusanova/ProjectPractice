@@ -19,6 +19,37 @@
     --color-primary-a60: #291c0a;
     --color-primary-a90: #ffffff;                 
 }
+.footer{
+    grid-area: footer;
+    color: var(--color-primary-a90);
+    background-color:var(--color-primary-a30);
+    margin-top:10px;
+    border-radius: 30px;
+    
+    display: grid;
+    height: 300px;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: auto;
+    grid-template-areas:
+        "col1 col2"    
+}
+.col1{
+    margin: 5%;
+    text-align: left;
+    grid-area: col1;
+}
+.col2 {
+    margin: 5%;
+    text-align: right;
+    grid-area: col2;
+}
+p {
+    font-size: medium;
+}
+a, a:hover {
+    text-decoration: none;
+    color: black;
+}
 
 @media (min-width:1300px){
     .text {
@@ -552,33 +583,23 @@ img {
     padding: 40px;
     grid-area: img;
 }
-.discription {
-    grid-area: discription;
-    padding: 30px;
-    text-align: left;
-    font-size: medium;   
-}
-.recipe:hover{
-    outline: 3px solid var(--color-primary-a50);
-	border-radius: 20px;
-	outline-offset:-2px;
-	box-shadow: 5px 5px 10px 3px var(--color-primary-a60);
-}
+
 
 #name {
     font-size: large;
     text-decoration: dashed;
 }
-.footer > p {
+.footer-contact > p {
     font-size: medium;
     text-align: right;
     margin: 10px;
     padding: 10px;
 
 }
-#footer-contact {
+.footer-contact {
     font-size: large;
     font-weight: bold;
+    color:var(--color-primary-a90)
 }
 
 

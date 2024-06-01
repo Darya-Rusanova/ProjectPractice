@@ -278,6 +278,23 @@ a {
     background-color:var(--color-primary-a30);
     margin-top:10px;
     border-radius: 30px;
+    
+    display: grid;
+    height: 300px;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: auto;
+    grid-template-areas:
+        "col1 col2"    
+}
+.col1{
+    margin: 5%;
+    text-align: left;
+    grid-area: col1;
+}
+.col2 {
+    margin: 5%;
+    text-align: right;
+    grid-area: col2;
 }
 .firstCol {
     grid-area: first;
@@ -287,7 +304,7 @@ a {
     
 }
 
-.dropbtn {
+.dropbtn{
     background-color: var(--color-primary-a30);
     color: var(--color-primary-a90);
     padding: 24px;
@@ -315,9 +332,10 @@ a {
     background-color: var(--color-primary-a10);
     min-width: 200px;
     border-radius: 20px;
+    font-size: medium;
    
 }
-  
+
 .dropdown-content a {
     color: var(--color-primary-a90);
     padding: 12px 12px;
@@ -362,16 +380,70 @@ a {
     font-size: large;
     text-decoration: dashed;
 }
-.footer > p {
+.footer-contact > p {
     font-size: medium;
     text-align: right;
     margin: 10px;
     padding: 10px;
 
 }
-#footer-contact {
+.footer-contact {
     font-size: large;
     font-weight: bold;
+    color:var(--color-primary-a90)
+}
+.weekend {
+    color: red;
+}
+.specialDay {
+    color:#ea9e0b;
+}
+.first {
+    grid-area: first;
+    margin: auto;
+}
+.second {
+    grid-area: second;
+}
+#m1 {
+    font-weight: bold;
+    font-size: large;
+    padding: 10px;
+    text-align: center;
+}
+
+table {
+    font-size: x-large;
+    outline: 3px solid var(--color-primary-a50);
+	border-radius: 20px;
+	outline-offset:-2px;
+	box-shadow: 5px 5px 10px 3px var(--color-primary-a60);
+    width: auto;
+    padding: 20px;
+    margin-left: 30px;
+
+}
+#back1, #forward1{
+    background-color: var(--color-primary-a30);
+    color: var(--color-primary-a90);
+    padding: 10px;
+    font-size: 20px;
+    border: none;
+    cursor: pointer;
+    width: 150px;
+    border-radius: 20px;
+    margin: 20px;
+    text-align: center;
+
+}
+#nameDay {
+    font-size: large;
+    margin: auto;
+    padding: 40px;
+}
+#nameDay > * {
+    padding: 20px;
+    text-align: center;
 }
 
 
