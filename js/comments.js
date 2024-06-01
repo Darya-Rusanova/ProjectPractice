@@ -6,7 +6,6 @@
     }
     function addComment() {
         let d = new Date();
-        console.log(d);
         let name = document.getElementById("user").value;
         let comment = document.getElementById("comment").value;
         if (comment != ""){
