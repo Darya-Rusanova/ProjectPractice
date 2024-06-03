@@ -14,194 +14,192 @@
     <title>ЧудоБлюдо</title>
 </head>
 
+
 <body>
+    <div class="container">
 
-    <body>
-        <div class="container">
-
-            <div class="header">
-                <a href="../index.html">
-                    <p class="title">ЧУДОБЛЮДО</p>
-                </a>
-                <div class="changeTheme">
-                    <button id="lightTheme">Светлая тема</button>
-                    <button id="darkTheme">Темная тема</button>
-                </div>
-            </div>
-
-            <div class="navigation">
-                <div class="dropdown" id="dropdown1">
-                    <button class="dropbtn">Выбери прием пищи</button>
-                    <div class="dropdown-content">
-                        <a href="../navigation/breakfast.html">Завтрак</a>
-                        <a href="../navigation/lanch.html">Обед</a>
-                        <a href="../navigation/dinner.html">Ужин</a>
-                    </div>
-                </div>
-
-                <div class="dropdown" id="dropdown2">
-                    <button class="dropbtn">Выбери кухню</button>
-                    <div class="dropdown-content">
-                        <a href="../navigation/china.html">Китайская кухня</a>
-                        <a href="#">Итальянская кухня</a>
-                        <a href="#">Русская кухня</a>
-                    </div>
-                </div>
-
-                <div class="dropdown" id="dropdown3">
-                    <button class="dropbtn">Выбери тип блюда</button>
-                    <div class="dropdown-content">
-                        <a href="../navigation/hot.html">Горячее блюдо</a>
-                        <a href="#">Закуски</a>
-                        <a href="#">Десерт</a>
-                        <a href="#">Напитки</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="description">
-                <img src="../images/waffles.jpg" width="600px" height="400px" id="main" />
-                <p>Мягкие венские вафли в домашних условиях – это вполне реально. Приготовьте популярный рецепт по
-                    простому рецепту в электровафельнице. Порадуйте близких аппетитным десертом.
-                </p>
-            </div>
-
-            <div class="gramm">
-                <form>
-                    <div class="field">
-                        <strong><label for="portion">Введите количество порций</label></strong>
-                        <input type="number" placeholder="Количество порций" name="count" id="portion" min="1" />
-                    </div>
-                    <div class="menu">
-                        <p>Мука (стаканы).............................
-                        <p id="flour"></p>
-                        </p>
-                    </div>
-                    <div class="menu">
-                        <p>Яйцо куринное(шт.).......................
-                        <p id="egg"></p>
-                        </p>
-                    </div>
-                    <div class="menu">
-                        <p>Молоко коровье (стаканы)..............
-                        <p id="milk"></p>
-                        </p>
-                    </div>
-                    <div class="menu">
-                        <p>Ванилин (граммы)..........................
-                        <p id="vanil"></p>
-                        </p>
-                    </div>
-                    <div class="menu">
-                        <p>Сахар (ст. ложки)...........................
-                        <p id="sugar"></p>
-                        </p>
-                    </div>
-                    <div class="menu">
-                        <p>Разрыхлитель (чайные ложки).........
-                        <p id="powder"></p>
-                        </p>
-                    </div>
-                    <div class="menu">
-                        <p>Лимонный сок (ст. ложки)................
-                        <p id="juice"></p>
-                        </p>
-                    </div>
-                    <div class="menu">
-                        <p>Сливочное масло (гр).......................
-                        <p id="butter"></p>
-                        </p>
-                    </div>
-                    <button id="count" type="button">Рассчитать</button>
-                </form>
-            </div>
-
-            <div class="stages">
-                <div class="step" id="step1">
-                    <h3 class="titleStep">ШАГ 1</h3>
-                    <img class="i" src="../images/recipe2/step1.jpg" height="300px" width="450px">
-                    <p class="text">Подготовьте для этого необходимые ингредиенты. Сливочное масло заранее достаньте из
-                        холодильника и оставьте при комнатной температуре, чтобы оно стало мягкое. Муку просейте через
-                        сито, чтобы она насытилась кислородом. </p>
-                </div>
-                <div class="step" id="step3">
-                    <h3 class="titleStep">ШАГ 3</h3>
-                    <img src="../images/recipe2/step3.jpg" class="i" height="300px" width="450px">
-                    <p class="text">Затем влейте в чашу молоко и добавьте яйца. Вмешайте их в тесто. Выдавливаем ложку
-                        сока из лимона и вливаем ее в массу.
-                    </p>
-                </div>
-                <div class="step" id="step5">
-                    <h3 class="titleStep">ШАГ 5</h3>
-                    <img src="../images/recipe2/step5.jpg" class="i" height="300px" width="450px">
-                    <p class="text">Тесто для вафель получается достаточно густое. </p>
-                </div>
-                <div class="step" id="step7">
-                    <h3 class="titleStep">ШАГ 7</h3>
-                    <img src="../images/recipe2/step7.jpg" class="i" height="300px" width="450px">
-                    <p class="text">Готовые венские вафли аккуратно снимите с вафельницы на тарелку и остудите. Дополнить вафли можно ягодами или сгущенкой. </p>
-                </div>
-
-                <div class="step" id="step2">
-                    <h3 class="titleStep">ШАГ 2</h3>
-                    <img src="../images/recipe2/step2.jpg" class="i" height="300px" width="450px">
-                    <p class="text">Для приготовления теста берите глубокую чашу, чтобы при взбивании не летели брызги.
-                        В чаше соедините мягкое сливочное масло и сахар. Смешайте. Для этого можно воспользоваться
-                        миксером.</p>
-                </div>
-                <div class="step" id="step4">
-                    <h3 class="titleStep">ШАГ 4</h3>
-                    <img src="../images/recipe2/step4.jpg" class="i" height="300px" width="450px">
-                    <p class="text">Постепенно подсыпайте муку с ванилином и замешивайте тесто. Количество муки может
-                        отличаться от указанного в рецепте, поэтому не всыпайте сразу всю. В количестве муки
-                        ориентируйтесь по консистенции готового теста.</p>
-                </div>
-                <div class="step" id="step6">
-                    <h3 class="titleStep">ШАГ 6</h3>
-                    <img src="../images/recipe2/step6.jpg" class="i" height="300px" width="450px">
-                    <p class="text">Вафельницу включите в розетку и разогрейте до горячего состояния. Выложите ложкой
-                        тесто и накройте крышкой. Готовьте вафли 3-5 минут, в зависимости от мощности вашей вафельницы.
-                        Вафли подрумянятся и станут аппетитного золотистого цвета.</p>
-                </div>
-
-                <div class="step" id="step8">
-                    <h3 class="titleStep">ШАГ 8</h3>
-                    <img src="../images/waffles.jpg" class="i" height="300px" width="450px">
-                    <p class="text">Приятного аппетита!</p>
-                </div>
-            </div>
-            <div class="comments">
-                <div class="ui huge header">Оставьте отзыв</div>
-                <form id="form" class="ui large form">
-                    <div class="field">
-                        <label>Имя</label>
-                        <input type="text" placeholder="Ваше имя" id="user">
-                    </div>
-                    <div class="field">
-                        <label>E-mail</label>
-                        <input type="email" placeholder="Ваш email" id="email">
-                    </div>
-                    <div class="field">
-                        <label>Оставьте отзыв</label>
-                        <textarea rows="4" cols="20" id="comment"></textarea>
-                    </div>
-                    <button id="formButton" type="button">Отправить</button>
-                </form>
-                <div class="forComments" id="elements">
-                </div>
-            </div>
-
-            <div class="footer">
-                <div class = "col1">
-                    <a href = "../navigation/calendars.html"><p class="footer-contact">Посмотреть календарь праздников</p></a>
-                </div>
-                <div class = "col2">
-                    <p class="footer-contact">Контакты для связи</p>
-                    <p>Email: dr1305@bk.ru</p>
-                    <p>+79-04-121-04-00</p>
-                </div>           
+        <div class="header">
+            <a href="../index.html">
+                <p class="title">ЧУДОБЛЮДО</p>
+            </a>
+            <div class="changeTheme">
+                <button id="lightTheme">Светлая тема</button>
+                <button id="darkTheme">Темная тема</button>
             </div>
         </div>
-    </body>
+
+        <div class="navigation">
+            <div class="dropdown" id="dropdown1">
+                <button class="dropbtn">Выбери прием пищи</button>
+                <div class="dropdown-content">
+                    <a href="../navigation/breakfast.html">Завтрак</a>
+                    <a href="../navigation/lanch.html">Обед</a>
+                    <a href="../navigation/dinner.html">Ужин</a>
+                </div>
+            </div>
+
+            <div class="dropdown" id="dropdown2">
+                <button class="dropbtn">Выбери кухню</button>
+                <div class="dropdown-content">
+                    <a href="../navigation/china.html">Китайская кухня</a>
+                    <a href="#">Итальянская кухня</a>
+                    <a href="#">Русская кухня</a>
+                </div>
+            </div>
+
+            <div class="dropdown" id="dropdown3">
+                <button class="dropbtn">Выбери тип блюда</button>
+                <div class="dropdown-content">
+                    <a href="../navigation/hot.html">Горячее блюдо</a>
+                    <a href="#">Закуски</a>
+                    <a href="#">Десерт</a>
+                    <a href="#">Напитки</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="description">
+            <img src="../images/waffles.jpg" id="main" alt="main" />
+            <p>Мягкие венские вафли в домашних условиях – это вполне реально. Приготовьте популярный рецепт по
+                простому рецепту в электровафельнице. Порадуйте близких аппетитным десертом.
+            </p>
+        </div>
+
+        <div class="gramm">
+            <form>
+                <div class="field">
+                    <strong><label for="portion">Введите количество порций</label></strong>
+                    <input type="number" placeholder="Количество порций" name="count" id="portion" min="1" />
+                </div>
+                <div class="menu">
+                    <p>Мука (стаканы).............................</p>
+                    <p id="flour"></p>
+                </div>
+                <div class="menu">
+                    <p>Яйцо куринное(шт.).......................</p>
+                    <p id="egg"></p>
+                </div>
+                <div class="menu">
+                    <p>Молоко коровье (стаканы)..............</p>
+                    <p id="milk"></p>
+                </div>
+                <div class="menu">
+                    <p>Ванилин (граммы)..........................</p>
+                    <p id="vanil"></p>
+                </div>
+                <div class="menu">
+                    <p>Сахар (ст. ложки)...........................</p>
+                    <p id="sugar"></p>
+                </div>
+                <div class="menu">
+                    <p>Разрыхлитель (чайные ложки).........</p>
+                    <p id="powder"></p>
+                </div>
+                <div class="menu">
+                    <p>Лимонный сок (ст. ложки)................</p>
+                    <p id="juice"></p>
+                </div>
+                <div class="menu">
+                    <p>Сливочное масло (гр).......................</p>
+                    <p id="butter"></p>
+                </div>
+                <button id="count" type="button">Рассчитать</button>
+            </form>
+        </div>
+
+        <div class="stages">
+            <div class="step" id="step1">
+                <h3 class="titleStep">ШАГ 1</h3>
+                <img class="i" src="../images/recipe2/step1.jpg" alt="step1">
+                <p class="text">Подготовьте для этого необходимые ингредиенты. Сливочное масло заранее достаньте из
+                    холодильника и оставьте при комнатной температуре, чтобы оно стало мягкое. Муку просейте через
+                    сито, чтобы она насытилась кислородом. </p>
+            </div>
+            <div class="step" id="step3">
+                <h3 class="titleStep">ШАГ 3</h3>
+                <img src="../images/recipe2/step3.jpg" class="i" alt="step3">
+                <p class="text">Затем влейте в чашу молоко и добавьте яйца. Вмешайте их в тесто. Выдавливаем ложку
+                    сока из лимона и вливаем ее в массу.
+                </p>
+            </div>
+            <div class="step" id="step5">
+                <h3 class="titleStep">ШАГ 5</h3>
+                <img src="../images/recipe2/step5.jpg" class="i" alt="step5">
+                <p class="text">Тесто для вафель получается достаточно густое. </p>
+            </div>
+            <div class="step" id="step7">
+                <h3 class="titleStep">ШАГ 7</h3>
+                <img src="../images/recipe2/step7.jpg" class="i" alt="step7">
+                <p class="text">Готовые венские вафли аккуратно снимите с вафельницы на тарелку и остудите. Дополнить
+                    вафли можно ягодами или сгущенкой. </p>
+            </div>
+
+            <div class="step" id="step2">
+                <h3 class="titleStep">ШАГ 2</h3>
+                <img src="../images/recipe2/step2.jpg" class="i" alt="step2">
+                <p class="text">Для приготовления теста берите глубокую чашу, чтобы при взбивании не летели брызги.
+                    В чаше соедините мягкое сливочное масло и сахар. Смешайте. Для этого можно воспользоваться
+                    миксером.</p>
+            </div>
+            <div class="step" id="step4">
+                <h3 class="titleStep">ШАГ 4</h3>
+                <img src="../images/recipe2/step4.jpg" class="i" alt="step4">
+                <p class="text">Постепенно подсыпайте муку с ванилином и замешивайте тесто. Количество муки может
+                    отличаться от указанного в рецепте, поэтому не всыпайте сразу всю. В количестве муки
+                    ориентируйтесь по консистенции готового теста.</p>
+            </div>
+            <div class="step" id="step6">
+                <h3 class="titleStep">ШАГ 6</h3>
+                <img src="../images/recipe2/step6.jpg" class="i" alt="step6">
+                <p class="text">Вафельницу включите в розетку и разогрейте до горячего состояния. Выложите ложкой
+                    тесто и накройте крышкой. Готовьте вафли 3-5 минут, в зависимости от мощности вашей вафельницы.
+                    Вафли подрумянятся и станут аппетитного золотистого цвета.</p>
+            </div>
+
+            <div class="step" id="step8">
+                <h3 class="titleStep">ШАГ 8</h3>
+                <img src="../images/waffles.jpg" class="i" alt="step8">
+                <p class="text">Приятного аппетита!</p>
+            </div>
+        </div>
+        <div class="comments">
+            <div class="ui huge header">Оставьте отзыв</div>
+            <form id="form" class="ui large form">
+                <div class="field">
+                    <label>Имя</label>
+                    <input type="text" placeholder="Ваше имя" id="user">
+                </div>
+                <div class="field">
+                    <label>E-mail</label>
+                    <input type="email" placeholder="Ваш email" id="email">
+                </div>
+                <div class="field">
+                    <label>Оставьте отзыв</label>
+                    <textarea rows="4" cols="20" id="comment"></textarea>
+                </div>
+                <button id="formButton" type="button">Отправить</button>
+            </form>
+            <div class="forComments" id="elements">
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="col1">
+                <a href="../navigation/calendars.html">
+                    <p class="footer-contact">Посмотреть календарь праздников</p>
+                </a>
+                <br>
+                <a href="../navigation/funnydogs.html">
+                    <p class="footer-contact">Нажмите если вам грустно</p>
+                </a>
+            </div>
+            <div class="col2">
+                <p class="footer-contact">Контакты для связи</p>
+                <p>Email: dr1305@bk.ru</p>
+                <p>+79-04-121-04-00</p>
+            </div>
+        </div>
+    </div>
+</body>
 
 </html>

@@ -1,0 +1,11 @@
+.main-text{
+    background-image: url(../images/dogs.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: 30px;
+    border-radius: 20px;
+    text-align: center;
+    color: white;
+    text-shadow: 1px 1px 1px #000;
+    padding: 30px;
+}

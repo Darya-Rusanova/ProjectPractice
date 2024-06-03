@@ -100,6 +100,8 @@ a, a:hover {
     }
     #main {
         margin-left: 5%;
+        width: 600px;
+        height: 400px;
     }
     
     .navigation {
@@ -420,6 +422,8 @@ a, a:hover {
 
 .i {
     grid-area: "img";
+    width: 450px;
+    height: 300px;
 }
 .text {
     grid-area: "text";
@@ -495,18 +499,21 @@ img {
 }
 .title {
     grid-area:title;
+    font-size: 54px;
+    margin-top: 50px;
 }
 
 .header {
-    grid-area: header;
-    font-size: 54px;
-    
+    grid-area: header;   
 }
 .header a{
     display: block;
     text-decoration: none;
     color: var(--color-primary-a90);
     cursor: pointer;
+}
+a {
+    font-size: medium;
 }
 
 #dropdown1 {
