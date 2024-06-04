@@ -503,7 +503,7 @@ img {
 }
 .title {
     grid-area: title;
-    font-size: 50px;
+    font-size: 45px;
     font-weight: bold;
     color:var(--color-primary-a50);
 }
