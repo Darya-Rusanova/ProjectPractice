@@ -147,6 +147,7 @@ a, a:hover {
             "step7 step8"
     }
     .header {
+        margin: 30px;
         display: grid;
         grid-template-columns: 80% 20%;
         grid-template-rows: auto;
@@ -223,6 +224,8 @@ a, a:hover {
             
     }
     .header {
+        margin-top: 20px;
+        margin-bottom: 10px;
         display: grid;
         grid-template-columns: 70% 30%;
         grid-template-rows: auto;
@@ -296,6 +299,8 @@ a, a:hover {
             
     }
     .header {
+        margin-top: 20px;
+        margin-bottom: 10px;
         display: grid;
         grid-template-columns: 100%;
         grid-template-rows: auto auto;
@@ -422,8 +427,7 @@ a, a:hover {
 
 .i {
     grid-area: "img";
-    width: 450px;
-    height: 300px;
+
 }
 .text {
     grid-area: "text";
@@ -498,9 +502,10 @@ img {
     text-align: center;
 }
 .title {
-    grid-area:title;
-    font-size: 54px;
-    margin-top: 50px;
+    grid-area: title;
+    font-size: 50px;
+    font-weight: bold;
+    color:var(--color-primary-a50);
 }
 
 .header {
