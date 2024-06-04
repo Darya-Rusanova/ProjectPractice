@@ -4,13 +4,14 @@
     window.addEventListener("load", init);
 
     function init() {
-      showDogs()
-      showFact();
+      document.getElementById("showFacts").addEventListener("click", function(){
+        showDogs();
+        showFact();
+      });
     }
 
     function showDogs() {
-      let url = "https://dog.ceo/api/breeds/image/random";
-      
+      let url = "https://dog.ceo/api/breeds/image/random";     
       fetch(url)
         .then(checkStatus)
         .then(resp => resp.json()) 
@@ -32,7 +33,10 @@
     
     function showResult(response) {
       let div = document.getElementById("output");
-      let img = document.getElementById("img")
+      div.innerHTML = "";
+      let img = document.createElement("img");
+      img.id = "img";
+      img.alt = "dogs"
       img.src = response["message"];
       img.style.width = "350px";
       img.style.height = "350px";

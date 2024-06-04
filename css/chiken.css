@@ -613,5 +613,17 @@ a {
     font-weight: bold;
     color:var(--color-primary-a90)
 }
+#portion {
+    font-size: small;
+    border-radius: 20px;
+    text-align: center;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    width: 180px;
+    border: none;
+    outline: none;
+    border: 3px solid var(--color-primary-a30);
+    background-color: var(--color-primary-a40);
+    color: #000000;
+}
 
 

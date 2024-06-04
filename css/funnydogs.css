@@ -9,3 +9,31 @@
     text-shadow: 1px 1px 1px #000;
     padding: 30px;
 }
+#showFacts {
+    grid-area: btn;
+    background-color: var(--color-primary-a30);
+    color: var(--color-primary-a90);
+    padding: 10px;
+    font-size: 20px;
+    border: none;
+    cursor: pointer;
+    width: 300px;
+    border-radius: 20px;
+    text-align: center;
+    margin: auto;
+}
+.secondCol {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+        "title"
+        "fact"
+        "btn"
+}
+#titleFact {
+    grid-area: title;
+}
+#fact {
+    grid-area: fact;
+}
