@@ -7,6 +7,7 @@
     --color-primary-a50: #ea9e0b;
     --color-primary-a60: lightgrey;
     --color-primary-a90: #000000;
+    --theme-image: url('../images/light-theme.jpg');
 
 }
 [data-theme="dark"] {  
@@ -17,21 +18,29 @@
     --color-primary-a40: #a5957f;
     --color-primary-a50: #291c0a;
     --color-primary-a60: #291c0a;
-    --color-primary-a90: #ffffff;                 
+    --color-primary-a90: #ffffff;    
+    --theme-image: url('../images/dark-theme.jpg');             
 }
 
 @media (min-width:1300px){
-
     .main-text{
         height: 400px;
+    }
+    .start{
+        grid-area: start;
+        display:grid;
+        grid-template-columns: 30% 70%;
+        grid-template-rows: 170px 150px;
+        grid-template-areas:
+            "header theme"
+            "header navigation"  
     }
     .container{
             display:grid;
             grid-template-columns: 50% 50%;
-            grid-template-rows: auto 100px auto auto 200px;
+            grid-template-rows: 270px auto auto 200px;
             grid-template-areas:
-                "header header"
-                "navigation navigation"
+                "start start"
                 "information information" 
                 "first second"
                 "footer footer"         
@@ -39,8 +48,8 @@
     .recipe {
         cursor: pointer;
         display: grid;
-        height: 300px;
-        grid-template-columns: 50% 50%;
+        height: 350px;
+        grid-template-columns: 60% 40%;
             grid-template-rows: auto;
             grid-template-areas:
                 "img discription"
@@ -54,36 +63,31 @@
         grid-template-areas:
             "btn1 btn2 btn3"
     }
-}
-@media (960px <= width < 1300px){
-    
-    .main-text{
-        height: 400px;
+    .dropbtn{
+        width: 300px;
     }
-    .container{
+    .dropdown-content {
+        min-width: 300px;
+    } 
+    .picture {
+        height: 266px;
+        width: 400px;
+        border-radius: 20px;
+    }
+
+}
+
+
+@media (800px <= width < 1300px){
+    .start{
+        grid-area: start;
         display:grid;
-        grid-template-columns: 100%;
-        grid-template-rows: auto 100px auto auto auto 200px;
+        grid-template-columns: 30% 70%;
+        grid-template-rows: auto;
         grid-template-areas:
-            "header"
-            "navigation"
-            "information" 
-            "first"
-            "second"
-            "footer"         
+            "header theme"
+            "navigation navigation"
     }
-    .recipe {
-        cursor: pointer;
-        display: grid;
-        height: 300px;
-        grid-template-columns: 50% 50%;
-            grid-template-rows: auto;
-            grid-template-areas:
-                "img discription"
-    }
-
-
-    
     .navigation {
         grid-area: navigation;
         display: grid;
@@ -92,18 +96,13 @@
         grid-template-areas:
             "btn1 btn2 btn3"
     }
-
-}
-
-@media (700px <= width < 960px){
-
     .container{
             display:grid;
             grid-template-columns: 50% 50%;
             grid-template-rows: auto auto auto auto 200px;
             grid-template-areas:
-                "header header"
-                "navigation information" 
+                "start start"
+                "information information" 
                 "first first"
                 "second second"
                 "footer footer"         
@@ -112,33 +111,45 @@
     .recipe {
         cursor: pointer;
         display: grid;
-        grid-template-columns: 50% 50%;
-            grid-template-rows: 300px;
+        grid-template-columns: 60% 40%;
+            grid-template-rows: 350px;
             grid-template-areas:
                 "img discription"
     }
-    
-
-    .navigation {
-        grid-area: navigation;
-        display: grid;
-        grid-template-columns: 100%;
-        grid-template-rows: 250px 250px 250px;
-        grid-template-areas:
-            "btn1"
-            "btn2"
-            "btn3"
+    .dropbtn{
+        width: 250px;
+        height: 80px;
+    }
+    .dropdown-content {
+        min-width: 250px;
+    } 
+    .picture {
+        height: 266px;
+        width: 400px;
+        border-radius: 20px;
     }
 }
-@media (width < 700px){
+@media (width < 800px){
+    .theme-switcher-wrapper {
+        margin-right: 10px;
+    }
+    .start{
+        grid-area: start;
+        display:grid;
+        grid-template-columns: 100%;
+        grid-template-rows: 100px auto auto;
+        grid-template-areas:
+            "theme"
+            "header"
+            "navigation"
+    }
 
     .container{
             display:grid;
             grid-template-columns: 100%;
-            grid-template-rows: auto auto auto auto auto 200px;
+            grid-template-rows: auto auto auto auto 200px;
             grid-template-areas:
-                "header"
-                "navigation" 
+                "start"
                 "information"
                 "first"
                 "second"
@@ -155,7 +166,6 @@
                 "discription"
     }
     
-    
     .navigation {
         grid-area: navigation;
         display: grid;
@@ -166,14 +176,29 @@
             "btn2"
             "btn3"
     }
+    .dropbtn{
+        width: 300px;
+    }
+    .dropdown-content {
+        min-width: 300px;
+    } 
+    .picture {
+        height: 200px;
+        width: 300px;
+        border-radius: 20px;
+    }
 }
-.header {
+.header {    
+    grid-area: header;
     margin: 30px;
-    display: grid;
-    grid-template-columns: 100% auto;
-    grid-template-rows: auto;
-    grid-template-areas:
-        "title themes"
+}
+.theme-bg {
+  background-image: var(--theme-image);
+  width: 350px;
+  height: 233px;
+  background-size: cover;       
+  background-position: center; 
+  background-repeat: no-repeat; 
 }
 body  *{
     font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -182,10 +207,10 @@ body {
     background-color: var(--color-primary-a40);
 }
 .theme-switcher-wrapper {
+    grid-area: theme;
     padding: 10px;
     cursor: pointer;
     border-radius: 10px;
-    grid-area: themes;
     margin: 10px;
     text-align: center;
 }
@@ -203,10 +228,6 @@ a {
     color: black;
 }
 
-.header {
-    grid-area: header;
-
-}
 .title {
     font-size: 45px;
     font-weight: bold;
@@ -299,9 +320,8 @@ a {
     font-size: 20px;
     border: none;
     cursor: pointer;
-    width: 300px;
     border-radius: 20px;
-  }
+}
   
 
 .dropdown {
@@ -317,7 +337,6 @@ a {
     opacity: 0;
     visibility: hidden;
     background-color: var(--color-primary-a10);
-    min-width: 300px;
     border-radius: 20px;
     font-size: medium;
     position: absolute;
@@ -363,8 +382,7 @@ a {
     grid-area: discription;
     padding: 30px;
     text-align: left;
-    font-size: medium;
-    
+    font-size: medium;    
 }
 .recipe:hover{
     outline: 3px solid var(--color-primary-a50);
@@ -372,12 +390,6 @@ a {
 	outline-offset:-2px;
 	box-shadow: 5px 5px 10px 3px var(--color-primary-a60);
 }
-.picture {
-    height: 200px;
-    width: 300px;
-    border-radius: 20px;
-}
-
 
 .name {
     font-size: large;

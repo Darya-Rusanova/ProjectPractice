@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/semantic.min.css" />
-    <link href="../css/chiken.css" type="text/css" rel="stylesheet" media="screen">
+    <link href="../css/recipe.css" type="text/css" rel="stylesheet" media="screen">
     <link href="../css/theme.css" type="text/css" rel="stylesheet" media="screen">
-    <script src="../js/first.js" type="text/javascript"></script>
+    <script src="../js/theme.js" type="text/javascript"></script>
     <script src="../js/form.js" type="text/javascript"></script>
     <script src="../js/comments.js" type="text/javascript"></script>
 
@@ -17,10 +17,13 @@
 
 <body>
     <div class="container">
-
-        <div class="header">
-            <img src="../images/light-theme.jpg" class="theme-image light-image" alt="Light theme"/>
-            <img src="../images/dark-theme.jpg" class="theme-image dark-image" alt="Dark theme" />
+        <div class="start">
+           <div class="header">
+                 <a href="../index.html">
+                    <div class="theme-bg"></div>
+                </a>
+            </div>
+            
             <div class="theme-switcher-wrapper">
                 <input type="checkbox" id="theme-toggle" class="theme-toggle">
                 <label for="theme-toggle" class="theme-label">
@@ -28,34 +31,34 @@
                 </label>
                 <label class="text-toggle">Переключить тему</label>
             </div>
-        </div>
 
-        <div class="navigation">
-            <div class="dropdown" id="dropdown1">
-                <button class="dropbtn">Выбери прием пищи</button>
-                <div class="dropdown-content">
-                    <a href="../navigation/breakfast.html">Завтрак</a>
-                    <a href="../navigation/lanch.html">Обед</a>
-                    <a href="#">Ужин</a>
+            <div class="navigation">
+                <div class="dropdown" id="dropdown1">
+                    <button class="dropbtn">Выбери прием пищи</button>
+                    <div class="dropdown-content">
+                        <a href="../navigation/breakfast.html">Завтрак</a>
+                        <a href="../navigation/lanch.html">Обед</a>
+                        <a href="#">Ужин</a>
+                    </div>
                 </div>
-            </div>
-
-            <div class="dropdown" id="dropdown2">
-                <button class="dropbtn">Выбери кухню</button>
-                <div class="dropdown-content">
-                    <a href="../navigation/china.html">Китайская кухня</a>
-                    <a href="#">Итальянская кухня</a>
-                    <a href="#">Русская кухня</a>
+        
+                <div class="dropdown" id="dropdown2">
+                    <button class="dropbtn">Выбери кухню</button>
+                    <div class="dropdown-content">
+                        <a href="../navigation/china.html">Китайская кухня</a>
+                        <a href="#">Итальянская кухня</a>
+                        <a href="#">Русская кухня</a>
+                    </div>
                 </div>
-            </div>
 
-            <div class="dropdown" id="dropdown3">
-                <button class="dropbtn">Выбери тип блюда</button>
-                <div class="dropdown-content">
-                    <a href="../navigation/hot.html">Горячее блюдо</a>
-                    <a href="#">Закуски</a>
-                    <a href="#">Десерт</a>
-                    <a href="#">Напитки</a>
+                <div class="dropdown" id="dropdown3">
+                    <button class="dropbtn">Выбери тип блюда</button>
+                    <div class="dropdown-content">
+                        <a href="../navigation/hot.html">Горячее блюдо</a>
+                        <a href="#">Закуски</a>
+                        <a href="#">Десерт</a>
+                        <a href="#">Напитки</a>
+                    </div>
                 </div>
             </div>
         </div>
