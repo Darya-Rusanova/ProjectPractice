@@ -19,12 +19,14 @@
     <div class="container">
 
         <div class="header">
-            <a href="../index.html">
-                <p class="title">ЧУДОБЛЮДО</p>
-            </a>
-            <div class="changeTheme">
-                <button id="lightTheme">Светлая тема</button>
-                <button id="darkTheme">Темная тема</button>
+            <img src="../images/light-theme.jpg" class="theme-image light-image" alt="Light theme"/>
+            <img src="../images/dark-theme.jpg" class="theme-image dark-image" alt="Dark theme" />
+            <div class="theme-switcher-wrapper">
+                <input type="checkbox" id="theme-toggle" class="theme-toggle">
+                <label for="theme-toggle" class="theme-label">
+                    <span class="theme-ball"></span>
+                </label>
+                <label class="text-toggle">Переключить тему</label>
             </div>
         </div>
 
@@ -189,9 +191,6 @@
                     <p class="footer-contact">Посмотреть календарь праздников</p>
                 </a>
                 <br>
-                <a href="../navigation/funnydogs.html">
-                    <p class="footer-contact">Нажмите если вам грустно</p>
-                </a>
             </div>
             <div class="col2">
                 <p class="footer-contact">Контакты для связи</p>

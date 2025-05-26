@@ -2,11 +2,18 @@
     window.addEventListener('load', init);                  
     let tmp = document.querySelector("html");
     function init() {
-        document.getElementById("lightTheme").addEventListener("click", setLightTheme);
-        document.getElementById("darkTheme").addEventListener("click", setDarkTheme);
+        let check = document.getElementById("theme-toggle");
+        check.addEventListener('change', function() {  
+            if (this.checked) {  
+                setDarkTheme(); 
+            } else {  
+                setLightTheme();
+            }  
+        });  
         if(window.localStorage) {
             if (localStorage.getItem('data-theme') == "dark") {
                 tmp.setAttribute("data-theme","dark");
+                check.checked = true;
             }
             else if (localStorage.getItem('data-theme') == "light") {
                 tmp.setAttribute("data-theme","light");
@@ -28,5 +35,4 @@
             localStorage.setItem('data-theme', 'light');
         }
     }
-
 })();
