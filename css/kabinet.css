@@ -1,0 +1,203 @@
+/* Стили для личного кабинета (kabinet.html) */
+
+/* Ссылка на логотип */
+.header a {
+  text-decoration: none;
+}
+
+/* Основные секции */
+.auth-section, .cabinet-section {
+  background-color: var(--color-primary-a10);
+  border-radius: 20px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 600px;
+  box-shadow: 5px 5px 10px 3px var(--color-primary-a60);
+}
+
+/* Секция входа */
+#login-section {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 30px;
+}
+
+#login-section h2 {
+  font-size: 28px;
+}
+
+#login-section label {
+  font-size: 18px;
+}
+
+#login-section input {
+  font-size: 16px;
+  padding: 12px;
+}
+
+#login-section button {
+  font-size: 16px;
+  padding: 12px 24px;
+}
+
+#login-section p {
+  font-size: 16px;
+}
+
+/* Сообщения об ошибках */
+.error {
+  color: #ff4d4d;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* Заголовки */
+.section h2, .section h3 {
+  color: var(--color-primary-a90);
+  text-align: center;
+  text-shadow: 1px 1px 1px var(--color-primary-a0);
+}
+
+/* Формы */
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+label {
+  color: var(--color-primary-a90);
+  margin: 5px 0;
+  width: 100%;
+  max-width: 400px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid var(--color-primary-a30);
+  border-radius: 10px;
+  background-color: var(--color-primary-a40);
+  color: var(--color-primary-a90);
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+button {
+  background-color: var(--color-primary-a30);
+  color: var(--color-primary-a90);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 10px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: var(--color-primary-a50);
+}
+
+/* Ссылки переключения форм */
+.toggle-link {
+  color: var(--color-primary-a50);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.toggle-link:hover {
+  color: var(--color-primary-a20);
+}
+
+/* Рецепты */
+.recipe {
+  background-color: var(--color-primary-a20);
+  border-radius: 20px;
+  padding: 15px;
+  margin: 10px 0;
+  box-shadow: 5px 5px 10px 3px var(--color-primary-a60);
+}
+
+.recipe h4 {
+  color: var(--color-primary-a90);
+  margin: 0 0 10px;
+}
+
+.recipe p {
+  color: var(--color-primary-a90);
+  margin: 5px 0;
+}
+
+.recipe img {
+  max-width: 200px;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
+.delete-btn {
+  background-color: #ff4d4d;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #cc0000;
+}
+
+/* Ингредиенты и шаги */
+.ingredient, .step {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.ingredient input, .step input {
+  flex: 1;
+  min-width: 150px;
+}
+
+/* Адаптивность */
+@media (width < 800px) {
+  .auth-section, .cabinet-section {
+    margin: 10px;
+    padding: 15px;
+  }
+  #login-section {
+    max-width: 90%;
+    margin: 20px auto;
+    padding: 20px;
+  }
+  #login-section h2 {
+    font-size: 24px;
+  }
+  #login-section label {
+    font-size: 16px;
+  }
+  #login-section input {
+    font-size: 14px;
+    padding: 10px;
+  }
+  #login-section button {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+  #login-section p {
+    font-size: 14px;
+  }
+  input, textarea, button {
+    font-size: 14px;
+  }
+  .recipe img {
+    max-width: 150px;
+  }
+}
+
+@media (800px <= width < 1300px) {
+  .auth-section, .cabinet-section {
+    max-width: 80%;
+  }
+  #login-section {
+    max-width: 600px;
+  }
+}

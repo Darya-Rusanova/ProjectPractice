@@ -1,378 +1,98 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen">
+  <link href="css/theme.css" type="text/css" rel="stylesheet" media="screen">
+  <link href="css/kabinet.css" type="text/css" rel="stylesheet" media="screen">
+  <script src="js/theme.js" type="text/javascript"></script>
+  <script src="js/kabinet.js" type="text/javascript"></script>
+  <link rel="icon" href="images/logo.png" type="image/png">
   <title>Личный кабинет</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    .section { margin-bottom: 20px; }
-    .error { color: red; }
-    input, textarea, button { margin: 5px; padding: 5px; }
-    .recipe { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
-    button { cursor: pointer; }
-    .toggle-link { color: blue; cursor: pointer; text-decoration: underline; }
-    .delete-btn { background-color: #ff4d4d; color: white; border: none; padding: 5px 10px; }
-    .delete-btn:hover { background-color: #cc0000; }
-  </style>
 </head>
 <body>
-  <div id="error" class="error section"></div>
-
-  <!-- Секция авторизации/регистрации -->
-  <div id="auth-section" class="section">
-    <!-- Форма регистрации -->
-    <div id="register-section" class="section" style="display: none;">
-      <h2>Регистрация</h2>
-      <form id="register-form">
-        <label>Имя пользователя: <input type="text" id="username" required></label><br>
-        <label>Email: <input type="email" id="email-register" required></label><br>
-        <label>Пароль: <input type="password" id="password-register" required></label><br>
-        <button type="submit">Зарегистрироваться</button>
-      </form>
-      <p>Уже есть аккаунт? <span class="toggle-link" id="show-login">Войти</span></p>
+  <div class="container">
+    <div class="start">
+      <div class="header">
+        <a href="index.html">
+          <div class="theme-bg"></div>
+        </a>
+      </div>
+      <div class="theme-switcher-wrapper">
+        <input type="checkbox" id="theme-toggle" class="theme-toggle">
+        <label for="theme-toggle" class="theme-label">
+          <span class="theme-ball"></span>
+        </label>
+        <label class="text-toggle">Переключить тему</label>
+      </div>
+      <div class="user">
+        <div class="user-bg"></div>
+        <a class="text-toggle" id="lk" href="kabinet.html">Личный кабинет</a>
+      </div>
     </div>
-
-    <!-- Форма входа -->
-    <div id="login-section" class="section">
-      <h2>Вход</h2>
-      <form id="login-form">
-        <label>Email: <input type="email" id="email" required></label><br>
-        <label>Пароль: <input type="password" id="password" required></label><br>
-        <button type="submit">Войти</button>
-      </form>
-      <p>Нет аккаунта? <span class="toggle-link" id="show-register">Зарегистрироваться</span></p>
+    <div id="error" class="error section"></div>
+    <!-- Секция авторизации/регистрации -->
+    <div id="auth-section" class="auth-section section">
+      <!-- Форма регистрации -->
+      <div id="register-section" class="section" style="display: none;">
+        <h2>Регистрация</h2>
+        <form id="register-form">
+          <label>Имя пользователя: <input type="text" id="username" required></label>
+          <label>Email: <input type="email" id="email-register" required></label>
+          <label>Пароль: <input type="password" id="password-register" required></label>
+          <button type="submit">Зарегистрироваться</button>
+        </form>
+        <p>Уже есть аккаунт? <span class="toggle-link" id="show-login">Войти</span></p>
+      </div>
+      <!-- Форма входа -->
+      <div id="login-section" class="section">
+        <h2>Вход</h2>
+        <form id="login-form">
+          <label>Email: <input type="email" id="email" required></label>
+          <label>Пароль: <input type="password" id="password" required></label>
+          <button type="submit">Войти</button>
+        </form>
+        <p>Нет аккаунта? <span class="toggle-link" id="show-register">Зарегистрироваться</span></p>
+      </div>
+    </div>
+    <!-- Секция личного кабинета -->
+    <div id="cabinet-section" class="cabinet-section section" style="display: none;">
+      <h2>Личный кабинет</h2>
+      <button id="logout">Выйти</button>
+      <div id="recipes-section" class="section">
+        <h3>Ваши рецепты</h3>
+        <div id="recipes-list"></div>
+      </div>
+      <div id="add-recipe-section" class="section">
+        <h3>Добавить новый рецепт</h3>
+        <form id="recipe-form">
+          <label>Название: <input type="text" id="recipe-title" required></label>
+          <label>Категория: <input type="text" id="recipe-category" required></label>
+          <label>Описание: <textarea id="recipe-description" required></textarea>
+          <label>Порции: <input type="number" id="recipe-servings" required></label>
+          <label>Время приготовления (мин): <input type="number" id="recipe-cookingTime" required></label>
+          <div id="ingredients-container">
+            <div class="ingredient">
+              <label>Ингредиент: <input type="text" class="ingredient-name" required></label>
+              <label>Количество (г): <input type="number" class="ingredient-quantity" required></label>
+            </div>
+          </div>
+          <button type="button" id="add-ingredient">Добавить ингредиент</button>
+          <label>Изображение (URL): <input type="text" id="recipe-image"></label>
+          <div id="steps-container">
+            <div class="step">
+              <label>Шаг: <input type="text" class="step-description" required></label>
+              <label>Изображение шага (URL): <input type="text" class="step-image"></label>
+            </div>
+          </div>
+          <button type="button" id="add-step">Добавить шаг</button>
+          <button type="submit">Добавить рецепт</button>
+        </form>
+      </div>
     </div>
   </div>
-
-  <!-- Секция личного кабинета -->
-  <div id="cabinet-section" class="section" style="display: none;">
-    <h2>Личный кабинет</h2>
-    <button id="logout">Выйти</button>
-    
-    <div id="recipes-section" class="section">
-      <h3>Ваши рецепты</h3>
-      <div id="recipes-list"></div>
-    </div>
-
-    <div id="add-recipe-section" class="section">
-      <h3>Добавить новый рецепт</h3>
-      <form id="recipe-form">
-        <label>Название: <input type="text" id="recipe-title" required></label><br>
-        <label>Категория: <input type="text" id="recipe-category" required></label><br>
-        <label>Описание: <textarea id="recipe-description" required></textarea></label><br>
-        <label>Порции: <input type="number" id="recipe-servings" required></label><br>
-        <label>Время приготовления (мин): <input type="number" id="recipe-cookingTime" required></label><br>
-        <div id="ingredients-container">
-          <div class="ingredient">
-            <label>Ингредиент: <input type="text" class="ingredient-name" required></label>
-            <label>Количество (г): <input type="number" class="ingredient-quantity" required></label>
-          </div>
-        </div>
-        <button type="button" id="add-ingredient">Добавить ингредиент</button><br>
-        <label>Изображение (URL): <input type="text" id="recipe-image"></label><br>
-        <div id="steps-container">
-          <div class="step">
-            <label>Шаг: <input type="text" class="step-description" required></label>
-            <label>Изображение шага (URL): <input type="text" class="step-image"></label>
-          </div>
-        </div>
-        <button type="button" id="add-step">Добавить шаг</button><br>
-        <button type="submit">Добавить рецепт</button>
-      </form>
-    </div>
-  </div>
-
-  <script>
-    let token = localStorage.getItem('token') || '';
-    let userId = localStorage.getItem('userId') || '';
-
-    const authSection = document.getElementById('auth-section');
-    const loginSection = document.getElementById('login-section');
-    const registerSection = document.getElementById('register-section');
-    const cabinetSection = document.getElementById('cabinet-section');
-    const errorDiv = document.getElementById('error');
-    const loginForm = document.getElementById('login-form');
-    const registerForm = document.getElementById('register-form');
-    const logoutButton = document.getElementById('logout');
-    const recipeForm = document.getElementById('recipe-form');
-    const recipesList = document.getElementById('recipes-list');
-    const addIngredientButton = document.getElementById('add-ingredient');
-    const addStepButton = document.getElementById('add-step');
-    const ingredientsContainer = document.getElementById('ingredients-container');
-    const stepsContainer = document.getElementById('steps-container');
-    const showRegisterLink = document.getElementById('show-register');
-    const showLoginLink = document.getElementById('show-login');
-
-    const API_BASE_URL = 'https://chudobludo-backend.onrender.com';
-
-    // Проверка токена при загрузке
-    async function checkToken() {
-        if (!token) {
-            authSection.style.display = 'block';
-            loginSection.style.display = 'block';
-            registerSection.style.display = 'none';
-            cabinetSection.style.display = 'none';
-            return;
-        }
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/users/${userId}/recipes`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            authSection.style.display = 'none';
-            cabinetSection.style.display = 'block';
-            fetchRecipes();
-        } catch (err) {
-            token = '';
-            userId = '';
-            localStorage.removeItem('token');
-            localStorage.removeItem('userId');
-            authSection.style.display = 'block';
-            loginSection.style.display = 'block';
-            registerSection.style.display = 'none';
-            cabinetSection.style.display = 'none';
-            errorDiv.textContent = 'Сессия истекла, пожалуйста, войдите или зарегистрируйтесь';
-        }
-    }
-
-    checkToken();
-
-    // Переключение на форму регистрации
-    showRegisterLink.addEventListener('click', () => {
-        loginSection.style.display = 'none';
-        registerSection.style.display = 'block';
-    });
-
-    // Переключение на форму входа
-    showLoginLink.addEventListener('click', () => {
-        loginSection.style.display = 'block';
-        registerSection.style.display = 'none';
-    });
-
-    // Обработчик регистрации
-    registerForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const username = document.getElementById('username').value;
-        const email = document.getElementById('email-register').value;
-        const password = document.getElementById('password-register').value;
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, email, password })
-            });
-            const data = await response.json();
-            if (data.token) {
-                token = data.token;
-                userId = data.userId;
-                localStorage.setItem('token', token);
-                localStorage.setItem('userId', userId);
-                authSection.style.display = 'none';
-                cabinetSection.style.display = 'block';
-                errorDiv.textContent = '';
-                fetchRecipes();
-            } else {
-                errorDiv.textContent = data.message || 'Ошибка регистрации';
-            }
-        } catch (err) {
-            console.error('Fetch Error:', err);
-            errorDiv.textContent = 'Ошибка соединения с сервером: ' + err.message;
-        }
-    });
-
-    // Обработчик входа
-    loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-            const data = await response.json();
-            if (data.token) {
-                token = data.token;
-                userId = data.userId;
-                localStorage.setItem('token', token);
-                localStorage.setItem('userId', userId);
-                authSection.style.display = 'none';
-                cabinetSection.style.display = 'block';
-                errorDiv.textContent = '';
-                fetchRecipes();
-            } else {
-                errorDiv.textContent = data.message || 'Ошибка входа';
-            }
-        } catch (err) {
-            console.error('Fetch Error:', err);
-            errorDiv.textContent = 'Ошибка соединения с сервером: ' + err.message;
-        }
-    });
-
-    // Обработчик выхода
-    logoutButton.addEventListener('click', () => {
-        token = '';
-        userId = '';
-        localStorage.removeItem('token');
-        localStorage.removeItem('userId');
-        authSection.style.display = 'block';
-        loginSection.style.display = 'block';
-        registerSection.style.display = 'none';
-        cabinetSection.style.display = 'none';
-        recipesList.innerHTML = '';
-        errorDiv.textContent = '';
-    });
-
-    // Функция загрузки рецептов
-    async function fetchRecipes() {
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/users/${userId}/recipes`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            const recipes = await response.json();
-            recipesList.innerHTML = '';
-            if (recipes.length === 0) {
-                recipesList.innerHTML = '<p>У вас пока нет рецептов</p>';
-            } else {
-                recipes.forEach(recipe => {
-                    const recipeDiv = document.createElement('div');
-                    recipeDiv.className = 'recipe';
-                    recipeDiv.innerHTML = `
-                        <h4>${recipe.title}</h4>
-                        <p>Категория: ${recipe.category}</p>
-                        <p>Описание: ${recipe.description}</p>
-                        ${recipe.image ? `<img src="${recipe.image}" alt="${recipe.title}" style="max-width: 200px;">` : ''}
-                        <button class="delete-btn" data-id="${recipe._id}">Удалить</button>
-                    `;
-                    recipesList.appendChild(recipeDiv);
-                });
-                // Добавляем обработчики для кнопок удаления
-                document.querySelectorAll('.delete-btn').forEach(button => {
-                    button.addEventListener('click', async () => {
-                        const recipeId = button.getAttribute('data-id');
-                        if (confirm('Вы уверены, что хотите удалить этот рецепт?')) {
-                            try {
-                                const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}`, {
-                                    method: 'DELETE',
-                                    headers: { 'Authorization': `Bearer ${token}` }
-                                });
-                                if (!response.ok) {
-                                    throw new Error(`HTTP error! Status: ${response.status}`);
-                                }
-                                const recipeDiv = button.closest('.recipe');
-                                recipeDiv.style.transition = 'opacity 0.5s';
-                                recipeDiv.style.opacity = '0';
-                                setTimeout(() => {
-                                    errorDiv.textContent = 'Рецепт удалён!';
-                                    fetchRecipes();
-                                }, 500);
-                            } catch (err) {
-                                console.error('Delete Error:', err);
-                                errorDiv.textContent = 'Ошибка удаления рецепта: ' + err.message;
-                            }
-                        }
-                    });
-                });
-            }
-        } catch (err) {
-            console.error('Fetch Recipes Error:', err);
-            errorDiv.textContent = `Ошибка загрузки рецептов: ${err.message}`;
-        }
-    }
-
-    // Обработчик добавления ингредиента
-    addIngredientButton.addEventListener('click', () => {
-        const ingredientDiv = document.createElement('div');
-        ingredientDiv.className = 'ingredient';
-        ingredientDiv.innerHTML = `
-            <label>Ингредиент: <input type="text" class="ingredient-name" required></label>
-            <label>Количество (г): <input type="number" class="ingredient-quantity" required></label>
-        `;
-        ingredientsContainer.appendChild(ingredientDiv);
-    });
-
-    // Обработчик добавления шага
-    addStepButton.addEventListener('click', () => {
-        const stepDiv = document.createElement('div');
-        stepDiv.className = 'step';
-        stepDiv.innerHTML = `
-            <label>Шаг: <input type="text" class="step-description" required></label>
-            <label>Изображение шага (URL): <input type="text" class="step-image"></label>
-        `;
-        stepsContainer.appendChild(stepDiv);
-    });
-
-    // Обработчик добавления рецепта
-    recipeForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const recipe = {
-            title: document.getElementById('recipe-title').value,
-            category: document.getElementById('recipe-category').value,
-            description: document.getElementById('recipe-description').value,
-            servings: parseInt(document.getElementById('recipe-servings').value),
-            cookingTime: parseInt(document.getElementById('recipe-cookingTime').value),
-            ingredients: [],
-            ingredientQuantities: [],
-            image: document.getElementById('recipe-image').value,
-            steps: []
-        };
-
-        const ingredientDivs = ingredientsContainer.getElementsByClassName('ingredient');
-        for (let div of ingredientDivs) {
-            const name = div.querySelector('.ingredient-name').value;
-            const quantity = parseInt(div.querySelector('.ingredient-quantity').value);
-            recipe.ingredients.push(name);
-            recipe.ingredientQuantities.push(quantity);
-        }
-
-        const stepDivs = stepsContainer.getElementsByClassName('step');
-        for (let div of stepDivs) {
-            const description = div.querySelector('.step-description').value;
-            const image = div.querySelector('.step-image').value;
-            recipe.steps.push({ description, image });
-        }
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/recipes`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(recipe)
-            });
-            const data = await response.json();
-            if (data._id) {
-                recipeForm.reset();
-                ingredientsContainer.innerHTML = `
-                    <div class="ingredient">
-                        <label>Ингредиент: <input type="text" class="ingredient-name" required></label>
-                        <label>Количество (г): <input type="number" class="ingredient-quantity" required></label>
-                    </div>
-                `;
-                stepsContainer.innerHTML = `
-                    <div class="step">
-                        <label>Шаг: <input type="text" class="step-description" required></label>
-                        <label>Изображение шага (URL): <input type="text" class="step-image"></label>
-                    </div>
-                `;
-                errorDiv.textContent = 'Рецепт добавлен!';
-                fetchRecipes();
-            } else {
-                errorDiv.textContent = data.message || 'Ошибка добавления рецепта';
-            }
-        } catch (err) {
-            console.error('Fetch Error:', err);
-            errorDiv.textContent = 'Ошибка соединения с сервером';
-        }
-    });
-  </script>
+  <script src="js/theme.js" type="text/javascript"></script>
+  <script src="js/kabinet.js" type="text/javascript"></script>
 </body>
 </html>
