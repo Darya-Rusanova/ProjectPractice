@@ -1,73 +1,72 @@
+// Подключаем зависимости
 const express = require('express');
 const router = express.Router();
-const Recipe = require('../models/Recipe');
 const auth = require('../middleware/auth');
+const Recipe = require('../models/Recipe');
+const User = require('../models/User');
 
-// Получить все рецепты
-router.get('/', async (req, res) => {
-    try {
-        const recipes = await Recipe.find().populate('author', 'username');
-        res.json(recipes);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-});
-
-// Получить рецепт по ID
-router.get('/:id', async (req, res) => {
-    try {
-        const recipe = await Recipe.findById(req.params.id).populate('author', 'username');
-        if (!recipe) return res.status(404).json({ message: 'Recipe not found' });
-        res.json(recipe);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-});
-
-// Добавить новый рецепт (требуется авторизация)
+// Создание нового рецепта
 router.post('/', auth, async (req, res) => {
-    const {
-        title,
-        category,
-        description,
-        servings,
-        cookingTime,
-        ingredients,
-        ingredientQuantities,
-        image,
-        steps
-    } = req.body;
-
-    // Валидация входных данных
-    if (!ingredients || !ingredientQuantities || ingredients.length !== ingredientQuantities.length) {
-        return res.status(400).json({ message: 'Ingredients and ingredientQuantities must have the same length' });
-    }
-    if (!steps || !steps.every(step => step.description)) {
-        return res.status(400).json({ message: 'Each step must have a description' });
-    }
-
-    const recipe = new Recipe({
-        title,
-        category,
-        author: req.user.id,
-        description,
-        servings,
-        cookingTime,
-        ingredients,
-        ingredientQuantities,
-        ingredientCount: ingredients.length,
-        image,
-        steps
-    });
-
     try {
-        const newRecipe = await recipe.save();
-        // Добавляем рецепт в список createdRecipes пользователя
-        await User.findByIdAndUpdate(req.user.id, { $push: { createdRecipes: newRecipe._id } });
-        res.status(201).json(newRecipe);
+        // Получаем данные из тела запроса
+        const {
+            title,
+            category,
+            description,
+            servings,
+            cookingTime,
+            ingredients,
+            ingredientQuantities,
+            image,
+            steps
+        } = req.body;
+
+        // Проверяем обязательные поля
+        if (!title || !category || !description || !servings || !cookingTime || !ingredients || !ingredientQuantities || !steps) {
+            return res.status(400).json({ message: 'All required fields must be provided' });
+        }
+
+        // Проверяем длину массивов
+        if (ingredients.length !== ingredientQuantities.length) {
+            return res.status(400).json({ message: 'Ingredients and quantities must have the same length' });
+        }
+
+        // Проверяем наличие req.user
+        if (!req.user) {
+            return res.status(401).json({ message: 'User not authenticated' });
+        }
+
+        // Создаём новый рецепт
+        const recipe = new Recipe({
+            title,
+            category,
+            description,
+            servings,
+            cookingTime,
+            ingredients,
+            ingredientQuantities,
+            ingredientCount: ingredients.length,
+            image,
+            steps,
+            author: req.user._id // Устанавливаем автора
+        });
+
+        // Сохраняем рецепт
+        await recipe.save();
+
+        // Обновляем createdRecipes пользователя
+        await User.findByIdAndUpdate(
+            req.user._id,
+            { $push: { createdRecipes: recipe._id } },
+            { new: true }
+        );
+
+        // Возвращаем рецепт
+        res.status(201).json(recipe);
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        console.error('Error creating recipe:', err.message);
+        res.status(500).json({ message: err.message });
     }
 });
 
-module.exports = router; 
+module.exports = router;

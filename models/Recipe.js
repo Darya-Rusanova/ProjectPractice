@@ -1,32 +1,24 @@
+// Подключаем mongoose
 const mongoose = require('mongoose');
 
-const stepSchema = new mongoose.Schema({
-    description: { type: String, required: true },
-    image: { type: String }
-});
-
+// Определяем схему рецепта
 const recipeSchema = new mongoose.Schema({
     title: { type: String, required: true },
     category: { type: String, required: true },
-    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    createdAt: { type: Date, default: Date.now },
     description: { type: String, required: true },
     servings: { type: Number, required: true },
-    cookingTime: { type: Number, required: true }, // В минутах
+    cookingTime: { type: Number, required: true },
     ingredients: [{ type: String, required: true }],
-    ingredientQuantities: [{ type: Number, required: true }], // Граммовки в граммах
-    ingredientCount: { type: Number, required: true }, // Автоматически вычисляется
+    ingredientQuantities: [{ type: Number, required: true }],
+    ingredientCount: { type: Number, required: true },
     image: { type: String },
-    steps: [stepSchema] // Массив шагов с описанием и фото
+    steps: [{
+        description: { type: String, required: true },
+        image: { type: String }
+    }],
+    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Поле author
+    createdAt: { type: Date, default: Date.now }
 });
 
-// Превентивная валидация: проверяем, что длина ingredients совпадает с ingredientQuantities
-recipeSchema.pre('save', function (next) {
-    this.ingredientCount = this.ingredients.length;
-    if (this.ingredients.length !== this.ingredientQuantities.length) {
-        return next(new Error('Ingredients and ingredientQuantities must have the same length'));
-    }
-    next();
-});
-
+// Экспортируем модель
 module.exports = mongoose.model('Recipe', recipeSchema);
