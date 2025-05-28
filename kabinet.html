@@ -266,6 +266,7 @@
                                 if (!response.ok) {
                                     throw new Error(`HTTP error! Status: ${response.status}`);
                                 }
+                                const recipeDiv = button.closest('.recipe'); // Находим правильный recipeDiv
                                 recipeDiv.style.transition = 'opacity 0.5s';
                                 recipeDiv.style.opacity = '0';
                                 setTimeout(() => {
