@@ -8,6 +8,7 @@
     --color-primary-a60: lightgrey;
     --color-primary-a90: #000000;
     --theme-image: url('../images/light-theme.jpg');
+    --user-image: url('../images/user-light.png');
 
 }
 [data-theme="dark"] {  
@@ -19,7 +20,8 @@
     --color-primary-a50: #291c0a;
     --color-primary-a60: #291c0a;
     --color-primary-a90: #ffffff;    
-    --theme-image: url('../images/dark-theme.jpg');             
+    --theme-image: url('../images/dark-theme.jpg');      
+    --user-image: url('../images/user-dark.png');       
 }
 
 @media (min-width:1300px){
@@ -29,11 +31,11 @@
     .start{
         grid-area: start;
         display:grid;
-        grid-template-columns: 30% 70%;
+        grid-template-columns: 30% 60% 10%;
         grid-template-rows: 170px 150px;
         grid-template-areas:
-            "header theme"
-            "header navigation"  
+            "header user theme"
+            "header navigation navigation"  
     }
     .container{
             display:grid;
@@ -74,6 +76,15 @@
         width: 400px;
         border-radius: 20px;
     }
+    .user{
+        margin-right: 110px;
+    }
+    .dropbtn{
+        font-size: 20px;
+    }
+    .text-toggle{
+        font-size: 20px;
+    }
 
 }
 
@@ -82,11 +93,11 @@
     .start{
         grid-area: start;
         display:grid;
-        grid-template-columns: 30% 70%;
-        grid-template-rows: auto;
+        grid-template-columns: 35% 55% 10%;
+        grid-template-rows: 170px 150px;
         grid-template-areas:
-            "header theme"
-            "navigation navigation"
+            "header user theme"
+            "header navigation navigation"  
     }
     .navigation {
         grid-area: navigation;
@@ -117,17 +128,27 @@
                 "img discription"
     }
     .dropbtn{
-        width: 250px;
-        height: 80px;
+        width: 170px;
+        height: 75px;
     }
     .dropdown-content {
-        min-width: 250px;
+        min-width: 200px;
     } 
     .picture {
         height: 266px;
         width: 400px;
         border-radius: 20px;
     }
+    .user{
+         margin-right: 200px;
+    }
+     .dropbtn{
+        font-size: 16px;
+    }
+    .text-toggle{
+        font-size: 20px;
+    }
+
 }
 @media (width < 800px){
     .theme-switcher-wrapper {
@@ -136,12 +157,12 @@
     .start{
         grid-area: start;
         display:grid;
-        grid-template-columns: 100%;
+        grid-template-columns: 50% 50%;
         grid-template-rows: 100px auto auto;
         grid-template-areas:
-            "theme"
-            "header"
-            "navigation"
+            "user theme"
+            "header header"
+            "navigation navigation"
     }
 
     .container{
@@ -187,6 +208,12 @@
         width: 300px;
         border-radius: 20px;
     }
+    .dropbtn{
+        font-size: 20px;
+    }
+    .text-toggle{
+        font-size: 14px;
+    }
 }
 .header {    
     grid-area: header;
@@ -199,6 +226,22 @@
   background-size: cover;       
   background-position: center; 
   background-repeat: no-repeat; 
+}
+.user{
+    grid-area:user;
+    margin-left: auto;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.user-bg{
+    background-image: var(--user-image);
+    width: 50px;
+    height: 50px;
+    background-size: cover;       
+    background-position: center; 
+    background-repeat: no-repeat; 
+    margin: 0 auto;
 }
 body  *{
     font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -215,7 +258,6 @@ body {
     text-align: center;
 }
 .text-toggle{
-  font-size: 20px;
   color: var(--color-primary-a30);
   text-align: center;
 }
@@ -317,7 +359,6 @@ a {
     background-color: var(--color-primary-a30);
     color: var(--color-primary-a90);
     padding: 24px;
-    font-size: 20px;
     border: none;
     cursor: pointer;
     border-radius: 20px;
@@ -377,6 +418,7 @@ a {
 .image {
     padding: 40px;
     grid-area: img;
+    margin: 0 auto;
 }
 .discription {
     grid-area: discription;
@@ -394,6 +436,7 @@ a {
 .name {
     font-size: large;
     text-decoration: dashed;
+    text-align: center;
 }
 .footer-contact > p {
     font-size: medium;
