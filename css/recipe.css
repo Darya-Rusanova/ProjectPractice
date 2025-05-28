@@ -23,6 +23,16 @@
     --theme-image: url('../images/dark-theme.jpg');      
     --user-image: url('../images/user-dark.png');       
 }
+.col1{
+    margin: 5%;
+    text-align: left;
+    grid-area: c1;
+}
+.col2 {
+    margin: 5%;
+    text-align: right;
+    grid-area: c2;
+}
 .footer{
     grid-area: footer;
     color: var(--color-primary-a90);
@@ -35,16 +45,12 @@
     grid-template-columns: 50% 50%;
     grid-template-rows: auto;
     grid-template-areas:
-        "col1 col2"    
+        "c1 c2"    
 }
-.col1{
-    margin: 5%;
-    text-align: left;
+.column1{
     grid-area: col1;
 }
-.col2 {
-    margin: 5%;
-    text-align: right;
+.column2 {
     grid-area: col2;
 }
 p {
@@ -76,7 +82,6 @@ a, a:hover {
 }
 @media (min-width:1300px){
     .text {
-        margin-top: 10%;
         font-size: 15px;
         margin-left: 19px;
     }
@@ -84,6 +89,7 @@ a, a:hover {
         width: 450px;
         height: 300px;
     }
+   
     .step {
         margin: auto;
         display: grid;
@@ -92,16 +98,16 @@ a, a:hover {
         grid-template-areas:
                 "ts ts"
                 "img text";
+    } 
+    .column1,.column2{
+        margin: 5%;
     }
     .stages {
         display: grid;
         grid-template-columns: 50% 50%;
         grid-template-rows: auto;
         grid-template-areas:
-            "step1 step2"
-            "step3 step4"
-            "step5 step6"
-            "step7 step8"
+            "col1 col2"
     }
      .start{
         grid-area: start;
@@ -162,24 +168,23 @@ a, a:hover {
         height: 300px;
     }
     .step {
-       margin-left: 10%;
         display: grid;
         grid-template-columns: 450px;
-        grid-template-rows: 50px 300px 200px;
+        grid-template-rows: 50px 300px 250px;
         grid-template-areas:
                 "ts"
                 "img"
                 "text";
+    }
+     .column1,.column2{
+        margin: 5%;
     }
     .stages {
         display: grid;
         grid-template-columns: 50% 50%;
         grid-template-rows: auto;
         grid-template-areas:
-            "step1 step2"
-            "step3 step4"
-            "step5 step6"
-            "step7 step8"
+            "col1 col2"
     }
     .start{
         grid-area: start;
@@ -236,7 +241,6 @@ a, a:hover {
 @media (850px <= width < 1000px){
 
     .text {
-        margin-top: 10%;
         margin-left: 100px;
         font-size: 18px;
     }
@@ -246,6 +250,7 @@ a, a:hover {
         height: 300px;
     }
     .step {
+        margin: 50px;
         display: grid;
         grid-template-columns: 450px 40%;
         grid-template-rows: 50px 400px;
@@ -254,20 +259,16 @@ a, a:hover {
                 "img text";
     }
     
+    .column2{
+        margin-top: -25px;
+    }
     .stages {
         display: grid;
         grid-template-columns: 100%;
-        grid-template-rows: 400px 400px 400px 400px 400px 400px 400px 400px;
+        grid-template-rows: auto auto;
         grid-template-areas:
-            "step1"
-            "step2"
-            "step3"
-            "step4"
-            "step5"
-            "step6"
-            "step7"
-            "step8"
-            
+            "col1"
+            "col2"
     }
     .start{
         grid-area: start;
@@ -329,6 +330,7 @@ a, a:hover {
         margin: auto;
     }
     .step {
+        margin: 50px;
         display: grid;
         grid-template-columns: 100%;
         grid-template-rows: auto auto;
@@ -338,21 +340,16 @@ a, a:hover {
                 "text";
     }
     
+    .column2{
+        margin-top: -25px;
+    }
     .stages {
-        margin: 10px;
         display: grid;
         grid-template-columns: 100%;
-        grid-template-rows: 400px 400px 400px 400px 400px 400px 400px 400px;
+        grid-template-rows: auto auto;
         grid-template-areas:
-            "step1"
-            "step2"
-            "step3"
-            "step4"
-            "step5"
-            "step6"
-            "step7"
-            "step8"
-            
+            "col1"
+            "col2"
     }
     .start{
         grid-area: start;
@@ -482,44 +479,14 @@ a, a:hover {
     grid-area: ts;
     margin: auto;
 }
-#step1 {
-    grid-area: step1;
-}
-#step2 {
-    grid-area: step2;
-}
-#step3 {
-    grid-area: step3;
-}
-#step4 {
-    grid-area: step4;
-}
-#step5 {
-    grid-area: step5;
-}
-#step6 {
-    grid-area: step6;
-}
-#step7 {
-    grid-area: step7;
-}
-#step8 {
-    grid-area: step8;
-}
-.place1 {
-    grid-area: place1;
-}
 
 .i {
     grid-area: "img";
-
 }
 .text {
     grid-area: text;
 }
-.place2 {
-    grid-area: place2;
-}
+
 .menu > *{
     display:inline-block;
 }
@@ -689,7 +656,6 @@ a {
     padding: 40px;
     grid-area: img;
 }
-
 
 #name {
     font-size: large;
