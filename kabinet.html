@@ -266,8 +266,12 @@
                                 if (!response.ok) {
                                     throw new Error(`HTTP error! Status: ${response.status}`);
                                 }
-                                errorDiv.textContent = 'Рецепт удалён!';
-                                fetchRecipes(); // Обновляем список
+                                recipeDiv.style.transition = 'opacity 0.5s';
+                                recipeDiv.style.opacity = '0';
+                                setTimeout(() => {
+                                    errorDiv.textContent = 'Рецепт удалён!';
+                                    fetchRecipes(); // Обновляем список после анимации
+                                }, 500);
                             } catch (err) {
                                 console.error('Delete Error:', err);
                                 errorDiv.textContent = 'Ошибка удаления рецепта: ' + err.message;
