@@ -12,6 +12,8 @@
     .recipe { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
     button { cursor: pointer; }
     .toggle-link { color: blue; cursor: pointer; text-decoration: underline; }
+    .delete-btn { background-color: #ff4d4d; color: white; border: none; padding: 5px 10px; }
+    .delete-btn:hover { background-color: #cc0000; }
   </style>
 </head>
 <body>
@@ -247,8 +249,31 @@
                         <p>Категория: ${recipe.category}</p>
                         <p>Описание: ${recipe.description}</p>
                         ${recipe.image ? `<img src="${recipe.image}" alt="${recipe.title}" style="max-width: 200px;">` : ''}
+                        <button class="delete-btn" data-id="${recipe._id}">Удалить</button>
                     `;
                     recipesList.appendChild(recipeDiv);
+                });
+                // Добавляем обработчики для кнопок удаления
+                document.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', async () => {
+                        const recipeId = button.getAttribute('data-id');
+                        if (confirm('Вы уверены, что хотите удалить этот рецепт?')) {
+                            try {
+                                const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}`, {
+                                    method: 'DELETE',
+                                    headers: { 'Authorization': `Bearer ${token}` }
+                                });
+                                if (!response.ok) {
+                                    throw new Error(`HTTP error! Status: ${response.status}`);
+                                }
+                                errorDiv.textContent = 'Рецепт удалён!';
+                                fetchRecipes(); // Обновляем список
+                            } catch (err) {
+                                console.error('Delete Error:', err);
+                                errorDiv.textContent = 'Ошибка удаления рецепта: ' + err.message;
+                            }
+                        }
+                    });
                 });
             }
         } catch (err) {
