@@ -1,43 +1,43 @@
-// Подключаем зависимости
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const cors = require('cors'); // Добавляем cors
+const cors = require('cors'); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ cors
 const recipeRoutes = require('./routes/recipes');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 
-// Загружаем переменные окружения из .env
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ .env
 dotenv.config();
 
-// Создаём приложение Express
+// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Express
 const app = express();
 
-// Разрешаем CORS для фронтенда на http://localhost:8080
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ CORS пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ http://localhost:8080
 app.use(cors({
-    origin: 'http://localhost:8080',
+    origin: ['http://localhost:8080', 'https://chudobludo.fun'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Парсим JSON в теле запросов
+// пїЅпїЅпїЅпїЅпїЅпїЅ JSON пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 app.use(express.json());
 
-// Подключаемся к MongoDB
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ MongoDB
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('MongoDB connection error:', err));
 
-// Настраиваем маршруты
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 app.use('/api/recipes', recipeRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 
-// Базовый маршрут для проверки
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 app.get('/', (req, res) => {
     res.send('Recipe API is running');
 });
 
-// Запускаем сервер
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
