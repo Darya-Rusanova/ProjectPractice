@@ -23,9 +23,34 @@ const showLoginLink = document.getElementById('show-login');
 
 const API_BASE_URL = 'https://chudobludo-backend.onrender.com';
 
+// Функция для выполнения запроса с повторными попытками
+async function fetchWithRetry(url, options, retries = 3, delay = 1000) {
+    for (let i = 0; i < retries; i++) {
+        try {
+            console.log(`Attempt ${i + 1} to fetch ${url}`);
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 30000);
+            const response = await fetch(url, { ...options, signal: controller.signal });
+            clearTimeout(timeoutId);
+            console.log(`Response status for ${url}: ${response.status}`);
+            return response;
+        } catch (err) {
+            console.error(`Fetch attempt ${i + 1} failed for ${url}:`, err.message);
+            if (i === retries - 1) throw err;
+            await new Promise(resolve => setTimeout(resolve, delay));
+        }
+    }
+}
+
+// Проверка доступности элементов
+console.log('loginForm:', loginForm);
+console.log('authSection:', authSection);
+console.log('loginSection:', loginSection);
+
 // Проверка токена при загрузке
 async function checkToken() {
     if (!token) {
+        console.log('No token, showing login form');
         authSection.style.display = 'block';
         loginSection.style.display = 'block';
         registerSection.style.display = 'none';
@@ -33,7 +58,7 @@ async function checkToken() {
         return;
     }
     try {
-        const response = await fetch(`${API_BASE_URL}/api/users/${userId}/recipes`, {
+        const response = await fetchWithRetry(`${API_BASE_URL}/api/users/${userId}/recipes`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!response.ok) {
@@ -43,6 +68,7 @@ async function checkToken() {
         cabinetSection.style.display = 'block';
         fetchRecipes();
     } catch (err) {
+        console.error('Token check failed:', err.message);
         token = '';
         userId = '';
         localStorage.removeItem('token');
@@ -51,7 +77,9 @@ async function checkToken() {
         loginSection.style.display = 'block';
         registerSection.style.display = 'none';
         cabinetSection.style.display = 'none';
-        errorDiv.textContent = 'Сессия истекла, пожалуйста, войдите или зарегистрируйтесь';
+        errorDiv.textContent = err.message.includes('Failed to fetch') 
+            ? 'Не удалось проверить сессию. Проверьте соединение или попробуйте позже.' 
+            : 'Сессия истекла: ' + err.message;
     }
 }
 
@@ -59,12 +87,14 @@ checkToken();
 
 // Переключение на форму регистрации
 showRegisterLink.addEventListener('click', () => {
+    console.log('Switching to register form');
     loginSection.style.display = 'none';
     registerSection.style.display = 'block';
 });
 
 // Переключение на форму входа
 showLoginLink.addEventListener('click', () => {
+    console.log('Switching to login form');
     loginSection.style.display = 'block';
     registerSection.style.display = 'none';
 });
@@ -72,16 +102,18 @@ showLoginLink.addEventListener('click', () => {
 // Обработчик регистрации
 registerForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+    console.log('Register form submitted');
     const username = document.getElementById('username').value;
     const email = document.getElementById('email-register').value;
     const password = document.getElementById('password-register').value;
     try {
-        const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
+        const response = await fetchWithRetry(`${API_BASE_URL}/api/auth/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, email, password })
         });
         const data = await response.json();
+        console.log('Register response data:', data);
         if (data.token) {
             token = data.token;
             userId = data.userId;
@@ -95,23 +127,29 @@ registerForm.addEventListener('submit', async (e) => {
             errorDiv.textContent = data.message || 'Ошибка регистрации';
         }
     } catch (err) {
-        console.error('Fetch Error:', err);
-        errorDiv.textContent = 'Ошибка соединения с сервером: ' + err.message;
+        console.error('Register error:', err.message);
+        errorDiv.textContent = err.message.includes('Failed to fetch') 
+            ? 'Не удалось подключиться к серверу. Проверьте соединение или попробуйте позже.' 
+            : 'Ошибка регистрации: ' + err.message;
     }
 });
 
 // Обработчик входа
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+    console.log('Login form submitted');
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
+    console.log('Email:', email, 'Password:', password);
     try {
-        const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        const response = await fetchWithRetry(`${API_BASE_URL}/api/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
         });
+        console.log('Login response status:', response.status);
         const data = await response.json();
+        console.log('Login response data:', data);
         if (data.token) {
             token = data.token;
             userId = data.userId;
@@ -125,13 +163,16 @@ loginForm.addEventListener('submit', async (e) => {
             errorDiv.textContent = data.message || 'Ошибка входа';
         }
     } catch (err) {
-        console.error('Fetch Error:', err);
-        errorDiv.textContent = 'Ошибка соединения с сервером: ' + err.message;
+        console.error('Login error:', err.message);
+        errorDiv.textContent = err.message.includes('Failed to fetch') 
+            ? 'Не удалось подключиться к серверу. Проверьте соединение или попробуйте позже.' 
+            : 'Ошибка входа: ' + err.message;
     }
 });
 
 // Обработчик выхода
 logoutButton.addEventListener('click', () => {
+    console.log('Logging out');
     token = '';
     userId = '';
     localStorage.removeItem('token');
@@ -147,7 +188,8 @@ logoutButton.addEventListener('click', () => {
 // Функция загрузки рецептов
 async function fetchRecipes() {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/users/${userId}/recipes`, {
+        console.log('Fetching recipes');
+        const response = await fetchWithRetry(`${API_BASE_URL}/api/users/${userId}/recipes`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!response.ok) {
@@ -176,7 +218,7 @@ async function fetchRecipes() {
                     const recipeId = button.getAttribute('data-id');
                     if (confirm('Вы уверены, что хотите удалить этот рецепт?')) {
                         try {
-                            const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}`, {
+                            const response = await fetchWithRetry(`${API_BASE_URL}/api/recipes/${recipeId}`, {
                                 method: 'DELETE',
                                 headers: { 'Authorization': `Bearer ${token}` }
                             });
@@ -191,7 +233,7 @@ async function fetchRecipes() {
                                 fetchRecipes();
                             }, 500);
                         } catch (err) {
-                            console.error('Delete Error:', err);
+                            console.error('Delete Error:', err.message);
                             errorDiv.textContent = 'Ошибка удаления рецепта: ' + err.message;
                         }
                     }
@@ -199,13 +241,16 @@ async function fetchRecipes() {
             });
         }
     } catch (err) {
-        console.error('Fetch Recipes Error:', err);
-        errorDiv.textContent = `Ошибка загрузки рецептов: ${err.message}`;
+        console.error('Fetch Recipes Error:', err.message);
+        errorDiv.textContent = err.message.includes('Failed to fetch') 
+            ? 'Не удалось загрузить рецепты. Проверьте соединение или попробуйте позже.' 
+            : 'Ошибка загрузки рецептов: ' + err.message;
     }
 }
 
 // Обработчик добавления ингредиента
 addIngredientButton.addEventListener('click', () => {
+    console.log('Adding ingredient');
     const ingredientDiv = document.createElement('div');
     ingredientDiv.className = 'ingredient';
     ingredientDiv.innerHTML = `
@@ -217,6 +262,7 @@ addIngredientButton.addEventListener('click', () => {
 
 // Обработчик добавления шага
 addStepButton.addEventListener('click', () => {
+    console.log('Adding step');
     const stepDiv = document.createElement('div');
     stepDiv.className = 'step';
     stepDiv.innerHTML = `
@@ -229,6 +275,7 @@ addStepButton.addEventListener('click', () => {
 // Обработчик добавления рецепта
 recipeForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+    console.log('Recipe form submitted');
     const recipe = {
         title: document.getElementById('recipe-title').value,
         category: document.getElementById('recipe-category').value,
@@ -257,7 +304,7 @@ recipeForm.addEventListener('submit', async (e) => {
     }
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/recipes`, {
+        const response = await fetchWithRetry(`${API_BASE_URL}/api/recipes`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -266,6 +313,7 @@ recipeForm.addEventListener('submit', async (e) => {
             body: JSON.stringify(recipe)
         });
         const data = await response.json();
+        console.log('Recipe response data:', data);
         if (data._id) {
             recipeForm.reset();
             ingredientsContainer.innerHTML = `
@@ -286,7 +334,9 @@ recipeForm.addEventListener('submit', async (e) => {
             errorDiv.textContent = data.message || 'Ошибка добавления рецепта';
         }
     } catch (err) {
-        console.error('Fetch Error:', err);
-        errorDiv.textContent = 'Ошибка соединения с сервером';
+        console.error('Fetch Error:', err.message);
+        errorDiv.textContent = err.message.includes('Failed to fetch') 
+            ? 'Не удалось добавить рецепт. Проверьте соединение или попробуйте позже.' 
+            : 'Ошибка добавления рецепта: ' + err.message;
     }
 });

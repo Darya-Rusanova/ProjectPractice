@@ -5,6 +5,14 @@
   text-decoration: none;
 }
 
+/* Центрирующий контейнер для авторизации */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 150px); /* Учитываем высоту .start и .error */
+}
+
 /* Основные секции */
 .auth-section, .cabinet-section {
   background-color: var(--color-primary-a10);
@@ -18,7 +26,6 @@
 /* Секция входа */
 #login-section {
   max-width: 700px;
-  margin: 40px auto;
   padding: 30px;
 }
 
@@ -159,13 +166,15 @@ button:hover {
 
 /* Адаптивность */
 @media (width < 800px) {
+  .auth-container {
+    min-height: calc(100vh - 120px);
+  }
   .auth-section, .cabinet-section {
     margin: 10px;
     padding: 15px;
   }
   #login-section {
     max-width: 90%;
-    margin: 20px auto;
     padding: 20px;
   }
   #login-section h2 {

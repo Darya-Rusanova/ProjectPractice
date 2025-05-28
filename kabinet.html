@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Личный кабинет | ЧудоБлюдо</title>
   <link href="css/style.css" type="text/css" rel="stylesheet" media="screen">
   <link href="css/theme.css" type="text/css" rel="stylesheet" media="screen">
   <link href="css/kabinet.css" type="text/css" rel="stylesheet" media="screen">
-  <script src="js/theme.js" type="text/javascript"></script>
-  <script src="js/kabinet.js" type="text/javascript"></script>
   <link rel="icon" href="images/logo.png" type="image/png">
-  <title>Личный кабинет</title>
+  <script src="js/theme.js" type="text/javascript" defer></script>
 </head>
 <body>
   <div class="container">
@@ -32,28 +31,30 @@
       </div>
     </div>
     <div id="error" class="error section"></div>
-    <!-- Секция авторизации/регистрации -->
-    <div id="auth-section" class="auth-section section">
-      <!-- Форма регистрации -->
-      <div id="register-section" class="section" style="display: none;">
-        <h2>Регистрация</h2>
-        <form id="register-form">
-          <label>Имя пользователя: <input type="text" id="username" required></label>
-          <label>Email: <input type="email" id="email-register" required></label>
-          <label>Пароль: <input type="password" id="password-register" required></label>
-          <button type="submit">Зарегистрироваться</button>
-        </form>
-        <p>Уже есть аккаунт? <span class="toggle-link" id="show-login">Войти</span></p>
-      </div>
-      <!-- Форма входа -->
-      <div id="login-section" class="section">
-        <h2>Вход</h2>
-        <form id="login-form">
-          <label>Email: <input type="email" id="email" required></label>
-          <label>Пароль: <input type="password" id="password" required></label>
-          <button type="submit">Войти</button>
-        </form>
-        <p>Нет аккаунта? <span class="toggle-link" id="show-register">Зарегистрироваться</span></p>
+    <!-- Центрирующий контейнер для авторизации -->
+    <div class="auth-container">
+      <div id="auth-section" class="auth-section section">
+        <!-- Форма регистрации -->
+        <div id="register-section" class="section" style="display: none;">
+          <h2>Регистрация</h2>
+          <form id="register-form">
+            <label>Имя пользователя: <input type="text" id="username" required></label>
+            <label>Email: <input type="email" id="email-register" required></label>
+            <label>Пароль: <input type="password" id="password-register" required></label>
+            <button type="submit">Зарегистрироваться</button>
+          </form>
+          <p>Уже есть аккаунт? <span class="toggle-link" id="show-login">Войти</span></p>
+        </div>
+        <!-- Форма входа -->
+        <div id="login-section" class="section">
+          <h2>Вход</h2>
+          <form id="login-form">
+            <label>Email: <input type="email" id="email" required></label>
+            <label>Пароль: <input type="password" id="password" required></label>
+            <button type="submit">Войти</button>
+          </form>
+          <p>Нет аккаунта? <span class="toggle-link" id="show-register">Зарегистрироваться</span></p>
+        </div>
       </div>
     </div>
     <!-- Секция личного кабинета -->
@@ -92,7 +93,6 @@
       </div>
     </div>
   </div>
-  <script src="js/theme.js" type="text/javascript"></script>
   <script src="js/kabinet.js" type="text/javascript"></script>
 </body>
 </html>
