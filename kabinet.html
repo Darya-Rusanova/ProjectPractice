@@ -266,12 +266,12 @@
                                 if (!response.ok) {
                                     throw new Error(`HTTP error! Status: ${response.status}`);
                                 }
-                                const recipeDiv = button.closest('.recipe'); // Находим правильный recipeDiv
+                                const recipeDiv = button.closest('.recipe');
                                 recipeDiv.style.transition = 'opacity 0.5s';
                                 recipeDiv.style.opacity = '0';
                                 setTimeout(() => {
                                     errorDiv.textContent = 'Рецепт удалён!';
-                                    fetchRecipes(); // Обновляем список после анимации
+                                    fetchRecipes();
                                 }, 500);
                             } catch (err) {
                                 console.error('Delete Error:', err);
