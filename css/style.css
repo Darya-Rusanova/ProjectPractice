@@ -215,6 +215,9 @@
         font-size: 14px;
     }
 }
+.recipe{
+    transition: outline 0.3s;
+}
 .header {    
     grid-area: header;
     margin: 30px;
@@ -399,6 +402,7 @@ a {
     border: none;
     cursor: pointer;
     border-radius: 20px;
+    transition: background-color 0.3s;
 }
   
 
@@ -448,7 +452,6 @@ a {
 }
   
 .dropdown:hover .dropbtn {
-    font-weight: bold;
     background-color: var(--color-primary-a50);
 }
 
