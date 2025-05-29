@@ -49,10 +49,12 @@ loginForm.addEventListener('submit', async (e) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'User-Agent': 'Mozilla/5.0 (compatible; ChudoBludo/1.0)'
             },
             body: JSON.stringify({ email, password }),
-            mode: 'cors'
+            mode: 'cors',
+            credentials: 'include'
         });
         console.log('Login status:', response.status, 'CORS:', response.headers.get('Access-Control-Allow-Origin'));
         const data = await response.json();
@@ -68,7 +70,7 @@ loginForm.addEventListener('submit', async (e) => {
     } catch (err) {
         console.error('Ошибка входа:', err.message, err.stack, 'Type:', err.name);
         errorDiv.textContent = err.message.includes('Failed to fetch')
-            ? `Ошибка сети (вход): ${err.message} (${err.name}). Проверьте соединение или браузер.`
+            ? `Ошибка сети (вход): ${err.message} (${err.name}). Проверьте настройки браузера.`
             : `Ошибка входа: ${err.message}`;
     } finally {
         button.disabled = false;
