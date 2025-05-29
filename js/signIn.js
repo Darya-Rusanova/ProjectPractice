@@ -18,6 +18,7 @@ async function checkLogin() {
         const response = await fetchWithRetry(`${API_BASE_URL}/api/users/${userId}/recipes`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
+        console.log('checkLogin response status:', response.status);
         if (response.ok) {
             window.location.href = 'kabinet.html';
         } else {
@@ -28,8 +29,8 @@ async function checkLogin() {
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
         errorDiv.textContent = err.message.includes('Failed to fetch')
-            ? `Сервер недоступен: ${err.message}`
-            : 'Сессия истекла: ' + err.message;
+            ? `Ошибка сети (токен): ${err.message}`
+            : `Сессия истекла: ${err.message}`;
     }
 }
 
@@ -51,9 +52,9 @@ loginForm.addEventListener('submit', async (e) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
         });
-        console.log('Статус ответа:', response.status);
+        console.log('Login response status:', response.status);
         const data = await response.json();
-        console.log('Данные ответа:', data);
+        console.log('Login response data:', data);
         if (data.token) {
             localStorage.setItem('token', data.token);
             localStorage.setItem('userId', data.userId);
@@ -65,7 +66,7 @@ loginForm.addEventListener('submit', async (e) => {
     } catch (err) {
         console.error('Ошибка входа:', err.message, err.stack);
         errorDiv.textContent = err.message.includes('Failed to fetch')
-            ? `Ошибка сети: ${err.message}. Проверьте соединение.`
+            ? `Ошибка сети (вход): ${err.message}. Проверьте соединение или браузер.`
             : `Ошибка входа: ${err.message}`;
     } finally {
         button.disabled = false;
