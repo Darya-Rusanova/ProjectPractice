@@ -7,8 +7,8 @@
     --color-primary-a50: #ea9e0b;
     --color-primary-a60: lightgrey;
     --color-primary-a90: #000000;
-    --theme-image: url('../images/light-theme.jpg');
-    --user-image: url('../images/user-light.png');
+    --theme-image: url('../images/functional/light-theme.jpg');
+    --user-image: url('../images/functional/user-light.png');
 
 }
 [data-theme="dark"] {  
@@ -20,8 +20,8 @@
     --color-primary-a50: #291c0a;
     --color-primary-a60: #291c0a;
     --color-primary-a90: #ffffff;    
-    --theme-image: url('../images/dark-theme.jpg');      
-    --user-image: url('../images/user-dark.png');       
+    --theme-image: url('../images/functional/dark-theme.jpg');      
+    --user-image: url('../images/functional/user-dark.png');       
 }
 
 @media (min-width:1300px){
@@ -243,6 +243,7 @@
     background-repeat: no-repeat; 
     margin: 0 auto;
 }
+
 body  *{
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
@@ -302,7 +303,7 @@ a {
 }
 
 .main-text{
-    background-image: url(../images/cooking.jpg);
+    background-image: url(../images/categories/cooking.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     margin: 30px;

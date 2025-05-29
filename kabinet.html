@@ -25,6 +25,7 @@
         </label>
         <label class="text-toggle">Переключить тему</label>
       </div>
+      
       <div class="user">
         <div class="user-bg"></div>
         <a class="text-toggle" id="lk">Личный кабинет</a>
@@ -47,12 +48,14 @@
           <label>Описание: <textarea id="recipe-description" required></textarea>
           <label>Порции: <input type="number" id="recipe-servings" required></label>
           <label>Время приготовления (мин): <input type="number" id="recipe-cookingTime" required></label>
+
           <div id="ingredients-container">
             <div class="ingredient">
               <label>Ингредиент: <input type="text" class="ingredient-name" required></label>
               <label>Количество (г): <input type="number" class="ingredient-quantity" required></label>
             </div>
           </div>
+          
           <button type="button" id="add-ingredient">Добавить ингредиент</button>
           <label>Изображение (URL): <input type="text" id="recipe-image"></label>
           <div id="steps-container">

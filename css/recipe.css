@@ -7,8 +7,8 @@
     --color-primary-a50: #ea9e0b;
     --color-primary-a60: lightgrey;
     --color-primary-a90: #000000;
-    --theme-image: url('../images/light-theme.jpg');
-    --user-image: url('../images/user-light.png');
+    --theme-image: url('../images/functional/light-theme.jpg');
+    --user-image: url('../images/functional/user-light.png');
 
 }
 [data-theme="dark"] {  
@@ -20,8 +20,8 @@
     --color-primary-a50: #291c0a;
     --color-primary-a60: #291c0a;
     --color-primary-a90: #ffffff;    
-    --theme-image: url('../images/dark-theme.jpg');      
-    --user-image: url('../images/user-dark.png');       
+    --theme-image: url('../images/functional/dark-theme.jpg');      
+    --user-image: url('../images/functional/user-dark.png');       
 }
 .col1{
     margin: 5%;
@@ -487,9 +487,24 @@ a, a:hover {
     grid-area: text;
 }
 
-.menu > *{
-    display:inline-block;
+.menu{ 
+    margin: 5px;
+    height: 40px;
+    display:grid;
+    grid-template-columns: 70% 30%;
+    grid-template-rows: auto;
+    grid-template-areas:
+        "pName pGram"
 }
+.pName{
+    grid-area: pName;
+    text-align: left;
+}
+.pGram{
+    grid-area: pGram;
+    text-align: center;
+}
+
 .field > *{
     margin-top: 10px;
 }
