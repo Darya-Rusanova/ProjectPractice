@@ -1,16 +1,10 @@
 // JavaScript для личного кабинета (kabinet.html)
 
-// Инициализация переменных
 let token = localStorage.getItem('token') || '';
 let userId = localStorage.getItem('userId') || '';
 
-const authSection = document.getElementById('auth-section');
-const loginSection = document.getElementById('login-section');
-const registerSection = document.getElementById('register-section');
-const cabinetSection = document.getElementById('cabinet-section');
 const errorDiv = document.getElementById('error');
-const loginForm = document.getElementById('login-form');
-const registerForm = document.getElementById('register-form');
+const cabinetSection = document.getElementById('cabinet-section');
 const logoutButton = document.getElementById('logout');
 const recipeForm = document.getElementById('recipe-form');
 const recipesList = document.getElementById('recipes-list');
@@ -18,8 +12,6 @@ const addIngredientButton = document.getElementById('add-ingredient');
 const addStepButton = document.getElementById('add-step');
 const ingredientsContainer = document.getElementById('ingredients-container');
 const stepsContainer = document.getElementById('steps-container');
-const showRegisterLink = document.getElementById('show-register');
-const showLoginLink = document.getElementById('show-login');
 
 const API_BASE_URL = 'https://chudobludo-backend.onrender.com';
 
@@ -42,19 +34,11 @@ async function fetchWithRetry(url, options, retries = 3, delay = 1000) {
     }
 }
 
-// Проверка доступности элементов
-console.log('loginForm:', loginForm);
-console.log('authSection:', authSection);
-console.log('loginSection:', loginSection);
-
 // Проверка токена при загрузке
 async function checkToken() {
-    if (!token) {
-        console.log('No token, showing login form');
-        authSection.style.display = 'block';
-        loginSection.style.display = 'block';
-        registerSection.style.display = 'none';
-        cabinetSection.style.display = 'none';
+    if (!token || !userId) {
+        console.log('No token, redirecting to login');
+        window.location.href = 'signIn.html';
         return;
     }
     try {
@@ -64,7 +48,6 @@ async function checkToken() {
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        authSection.style.display = 'none';
         cabinetSection.style.display = 'block';
         fetchRecipes();
     } catch (err) {
@@ -73,102 +56,14 @@ async function checkToken() {
         userId = '';
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
-        authSection.style.display = 'block';
-        loginSection.style.display = 'block';
-        registerSection.style.display = 'none';
-        cabinetSection.style.display = 'none';
+        window.location.href = 'signIn.html';
         errorDiv.textContent = err.message.includes('Failed to fetch') 
-            ? 'Не удалось проверить сессию. Проверьте соединение или попробуйте позже.' 
+            ? 'Не удалось проверить сессию. Сервер недоступен, попробуйте позже.' 
             : 'Сессия истекла: ' + err.message;
     }
 }
 
 checkToken();
-
-// Переключение на форму регистрации
-showRegisterLink.addEventListener('click', () => {
-    console.log('Switching to register form');
-    loginSection.style.display = 'none';
-    registerSection.style.display = 'block';
-});
-
-// Переключение на форму входа
-showLoginLink.addEventListener('click', () => {
-    console.log('Switching to login form');
-    loginSection.style.display = 'block';
-    registerSection.style.display = 'none';
-});
-
-// Обработчик регистрации
-registerForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    console.log('Register form submitted');
-    const username = document.getElementById('username').value;
-    const email = document.getElementById('email-register').value;
-    const password = document.getElementById('password-register').value;
-    try {
-        const response = await fetchWithRetry(`${API_BASE_URL}/api/auth/register`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, email, password })
-        });
-        const data = await response.json();
-        console.log('Register response data:', data);
-        if (data.token) {
-            token = data.token;
-            userId = data.userId;
-            localStorage.setItem('token', token);
-            localStorage.setItem('userId', userId);
-            authSection.style.display = 'none';
-            cabinetSection.style.display = 'block';
-            errorDiv.textContent = '';
-            fetchRecipes();
-        } else {
-            errorDiv.textContent = data.message || 'Ошибка регистрации';
-        }
-    } catch (err) {
-        console.error('Register error:', err.message);
-        errorDiv.textContent = err.message.includes('Failed to fetch') 
-            ? 'Не удалось подключиться к серверу. Проверьте соединение или попробуйте позже.' 
-            : 'Ошибка регистрации: ' + err.message;
-    }
-});
-
-// Обработчик входа
-loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    console.log('Login form submitted');
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    console.log('Email:', email, 'Password:', password);
-    try {
-        const response = await fetchWithRetry(`${API_BASE_URL}/api/auth/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-        });
-        console.log('Login response status:', response.status);
-        const data = await response.json();
-        console.log('Login response data:', data);
-        if (data.token) {
-            token = data.token;
-            userId = data.userId;
-            localStorage.setItem('token', token);
-            localStorage.setItem('userId', userId);
-            authSection.style.display = 'none';
-            cabinetSection.style.display = 'block';
-            errorDiv.textContent = '';
-            fetchRecipes();
-        } else {
-            errorDiv.textContent = data.message || 'Ошибка входа';
-        }
-    } catch (err) {
-        console.error('Login error:', err.message);
-        errorDiv.textContent = err.message.includes('Failed to fetch') 
-            ? 'Не удалось подключиться к серверу. Проверьте соединение или попробуйте позже.' 
-            : 'Ошибка входа: ' + err.message;
-    }
-});
 
 // Обработчик выхода
 logoutButton.addEventListener('click', () => {
@@ -177,12 +72,7 @@ logoutButton.addEventListener('click', () => {
     userId = '';
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
-    authSection.style.display = 'block';
-    loginSection.style.display = 'block';
-    registerSection.style.display = 'none';
-    cabinetSection.style.display = 'none';
-    recipesList.innerHTML = '';
-    errorDiv.textContent = '';
+    window.location.href = 'signIn.html';
 });
 
 // Функция загрузки рецептов
@@ -212,7 +102,6 @@ async function fetchRecipes() {
                 `;
                 recipesList.appendChild(recipeDiv);
             });
-            // Добавляем обработчики для кнопок удаления
             document.querySelectorAll('.delete-btn').forEach(button => {
                 button.addEventListener('click', async () => {
                     const recipeId = button.getAttribute('data-id');
@@ -234,7 +123,9 @@ async function fetchRecipes() {
                             }, 500);
                         } catch (err) {
                             console.error('Delete Error:', err.message);
-                            errorDiv.textContent = 'Ошибка удаления рецепта: ' + err.message;
+                            errorDiv.textContent = err.message.includes('Failed to fetch') 
+                                ? 'Не удалось удалить рецепт. Сервер недоступен.' 
+                                : 'Ошибка удаления рецепта: ' + err.message;
                         }
                     }
                 });
@@ -243,7 +134,7 @@ async function fetchRecipes() {
     } catch (err) {
         console.error('Fetch Recipes Error:', err.message);
         errorDiv.textContent = err.message.includes('Failed to fetch') 
-            ? 'Не удалось загрузить рецепты. Проверьте соединение или попробуйте позже.' 
+            ? 'Не удалось загрузить рецепты. Сервер недоступен.' 
             : 'Ошибка загрузки рецептов: ' + err.message;
     }
 }
@@ -276,6 +167,10 @@ addStepButton.addEventListener('click', () => {
 recipeForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     console.log('Recipe form submitted');
+    const button = recipeForm.querySelector('button[type="submit"]');
+    const originalText = button.textContent;
+    button.disabled = true;
+    button.textContent = 'Загрузка...';
     const recipe = {
         title: document.getElementById('recipe-title').value,
         category: document.getElementById('recipe-category').value,
@@ -336,7 +231,10 @@ recipeForm.addEventListener('submit', async (e) => {
     } catch (err) {
         console.error('Fetch Error:', err.message);
         errorDiv.textContent = err.message.includes('Failed to fetch') 
-            ? 'Не удалось добавить рецепт. Проверьте соединение или попробуйте позже.' 
+            ? 'Не удалось добавить рецепт. Сервер недоступен.' 
             : 'Ошибка добавления рецепта: ' + err.message;
+    } finally {
+        button.disabled = false;
+        button.textContent = originalText;
     }
 });

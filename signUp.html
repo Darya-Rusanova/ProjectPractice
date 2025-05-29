@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Регистрация | ЧудоБлюдо</title>
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen">
+  <link href="css/theme.css" type="text/css" rel="stylesheet" media="screen">
+  <link href="css/signUp.css" type="text/css" rel="stylesheet" media="screen">
+  <link rel="icon" href="images/logo.png" type="image/png">
+  <script src="js/theme.js" type="text/javascript" defer></script>
+</head>
+<body>
+  <div class="container">
+    <div class="start">
+      <div class="header">
+        <a href="index.html">
+          <div class="theme-bg"></div>
+        </a>
+      </div>
+      <div class="theme-switcher-wrapper">
+        <input type="checkbox" id="theme-toggle" class="theme-toggle">
+        <label for="theme-toggle" class="theme-label">
+          <span class="theme-ball"></span>
+        </label>
+        <label class="text-toggle">Переключить тему</label>
+      </div>
+      <div class="user">
+        <div class="user-bg"></div>
+        <a class="text-toggle" id="lk">Личный кабинет</a>
+      </div>
+    </div>
+    <div id="error" class="error section"></div>
+    <!-- Центрирующий контейнер для авторизации -->
+    <div class="auth-container">
+      <div id="auth-section" class="auth-section section">
+        <!-- Форма регистрации -->
+        <div id="register-section" class="section">
+          <h2>Регистрация</h2>
+          <form id="register-form">
+            <label>Имя пользователя: <input type="text" id="username" required></label>
+            <label>Email: <input type="email" id="email-register" required></label>
+            <label>Пароль: <input type="password" id="password-register" required></label>
+            <button type="submit">Зарегистрироваться</button>
+          </form>
+          <p>Уже есть аккаунт? <a href="signIn.html">Войти</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="js/signUp.js" type="text/javascript"></script>
+</body>
+</html>
