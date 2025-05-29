@@ -314,6 +314,39 @@ a {
     padding: 30px;
 }
 
+.snack{
+    background-image: url(../images/categories/snack.jpg);
+}
+.hot{
+    background-image: url(../images/categories/hot.jpg);
+}
+.russia{
+    background-image: url(../images/categories/russia.jpg);
+}
+.launch{
+    background-image: url(../images/categories/launch.jpg);
+}
+.italy{
+    background-image: url(../images/categories/italy.jpg);
+}
+.dinner{
+    background-image: url(../images/categories/dinner.jpg);
+}
+.china{
+    background-image: url(../images/categories/china.jpg);
+}
+.calendars{
+    background-image: url(../images/categories/celebration.jpg);
+}
+.breakfast{
+    background-image: url(../images/categories/breakfast.jpg);
+}
+.dessert{
+    background-image: url(../images/categories/dessert.jpg);
+}
+.drink{
+    background-image: url(../images/categories/drink.jpg);
+}
 
 #inf {
     font-size: 20px;   
