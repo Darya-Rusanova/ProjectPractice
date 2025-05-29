@@ -20,5 +20,3 @@ async function fetchWithRetry(url, options, retries = 3, delay = 1000) {
         }
     }
 }
-
-export { API_BASE_URL, fetchWithRetry };
