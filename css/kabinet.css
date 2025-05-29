@@ -4,7 +4,10 @@
 .header a {
   text-decoration: none;
 }
-
+.theme-bg {
+  width: 200px;
+  height: 133px;
+}
 /* Центрирующий контейнер для авторизации */
 .auth-container {
   display: flex;
