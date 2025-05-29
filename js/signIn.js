@@ -1,5 +1,5 @@
 // C:\Users\Kseniia\Desktop\pract\ProjectPractice\js\signIn.js
-console.log('signIn.js starting');
+console.log('signIn.js starting', 'User-Agent:', navigator.userAgent);
 
 const errorDiv = document.getElementById('error');
 const loginForm = document.getElementById('login-form');
@@ -18,18 +18,16 @@ async function checkLogin() {
         const response = await fetchWithRetry(`${API_BASE_URL}/api/users/${userId}/recipes`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
-        console.log('checkLogin response status:', response.status);
+        console.log('checkLogin status:', response.status, 'CORS:', response.headers.get('Access-Control-Allow-Origin'));
         if (response.ok) {
             window.location.href = 'kabinet.html';
         } else {
             throw new Error(`HTTP ошибка: ${response.status}`);
         }
     } catch (err) {
-        console.error('Ошибка проверки токена:', err.message, err.stack);
-        localStorage.removeItem('token');
-        localStorage.removeItem('userId');
+        console.error('Ошибка проверки токена:', err.message, err.stack, 'Type:', err.name);
         errorDiv.textContent = err.message.includes('Failed to fetch')
-            ? `Ошибка сети (токен): ${err.message}`
+            ? `Ошибка сети (токен): ${err.message} (${err.name})`
             : `Сессия истекла: ${err.message}`;
     }
 }
@@ -49,12 +47,17 @@ loginForm.addEventListener('submit', async (e) => {
     try {
         const response = await fetchWithRetry(`${API_BASE_URL}/api/auth/login`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ email, password }),
+            mode: 'cors',
+            credentials: 'include'
         });
-        console.log('Login response status:', response.status);
+        console.log('Login status:', response.status, 'CORS:', response.headers.get('Access-Control-Allow-Origin'));
         const data = await response.json();
-        console.log('Login response data:', data);
+        console.log('Login data:', data);
         if (data.token) {
             localStorage.setItem('token', data.token);
             localStorage.setItem('userId', data.userId);
@@ -64,9 +67,9 @@ loginForm.addEventListener('submit', async (e) => {
             errorDiv.textContent = data.message || 'Неверный email или пароль';
         }
     } catch (err) {
-        console.error('Ошибка входа:', err.message, err.stack);
+        console.error('Ошибка входа:', err.message, err.stack, 'Type:', err.name);
         errorDiv.textContent = err.message.includes('Failed to fetch')
-            ? `Ошибка сети (вход): ${err.message}. Проверьте соединение или браузер.`
+            ? `Ошибка сети (вход): ${err.message} (${err.name}). Проверьте настройки браузера.`
             : `Ошибка входа: ${err.message}`;
     } finally {
         button.disabled = false;
