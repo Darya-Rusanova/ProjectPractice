@@ -66,7 +66,7 @@ loginForm.addEventListener('submit', async (e) => {
     } catch (err) {
         console.error('Ошибка входа:', err.message, err.stack);
         errorDiv.textContent = err.message.includes('Failed to fetch') || err.name === 'AbortError'
-            ? 'Не удалось подключиться к серверу: ${err.message}. Проверьте соединение или попробуйте позже.'
+            ? `Не удалось подключиться к серверу: ${err.message}. Проверьте соединение или попробуйте позже.`
             : 'Ошибка входа: ' + err.message;
         if (err.message.includes('CORS')) {
             errorDiv.textContent += ' Возможна проблема с CORS. Проверьте настройки сервера.';
