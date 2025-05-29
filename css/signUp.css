@@ -5,6 +5,12 @@
   text-decoration: none;
 }
 
+#lk {
+  font-weight: bold;
+  text-decoration: none;
+}
+
+
 /* Центрирующий контейнер для авторизации */
 .auth-container {
   display: flex;

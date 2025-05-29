@@ -5,6 +5,11 @@
   text-decoration: none;
 }
 
+#lk {
+  font-weight: bold;
+  text-decoration: none;
+}
+
 /* Основные секции */
 .cabinet-section {
   background-color: var(--color-primary-a10);
