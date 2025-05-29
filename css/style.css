@@ -261,7 +261,7 @@ body {
   color: var(--color-primary-a30);
   text-align: center;
 }
-#lkout:hover {
+#lk:hover {
   text-decoration: underline;
 }
 .title {

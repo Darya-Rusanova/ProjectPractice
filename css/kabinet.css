@@ -9,6 +9,9 @@
   font-weight: bold;
   text-decoration: none;
 }
+#lk:hover {
+  text-decoration: none;
+}
 
 /* Основные секции */
 .cabinet-section {

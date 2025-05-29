@@ -9,15 +9,18 @@ const API_BASE_URL = 'https://chudobludo-backend.onrender.com';
 async function fetchWithRetry(url, options, retries = 3, delay = 1000) {
     for (let i = 0; i < retries; i++) {
         try {
-            console.log(`Attempt ${i + 1} to fetch ${url}`);
+            console.log(`Попытка ${i + 1} для ${url}`);
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 30000);
+            const timeoutId = setTimeout(() => controller.abort(), 60000);
             const response = await fetch(url, { ...options, signal: controller.signal });
             clearTimeout(timeoutId);
-            console.log(`Response status for ${url}: ${response.status}`);
+            console.log(`Статус ответа для ${url}: ${response.status}`);
             return response;
         } catch (err) {
-            console.error(`Fetch attempt ${i + 1} failed for ${url}:`, err.message);
+            console.error(`Попытка ${i + 1} для ${url} не удалась:`, err.message, err.stack);
+            if (err.name === 'AbortError') {
+                err.message = 'Запрос прерван: сервер не ответил за 60 секунд';
+            }
             if (i === retries - 1) throw err;
             await new Promise(resolve => setTimeout(resolve, delay));
         }
@@ -32,7 +35,7 @@ async function checkToken() {
     const token = localStorage.getItem('token') || '';
     const userId = localStorage.getItem('userId') || '';
     if (!token || !userId) {
-        console.log('No token, staying on register page');
+        console.log('Токен отсутствует, остаемся на странице регистрации');
         return;
     }
     try {
@@ -42,14 +45,14 @@ async function checkToken() {
         if (response.ok) {
             window.location.href = 'kabinet.html';
         } else {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            throw new Error(`Ошибка HTTP! Статус: ${response.status}`);
         }
     } catch (err) {
-        console.error('Token check failed:', err.message);
+        console.error('Проверка токена не удалась:', err.message, err.stack);
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
-        errorDiv.textContent = err.message.includes('Failed to fetch') 
-            ? 'Не удалось проверить сессию. Сервер недоступен, попробуйте позже.' 
+        errorDiv.textContent = err.message.includes('Failed to fetch') || err.name === 'AbortError'
+            ? 'Не удалось проверить сессию. Сервер недоступен, попробуйте позже.'
             : 'Сессия истекла: ' + err.message;
     }
 }
@@ -59,7 +62,7 @@ checkToken();
 // Обработчик регистрации
 registerForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    console.log('Register form submitted');
+    console.log('Форма регистрации отправлена');
     const button = registerForm.querySelector('button');
     const originalText = button.textContent;
     button.disabled = true;
@@ -74,7 +77,7 @@ registerForm.addEventListener('submit', async (e) => {
             body: JSON.stringify({ username, email, password })
         });
         const data = await response.json();
-        console.log('Register response data:', data);
+        console.log('Данные ответа на регистрацию:', data);
         if (data.token) {
             localStorage.setItem('token', data.token);
             localStorage.setItem('userId', data.userId);
@@ -84,10 +87,13 @@ registerForm.addEventListener('submit', async (e) => {
             errorDiv.textContent = data.message || 'Ошибка регистрации';
         }
     } catch (err) {
-        console.error('Register error:', err.message);
-        errorDiv.textContent = err.message.includes('Failed to fetch') 
-            ? 'Не удалось подключиться к серверу. Проверьте соединение или попробуйте позже.' 
+        console.error('Ошибка регистрации:', err.message, err.stack);
+        errorDiv.textContent = err.message.includes('Failed to fetch') || err.name === 'AbortError'
+            ? 'Не удалось подключиться к серверу. Проверьте соединение или попробуйте позже.'
             : 'Ошибка регистрации: ' + err.message;
+        if (err.message.includes('CORS')) {
+            errorDiv.textContent += ' Возможна проблема с CORS. Проверьте настройки сервера.';
+        }
     } finally {
         button.disabled = false;
         button.textContent = originalText;
