@@ -5,50 +5,14 @@
   text-decoration: none;
 }
 
-/* Центрирующий контейнер для авторизации */
-.auth-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: calc(100vh - 150px); /* Учитываем высоту .start и .error */
-}
-
 /* Основные секции */
-.auth-section, .cabinet-section {
+.cabinet-section {
   background-color: var(--color-primary-a10);
   border-radius: 20px;
   padding: 20px;
   margin: 20px auto;
   max-width: 600px;
   box-shadow: 5px 5px 10px 3px var(--color-primary-a60);
-}
-
-/* Секция входа */
-#login-section {
-  max-width: 700px;
-  padding: 30px;
-}
-
-#login-section h2 {
-  font-size: 28px;
-}
-
-#login-section label {
-  font-size: 18px;
-}
-
-#login-section input {
-  font-size: 16px;
-  padding: 12px;
-}
-
-#login-section button {
-  font-size: 16px;
-  padding: 12px 24px;
-}
-
-#login-section p {
-  font-size: 16px;
 }
 
 /* Сообщения об ошибках */
@@ -105,17 +69,6 @@ button:hover {
   background-color: var(--color-primary-a50);
 }
 
-/* Ссылки переключения форм */
-.toggle-link {
-  color: var(--color-primary-a50);
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.toggle-link:hover {
-  color: var(--color-primary-a20);
-}
-
 /* Рецепты */
 .recipe {
   background-color: var(--color-primary-a20);
@@ -166,33 +119,9 @@ button:hover {
 
 /* Адаптивность */
 @media (width < 800px) {
-  .auth-container {
-    min-height: calc(100vh - 120px);
-  }
-  .auth-section, .cabinet-section {
+  .cabinet-section {
     margin: 10px;
     padding: 15px;
-  }
-  #login-section {
-    max-width: 90%;
-    padding: 20px;
-  }
-  #login-section h2 {
-    font-size: 24px;
-  }
-  #login-section label {
-    font-size: 16px;
-  }
-  #login-section input {
-    font-size: 14px;
-    padding: 10px;
-  }
-  #login-section button {
-    font-size: 14px;
-    padding: 10px 20px;
-  }
-  #login-section p {
-    font-size: 14px;
   }
   input, textarea, button {
     font-size: 14px;
@@ -203,10 +132,7 @@ button:hover {
 }
 
 @media (800px <= width < 1300px) {
-  .auth-section, .cabinet-section {
+  .cabinet-section {
     max-width: 80%;
-  }
-  #login-section {
-    max-width: 600px;
   }
 }

@@ -1,0 +1,136 @@
+/* Стили для страницы входа (signIn.html) */
+
+/* Ссылка на логотип */
+.header a {
+  text-decoration: none;
+}
+
+/* Центрирующий контейнер для авторизации */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 150px); /* Учитываем высоту .start и .error */
+}
+
+/* Основные секции */
+.auth-section {
+  background-color: var(--color-primary-a10);
+  border-radius: 20px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 600px;
+  box-shadow: 5px 5px 10px 3px var(--color-primary-a60);
+}
+
+/* Секция входа */
+#login-section {
+  max-width: 700px;
+  padding: 30px;
+}
+
+#login-section h2 {
+  font-size: 28px;
+  color: var(--color-primary-a90);
+  text-align: center;
+  text-shadow: 1px 1px 1px var(--color-primary-a0);
+}
+
+#login-section label {
+  font-size: 18px;
+  color: var(--color-primary-a90);
+  margin: 5px 0;
+  width: 100%;
+  max-width: 400px;
+}
+
+#login-section input {
+  font-size: 16px;
+  padding: 12px;
+  width: 100%;
+  margin: 5px 0;
+  border: 1px solid var(--color-primary-a30);
+  border-radius: 10px;
+  background-color: var(--color-primary-a40);
+  color: var(--color-primary-a90);
+  font-family: Verdana, Geneva, sans-serif;
+}
+
+#login-section button {
+  font-size: 16px;
+  padding: 12px 24px;
+  background-color: var(--color-primary-a30);
+  color: var(--color-primary-a90);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 10px;
+  transition: background-color 0.3s;
+}
+
+#login-section button:hover {
+  background-color: var(--color-primary-a50);
+}
+
+#login-section p {
+  font-size: 16px;
+  color: var(--color-primary-a90);
+  text-align: center;
+}
+
+#login-section a {
+  color: var(--color-primary-a50);
+  text-decoration: underline;
+}
+
+#login-section a:hover {
+  color: var(--color-primary-a20);
+}
+
+/* Сообщения об ошибках */
+.error {
+  color: #ff4d4d;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* Адаптивность */
+@media (width < 800px) {
+  .auth-container {
+    min-height: calc(100vh - 120px);
+  }
+  .auth-section {
+    margin: 10px;
+    padding: 15px;
+  }
+  #login-section {
+    max-width: 90%;
+    padding: 20px;
+  }
+  #login-section h2 {
+    font-size: 24px;
+  }
+  #login-section label {
+    font-size: 16px;
+  }
+  #login-section input {
+    font-size: 14px;
+    padding: 10px;
+  }
+  #login-section button {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+  #login-section p {
+    font-size: 14px;
+  }
+}
+
+@media (800px <= width < 1300px) {
+  .auth-section {
+    max-width: 80%;
+  }
+  #login-section {
+    max-width: 600px;
+  }
+}
