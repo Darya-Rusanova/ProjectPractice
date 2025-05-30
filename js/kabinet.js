@@ -171,7 +171,7 @@ async function fetchRecipes() {
                     const rawUnit = recipe.ingredientUnits[index] || 'г';
                     const displayUnit = unitDisplayMap[rawUnit] || rawUnit;
                     const quantity = recipe.ingredientUnits[index] === 'пв' ? '' : recipe.ingredientQuantities[index];
-                    const space = quantity ? ' ' : ''; // Пробел, если есть количество
+                    const space = ['г', 'кг', 'мл', 'л', 'шт.', 'ст.', 'ст.л.', 'ч.л.'].includes(rawUnit) && quantity ? ' ' : '';
                     return `${ing}: ${quantity}${space}${displayUnit}`;
                 }).join(', ');
                 recipeDiv.innerHTML = `
