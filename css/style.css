@@ -164,6 +164,9 @@
             "header header"
             "navigation navigation"
     }
+    .theme-bg{
+        margin: 0 auto;
+    }
 
     .container{
             display:grid;
@@ -191,7 +194,7 @@
         grid-area: navigation;
         display: grid;
         grid-template-columns: 100%;
-        grid-template-rows: 250px 250px 250px;
+        grid-template-rows: 100px 100px 100px;
         grid-template-areas:
             "btn1"
             "btn2"
@@ -224,7 +227,7 @@
 }
 .theme-bg {
   background-image: var(--theme-image);
-  width: 350px;
+  width: 360px;
   height: 233px;
   background-size: cover;       
   background-position: center; 
