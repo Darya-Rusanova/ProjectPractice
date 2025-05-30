@@ -233,7 +233,7 @@ categoryButtons.forEach(button => {
 addIngredientButton.addEventListener('click', () => {
     const ingredientCount = ingredientsContainer.getElementsByClassName('ingredient').length;
     if (ingredientCount >= 100) {
-        errorDiv.textContent = 'Максимальное количество ингредиентов (100) достигнуто';
+        errorDiv.textContent = 'Максимальное количество ингредиентов достигнуто';
         return;
     }
     console.log('Добавление ингредиента');
@@ -269,7 +269,7 @@ addIngredientButton.addEventListener('click', () => {
 addStepButton.addEventListener('click', () => {
     const stepCount = stepsContainer.getElementsByClassName('step').length;
     if (stepCount >= 50) {
-        errorDiv.textContent = 'Максимальное количество шагов (50) достигнуто';
+        errorDiv.textContent = 'Максимальное количество шагов достигнуто';
         return;
     }
     console.log('Добавление шага');
