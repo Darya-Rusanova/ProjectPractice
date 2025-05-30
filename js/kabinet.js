@@ -1,5 +1,3 @@
-// JavaScript для личного кабинета (kabinet.html)
-
 let token = localStorage.getItem('token') || '';
 let userId = localStorage.getItem('userId') || '';
 
@@ -12,6 +10,7 @@ const addIngredientButton = document.getElementById('add-ingredient');
 const addStepButton = document.getElementById('add-step');
 const ingredientsContainer = document.getElementById('ingredients-container');
 const stepsContainer = document.getElementById('steps-container');
+const categoryButtons = document.querySelectorAll('.category-btn');
 
 // Проверка токена при загрузке
 async function checkToken() {
@@ -77,7 +76,7 @@ async function fetchRecipes() {
                 recipeDiv.className = 'recipe';
                 recipeDiv.innerHTML = `
                     <h4>${recipe.title}</h4>
-                    <p>Категория: ${recipe.category}</p>
+                    <p>Категории: ${recipe.categories.join(', ')}</p>
                     <p>Описание: ${recipe.description}</p>
                     ${recipe.image ? `<img src="${recipe.image}" alt="${recipe.title}" style="max-width: 200px;">` : ''}
                     <button class="delete-btn" data-id="${recipe._id}">Удалить</button>
@@ -121,6 +120,14 @@ async function fetchRecipes() {
     }
 }
 
+// Обработчик выбора категорий
+categoryButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        button.classList.toggle('active');
+        console.log('Категория переключена:', button.dataset.category, button.classList.contains('active'));
+    });
+});
+
 // Обработчик добавления ингредиента
 addIngredientButton.addEventListener('click', () => {
     console.log('Добавление ингредиента');
@@ -128,7 +135,7 @@ addIngredientButton.addEventListener('click', () => {
     ingredientDiv.className = 'ingredient';
     ingredientDiv.innerHTML = `
         <label>Ингредиент: <input type="text" class="ingredient-name" required></label>
-        <label>Количество (г): <input type="number" class="ingredient-quantity" required></label>
+        <label>Количество (г): <input type="number" class="ingredient-quantity" min="0" max="1000" step="0.01" required></label>
     `;
     ingredientsContainer.appendChild(ingredientDiv);
 });
@@ -153,12 +160,43 @@ recipeForm.addEventListener('submit', async (e) => {
     const originalText = button.textContent;
     button.disabled = true;
     button.textContent = 'Загрузка...';
+
+    // Собираем категории
+    const selectedCategories = Array.from(categoryButtons)
+        .filter(button => button.classList.contains('active'))
+        .map(button => button.dataset.category);
+    
+    if (selectedCategories.length === 0) {
+        errorDiv.textContent = 'Выберите хотя бы одну категорию';
+        button.disabled = false;
+        button.textContent = originalText;
+        return;
+    }
+
+    // Собираем данные рецепта
+    const servings = parseInt(document.getElementById('recipe-servings').value);
+    const cookingTime = parseInt(document.getElementById('recipe-cookingTime').value);
+    
+    // Валидация числовых полей
+    if (servings < 1 || servings > 100) {
+        errorDiv.textContent = 'Порции должны быть от 1 до 100';
+        button.disabled = false;
+        button.textContent = originalText;
+        return;
+    }
+    if (cookingTime < 1 || cookingTime > 100000) {
+        errorDiv.textContent = 'Время приготовления должно быть от 1 до 100000 минут';
+        button.disabled = false;
+        button.textContent = originalText;
+        return;
+    }
+
     const recipe = {
         title: document.getElementById('recipe-title').value,
-        category: document.getElementById('recipe-category').value,
+        categories: selectedCategories,
         description: document.getElementById('recipe-description').value,
-        servings: parseInt(document.getElementById('recipe-servings').value),
-        cookingTime: parseInt(document.getElementById('recipe-cookingTime').value),
+        servings: servings,
+        cookingTime: cookingTime,
         ingredients: [],
         ingredientQuantities: [],
         image: document.getElementById('recipe-image').value,
@@ -168,7 +206,13 @@ recipeForm.addEventListener('submit', async (e) => {
     const ingredientDivs = ingredientsContainer.getElementsByClassName('ingredient');
     for (let div of ingredientDivs) {
         const name = div.querySelector('.ingredient-name').value;
-        const quantity = parseInt(div.querySelector('.ingredient-quantity').value);
+        const quantity = parseFloat(div.querySelector('.ingredient-quantity').value);
+        if (quantity < 0 || quantity > 1000) {
+            errorDiv.textContent = 'Количество ингредиента должно быть от 0 до 1000';
+            button.disabled = false;
+            button.textContent = originalText;
+            return;
+        }
         recipe.ingredients.push(name);
         recipe.ingredientQuantities.push(quantity);
     }
@@ -193,10 +237,11 @@ recipeForm.addEventListener('submit', async (e) => {
         console.log('Данные ответа на добавление рецепта:', data);
         if (data._id) {
             recipeForm.reset();
+            categoryButtons.forEach(button => button.classList.remove('active'));
             ingredientsContainer.innerHTML = `
                 <div class="ingredient">
                     <label>Ингредиент: <input type="text" class="ingredient-name" required></label>
-                    <label>Количество (г): <input type="number" class="ingredient-quantity" required></label>
+                    <label>Количество (г): <input type="number" class="ingredient-quantity" min="0" max="1000" step="0.01" required></label>
                 </div>
             `;
             stepsContainer.innerHTML = `

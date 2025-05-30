@@ -1,146 +1,66 @@
-/* Стили для личного кабинета (kabinet.html) */
-
-/* Ссылка на логотип */
-.header a {
-  text-decoration: none;
-}
-
-#lk {
-  font-weight: bold;
-  text-decoration: none;
-}
-#lk:hover {
-  text-decoration: none;
-}
-
-/* Основные секции */
 .cabinet-section {
-  background-color: var(--color-primary-a10);
-  border-radius: 20px;
-  padding: 20px;
-  margin: 20px auto;
-  max-width: 600px;
-  box-shadow: 5px 5px 10px 3px var(--color-primary-a60);
+    margin-top: 20px;
 }
 
-/* Сообщения об ошибках */
+.section {
+    margin-bottom: 20px;
+}
+
 .error {
-  color: #ff4d4d;
-  text-align: center;
-  margin-bottom: 10px;
+    color: red;
+    margin: 10px 0;
 }
 
-/* Заголовки */
-.section h2, .section h3 {
-  color: var(--color-primary-a90);
-  text-align: center;
-  text-shadow: 1px 1px 1px var(--color-primary-a0);
-}
-
-/* Формы */
-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-label {
-  color: var(--color-primary-a90);
-  margin: 5px 0;
-  width: 100%;
-  max-width: 400px;
-}
-
-input, textarea {
-  width: 100%;
-  padding: 10px;
-  margin: 5px 0;
-  border: 1px solid var(--color-primary-a30);
-  border-radius: 10px;
-  background-color: var(--color-primary-a40);
-  color: var(--color-primary-a90);
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-
-button {
-  background-color: var(--color-primary-a30);
-  color: var(--color-primary-a90);
-  padding: 10px 20px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  margin: 10px;
-  transition: background-color 0.3s;
-}
-
-button:hover {
-  background-color: var(--color-primary-a50);
-}
-
-/* Рецепты */
 .recipe {
-  background-color: var(--color-primary-a20);
-  border-radius: 20px;
-  padding: 15px;
-  margin: 10px 0;
-  box-shadow: 5px 5px 10px 3px var(--color-primary-a60);
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
 }
 
-.recipe h4 {
-  color: var(--color-primary-a90);
-  margin: 0 0 10px;
+form label {
+    display: block;
+    margin: 10px 0;
 }
 
-.recipe p {
-  color: var(--color-primary-a90);
-  margin: 5px 0;
+form input, form textarea {
+    width: 100%;
+    padding: 5px;
 }
 
-.recipe img {
-  max-width: 200px;
-  border-radius: 10px;
-  margin: 10px 0;
+form button {
+    margin-top: 10px;
+    padding: 5px 10px;
 }
 
-.delete-btn {
-  background-color: #ff4d4d;
-  color: white;
+.category-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
-.delete-btn:hover {
-  background-color: #cc0000;
+.category-btn {
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-/* Ингредиенты и шаги */
-.ingredient, .step {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  width: 100%;
-  max-width: 400px;
+.category-btn.active {
+    background-color: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
 }
 
-.ingredient input, .step input {
-  flex: 1;
-  min-width: 150px;
+[data-theme="dark"] .category-btn {
+    background-color: #333;
+    color: #fff;
+    border-color: #555;
 }
 
-/* Адаптивность */
-@media (width < 800px) {
-  .cabinet-section {
-    margin: 10px;
-    padding: 15px;
-  }
-  input, textarea, button {
-    font-size: 14px;
-  }
-  .recipe img {
-    max-width: 150px;
-  }
-}
-
-@media (800px <= width < 1300px) {
-  .cabinet-section {
-    max-width: 80%;
-  }
+[data-theme="dark"] .category-btn.active {
+    background-color: #45a049;
+    border-color: #45a049;
 }
