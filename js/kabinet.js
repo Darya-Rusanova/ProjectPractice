@@ -28,9 +28,14 @@ function restrictInput(input, isDecimal = false) {
             if (parts.length > 2) {
                 value = parts[0] + '.' + parts[1];
             }
+            // Удаляем ведущие нули, но сохраняем "0." для десятичных
+            if (parts[0].startsWith('0') && parts[0].length > 1 && !value.startsWith('0.')) {
+                parts[0] = parts[0].replace(/^0+/, '') || '0';
+                value = parts[0] + (parts[1] !== undefined ? '.' + parts[1] : '');
+            }
         } else {
-            // Только цифры
-            value = value.replace(/[^0-9]/g, '');
+            // Только цифры, без ведущих нулей
+            value = value.replace(/[^0-9]/g, '').replace(/^0+/, '') || '0';
         }
         input.value = value;
     });
@@ -53,8 +58,8 @@ function enforceMinMax(input) {
 }
 
 // Применяем ограничения к начальным полям
-restrictInput(servingsInput); // Только цифры
-restrictInput(cookingTimeInput); // Только цифры
+restrictInput(servingsInput); // Только цифры, без ведущих нулей
+restrictInput(cookingTimeInput); // Только цифры, без ведущих нулей
 enforceMinMax(servingsInput); // min=1, max=100
 enforceMinMax(cookingTimeInput); // min=1, max=100000
 
