@@ -155,9 +155,11 @@ async function fetchRecipes() {
                 const recipeDiv = document.createElement('div');
                 recipeDiv.className = 'myRecipe';
                 // Формируем список ингредиентов с количеством и единицами
-                const ingredientsList = recipe.ingredients.map((ing, index) => 
-                    `${ing}: ${recipe.ingredientUnits[index] === 'пв' ? '' : recipe.ingredientQuantities[index]}${recipe.ingredientUnits[index] || 'г'}`
-                ).join(', ');
+                const ingredientsList = recipe.ingredients.map((ing, index) => {
+                    const unit = recipe.ingredientUnits[index] === 'пв' ? 'по вкусу' : recipe.ingredientUnits[index] || 'г';
+                    const quantity = recipe.ingredientUnits[index] === 'пв' ? '' : recipe.ingredientQuantities[index];
+                    return `${ing}: ${quantity}${unit}`;
+                }).join(', ');
                 recipeDiv.innerHTML = `
                     <h4>${recipe.title}</h4>
                     <p>Категории: ${recipe.categories.join(', ')}</p>

@@ -81,7 +81,6 @@
 }
 #recipe-form input.ingredient-quantity:disabled {
   background-color: var(--color-primary-a60);
-  color: var(--color-primary-a50);
   cursor: not-allowed;
 }
 #recipe-form textarea {
