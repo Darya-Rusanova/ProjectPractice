@@ -93,7 +93,7 @@
     .start{
         grid-area: start;
         display:grid;
-        grid-template-columns: 35% 55% 10%;
+        grid-template-columns: 40% 50% 10%;
         grid-template-rows: 170px 150px;
         grid-template-areas:
             "header user theme"
@@ -218,6 +218,9 @@
         font-size: 14px;
     }
 }
+.text-toggle{
+    color: var(--color-primary-a50);
+}
 .recipe{
     transition: outline 0.3s;
 }
@@ -232,6 +235,7 @@
   background-size: cover;       
   background-position: center; 
   background-repeat: no-repeat; 
+  transition: background-image 0.3s;
 }
 .user{
     grid-area:user;
@@ -255,22 +259,16 @@ body  *{
 }
 body {
     background-color: var(--color-primary-a40);
+    transition: background-color 0.3s, color 0.3s;
 }
 .theme-switcher-wrapper {
     grid-area: theme;
-    padding: 10px;
-    cursor: pointer;
-    border-radius: 10px;
-    margin: 10px;
-    text-align: center;
+    text-align: right;
+    margin-right: 50px;
+    margin-top: 10px;
 }
-.text-toggle{
-  color: var(--color-primary-a30);
-  text-align: center;
-}
-#lk:hover {
-  text-decoration: underline;
-}
+
+
 .title {
     grid-area:title;
     margin: 0 auto;
