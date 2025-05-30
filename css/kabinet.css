@@ -1,66 +1,226 @@
+/* Стили для страницы личного кабинета (kabinet.html) */
+
+/* Ссылка на логотип */
+.header a {
+  text-decoration: none;
+}
+
+#lk {
+  font-weight: bold;
+  text-decoration: none;
+}
+#lk:hover {
+  text-decoration: none;
+}
+
+/* Центрирующий контейнер для личного кабинета */
+.cabinet-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 150px); /* Учитываем высоту .start и .error */
+}
+
+/* Основные секции */
 .cabinet-section {
-    margin-top: 20px;
+  background-color: var(--color-primary-a10);
+  border-radius: 20px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 600px;
+  box-shadow: 5px 5px 10px 3px var(--color-primary-a60);
 }
 
-.section {
-    margin-bottom: 20px;
+/* Секция личного кабинета */
+#cabinet-section {
+  max-width: 700px;
+  padding: 30px;
 }
 
-.error {
-    color: red;
-    margin: 10px 0;
+#cabinet-section h2 {
+  font-size: 28px;
+  color: var(--color-primary-a90);
+  text-align: center;
+  text-shadow: 1px 1px 1px var(--color-primary-a0);
 }
 
+#recipes-section, #add-recipe-section {
+  margin-top: 20px;
+}
+
+#recipes-section h3, #add-recipe-section h3 {
+  font-size: 22px;
+  color: var(--color-primary-a90);
+  text-align: center;
+}
+
+/* Стили для списка рецептов */
 .recipe {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 10px;
+  border: 1px solid var(--color-primary-a30);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  background-color: var(--color-primary-a40);
 }
 
-form label {
-    display: block;
-    margin: 10px 0;
+.recipe h4 {
+  font-size: 18px;
+  color: var(--color-primary-a90);
+  margin-bottom: 10px;
 }
 
-form input, form textarea {
-    width: 100%;
-    padding: 5px;
+.recipe p {
+  font-size: 16px;
+  color: var(--color-primary-a90);
+  margin: 5px 0;
 }
 
-form button {
-    margin-top: 10px;
-    padding: 5px 10px;
+.recipe img {
+  max-width: 100%;
+  border-radius: 10px;
 }
 
+/* Стили для формы добавления рецепта */
+#recipe-form label {
+  font-size: 18px;
+  color: var(--color-primary-a90);
+  margin: 5px 0;
+  width: 100%;
+  max-width: 400px;
+  display: block;
+}
+
+#recipe-form input, #recipe-form textarea {
+  font-size: 16px;
+  padding: 12px;
+  width: 100%;
+  margin: 5px 0;
+  border: 1px solid var(--color-primary-a30);
+  border-radius: 10px;
+  background-color: var(--color-primary-a40);
+  color: var(--color-primary-a90);
+  font-family: Verdana, Geneva, sans-serif;
+}
+
+#recipe-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+#recipe-form button {
+  font-size: 16px;
+  padding: 12px 24px;
+  background-color: var(--color-primary-a30);
+  color: var(--color-primary-a90);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 10px;
+  transition: background-color 0.3s;
+}
+
+#recipe-form button:hover {
+  background-color: var(--color-primary-a50);
+}
+
+/* Стили для кнопок категорий */
 .category-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
 .category-btn {
-    padding: 8px 16px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s, color 0.3s;
+  font-size: 16px;
+  padding: 8px 16px;
+  border: 1px solid var(--color-primary-a30);
+  background-color: var(--color-primary-a40);
+  color: var(--color-primary-a90);
+  cursor: pointer;
+  border-radius: 10px;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  font-family: Verdana, Geneva, sans-serif;
 }
 
 .category-btn.active {
-    background-color: #4CAF50;
-    color: white;
-    border-color: #4CAF50;
+  background-color: var(--color-primary-a50);
+  color: var(--color-primary-a90);
+  border-color: var(--color-primary-a50);
 }
 
-[data-theme="dark"] .category-btn {
-    background-color: #333;
-    color: #fff;
-    border-color: #555;
+/* Стили для кнопки выхода и удаления */
+#logout, .delete-btn {
+  font-size: 16px;
+  padding: 12px 24px;
+  background-color: var(--color-primary-a30);
+  color: var(--color-primary-a90);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 10px;
+  transition: background-color 0.3s;
 }
 
-[data-theme="dark"] .category-btn.active {
-    background-color: #45a049;
-    border-color: #45a049;
+#logout:hover, .delete-btn:hover {
+  background-color: var(--color-primary-a50);
+}
+
+/* Сообщения об ошибках */
+.error {
+  color: #ff4d4d;
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+/* Адаптивность */
+@media (width < 800px) {
+  .cabinet-container {
+    min-height: calc(100vh - 120px);
+  }
+  .cabinet-section {
+    margin: 10px;
+    padding: 15px;
+  }
+  #cabinet-section {
+    max-width: 90%;
+    padding: 20px;
+  }
+  #cabinet-section h2 {
+    font-size: 24px;
+  }
+  #recipes-section h3, #add-recipe-section h3 {
+    font-size: 20px;
+  }
+  #recipe-form label {
+    font-size: 16px;
+  }
+  #recipe-form input, #recipe-form textarea {
+    font-size: 14px;
+    padding: 10px;
+  }
+  #recipe-form button, #logout, .delete-btn {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+  .category-btn {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+  .recipe h4 {
+    font-size: 16px;
+  }
+  .recipe p {
+    font-size: 14px;
+  }
+}
+
+@media (800px <= width < 1300px) {
+  .cabinet-section {
+    max-width: 80%;
+  }
+  #cabinet-section {
+    max-width: 600px;
+  }
 }
