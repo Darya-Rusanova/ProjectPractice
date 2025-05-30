@@ -22,9 +22,7 @@ function restrictInput(input, isDecimal = false) {
     input.addEventListener('input', () => {
         let value = input.value;
         if (isDecimal) {
-            // Заменяем точку на запятую и разрешаем цифры и одну запятую
             value = value.replace(/\./g, ',').replace(/[^0-9,]/g, '');
-            // Обрабатываем начальную запятую
             if (value.startsWith(',')) {
                 value = '0' + value;
             }
@@ -32,13 +30,11 @@ function restrictInput(input, isDecimal = false) {
             if (parts.length > 2) {
                 value = parts[0] + ',' + parts[1];
             }
-            // Удаляем ведущие нули, но сохраняем "0," для десятичных
             if (parts[0].startsWith('0') && parts[0].length > 1 && !value.startsWith('0,')) {
                 parts[0] = parts[0].replace(/^0+/, '') || '0';
                 value = parts[0] + (parts[1] !== undefined ? ',' + parts[1] : parts[0].endsWith(',') ? ',' : '');
             }
         } else {
-            // Только цифры, без ведущих нулей
             value = value.replace(/[^0-9]/g, '').replace(/^0+/, '') || '0';
         }
         input.value = value;
@@ -52,12 +48,10 @@ function enforceMinMax(input, isDecimal = false) {
         const max = parseFloat(input.max);
         let value = input.value;
         if (isDecimal) {
-            // Если значение заканчивается запятой, убираем её
             if (value.endsWith(',')) {
                 input.value = value.slice(0, -1);
                 value = input.value;
             }
-            // Преобразуем запятую в точку для парсинга
             value = parseFloat(value.replace(',', '.'));
         } else {
             value = parseFloat(value);
@@ -67,21 +61,21 @@ function enforceMinMax(input, isDecimal = false) {
         } else if (value < min) {
             input.value = isDecimal ? min.toString().replace('.', ',') : min;
         } else if (value > max) {
-            input.value = isDecimal ? max.toString().replace('.', ',') : max;
+            input.value = isDecimal ? min.toString().replace('.', ',') : max;
         }
     });
 }
 
 // Применяем ограничения к начальным полям
-restrictInput(servingsInput); // Только цифры, без ведущих нулей
-restrictInput(cookingTimeInput); // Только цифры, без ведущих нулей
-enforceMinMax(servingsInput); // min=1, max=100
-enforceMinMax(cookingTimeInput); // min=1, max=100000
+restrictInput(servingsInput);
+restrictInput(cookingTimeInput);
+enforceMinMax(servingsInput);
+enforceMinMax(cookingTimeInput);
 
 // Применяем ограничения к начальному полю Количество
 const initialQuantityInput = document.querySelector('.ingredient-quantity');
-restrictInput(initialQuantityInput, true); // Цифры и запятая
-enforceMinMax(initialQuantityInput, true); // min=0, max=1000
+restrictInput(initialQuantityInput, true);
+enforceMinMax(initialQuantityInput, true);
 
 // Проверка токена при загрузке
 async function checkToken() {
@@ -145,10 +139,15 @@ async function fetchRecipes() {
             recipes.forEach(recipe => {
                 const recipeDiv = document.createElement('div');
                 recipeDiv.className = 'myRecipe';
+                // Формируем список ингредиентов с количеством и единицами
+                const ingredientsList = recipe.ingredients.map((ing, index) => 
+                    `${ing}: ${recipe.ingredientQuantities[index]}${recipe.ingredientUnits ? recipe.ingredientUnits[index] : 'г'}`
+                ).join(', ');
                 recipeDiv.innerHTML = `
                     <h4>${recipe.title}</h4>
                     <p>Категории: ${recipe.categories.join(', ')}</p>
                     <p>Описание: ${recipe.description}</p>
+                    <p>Ингредиенты: ${ingredientsList}</p>
                     ${recipe.image ? `<img src="${recipe.image}" alt="${recipe.title}" style="max-width: 200px;">` : ''}
                     <button class="delete-btn" data-id="${recipe._id}">Удалить</button>
                 `;
@@ -206,10 +205,22 @@ addIngredientButton.addEventListener('click', () => {
     ingredientDiv.className = 'ingredient';
     ingredientDiv.innerHTML = `
         <label>Ингредиент: <input type="text" class="ingredient-name" required></label>
-        <label>Количество (г): <input type="text" class="ingredient-quantity" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required></label>
+        <label>Количество: 
+          <input type="text" class="ingredient-quantity" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required>
+          <select class="ingredient-unit" required>
+            <option value="г">г</option>
+            <option value="кг">кг</option>
+            <option value="мл">мл</option>
+            <option value="л">л</option>
+            <option value="шт">шт.</option>
+            <option value="ст">ст.</option>
+            <option value="стл">ст.л.</option>
+            <option value="чл">ч.л.</option>
+            <option value="пв">по вкусу</option>
+          </select>
+        </label>
     `;
     ingredientsContainer.appendChild(ingredientDiv);
-    // Применяем ограничения к новому полю Количество
     const newQuantityInput = ingredientDiv.querySelector('.ingredient-quantity');
     restrictInput(newQuantityInput, true);
     enforceMinMax(newQuantityInput, true);
@@ -217,6 +228,11 @@ addIngredientButton.addEventListener('click', () => {
 
 // Обработчик добавления шага
 addStepButton.addEventListener('click', () => {
+    const stepCount = stepsContainer.getElementsByClassName('step').length;
+    if (stepCount >= 50) {
+        errorDiv.textContent = 'Максимальное количество шагов (50) достигнуто';
+        return;
+    }
     console.log('Добавление шага');
     const stepDiv = document.createElement('div');
     stepDiv.className = 'step';
@@ -236,7 +252,6 @@ recipeForm.addEventListener('submit', async (e) => {
     button.disabled = true;
     button.textContent = 'Загрузка...';
 
-    // Собираем категории
     const selectedCategories = Array.from(categoryButtons)
         .filter(button => button.classList.contains('active'))
         .map(button => button.dataset.category);
@@ -248,7 +263,6 @@ recipeForm.addEventListener('submit', async (e) => {
         return;
     }
 
-    // Собираем данные рецепта
     const servings = parseInt(servingsInput.value);
     const cookingTime = parseInt(cookingTimeInput.value);
     
@@ -260,6 +274,7 @@ recipeForm.addEventListener('submit', async (e) => {
         cookingTime: cookingTime,
         ingredients: [],
         ingredientQuantities: [],
+        ingredientUnits: [],
         image: document.getElementById('recipe-image').value,
         steps: []
     };
@@ -268,13 +283,14 @@ recipeForm.addEventListener('submit', async (e) => {
     for (let div of ingredientDivs) {
         const name = div.querySelector('.ingredient-name').value;
         let quantity = div.querySelector('.ingredient-quantity').value;
-        // Если значение заканчивается запятой, убираем её перед парсингом
+        const unit = div.querySelector('.ingredient-unit').value;
         if (quantity.endsWith(',')) {
             quantity = quantity.slice(0, -1);
         }
         quantity = parseFloat(quantity.replace(',', '.'));
         recipe.ingredients.push(name);
         recipe.ingredientQuantities.push(quantity);
+        recipe.ingredientUnits.push(unit);
     }
 
     const stepDivs = stepsContainer.getElementsByClassName('step');
@@ -301,10 +317,22 @@ recipeForm.addEventListener('submit', async (e) => {
             ingredientsContainer.innerHTML = `
                 <div class="ingredient">
                     <label>Ингредиент: <input type="text" class="ingredient-name" required></label>
-                    <label>Количество (г): <input type="text" class="ingredient-quantity" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required></label>
+                    <label>Количество: 
+                      <input type="text" class="ingredient-quantity" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required>
+                      <select class="ingredient-unit" required>
+                        <option value="г">г</option>
+                        <option value="кг">кг</option>
+                        <option value="мл">мл</option>
+                        <option value="л">л</option>
+                        <option value="шт">шт.</option>
+                        <option value="ст">ст.</option>
+                        <option value="стл">ст.л.</option>
+                        <option value="чл">ч.л.</option>
+                        <option value="пв">по вкусу</option>
+                      </select>
+                    </label>
                 </div>
             `;
-            // Применяем ограничения к новому начальному полю Количество
             const newInitialQuantityInput = ingredientsContainer.querySelector('.ingredient-quantity');
             restrictInput(newInitialQuantityInput, true);
             enforceMinMax(newInitialQuantityInput, true);

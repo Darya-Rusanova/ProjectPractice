@@ -67,13 +67,11 @@
   color: var(--color-primary-a90);
   margin: 5px 0;
   width: 100%;
-  max-width: 100%;
   display: block;
 }
-#recipe-form input, #recipe-form textarea {
+#recipe-form input, #recipe-form textarea, #recipe-form select {
   font-size: 16px;
   padding: 12px;
-  width: 100%;
   margin: 5px 0;
   border: 1px solid var(--color-primary-a30);
   border-radius: 10px;
@@ -81,9 +79,16 @@
   color: var(--color-primary-a90);
   font-family: Verdana, Geneva, sans-serif;
 }
+#recipe-form select.ingredient-unit {
+  width: 80px;
+  padding: 10px;
+  margin-left: 5px;
+  vertical-align: middle;
+}
 #recipe-form textarea {
   resize: vertical;
   min-height: 100px;
+  width: 100%;
 }
 #add-ingredient, #addREc, #add-step {
   font-size: 16px;
@@ -118,7 +123,7 @@
 }
 .category-btn.active {
   background-color: var(--color-primary-a50);
-  color:var(--color-primary-a90);
+  color: var(--color-primary-a90);
   border-color: var(--color-primary-a30);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
@@ -187,9 +192,13 @@
   #recipe-form label {
     font-size: 16px;
   }
-  #recipe-form input, #recipe-form textarea {
+  #recipe-form input, #recipe-form textarea, #recipe-form select {
     font-size: 14px;
     padding: 10px;
+  }
+  #recipe-form select.ingredient-unit {
+    width: 70px;
+    padding: 8px;
   }
   #recipe-form button, #logout, .delete-btn {
     font-size: 14px;
