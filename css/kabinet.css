@@ -79,6 +79,11 @@
   color: var(--color-primary-a90);
   font-family: Verdana, Geneva, sans-serif;
 }
+#recipe-form input.ingredient-quantity:disabled {
+  background-color: var(--color-primary-a60);
+  color: var(--color-primary-a50);
+  cursor: not-allowed;
+}
 #recipe-form textarea {
   resize: vertical;
   min-height: 100px;
