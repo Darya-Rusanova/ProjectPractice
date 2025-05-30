@@ -41,24 +41,24 @@
   color: var(--color-primary-a90);
   text-align: center;
 }
-.recipe {
+.myRecipe {
   border: 1px solid var(--color-primary-a30);
   border-radius: 10px;
   padding: 15px;
   margin-bottom: 15px;
   background-color: var(--color-primary-a40);
 }
-.recipe h4 {
+.myRecipe h4 {
   font-size: 18px;
   color: var(--color-primary-a90);
   margin-bottom: 10px;
 }
-.recipe p {
+.myRecipe p {
   font-size: 16px;
   color: var(--color-primary-a90);
   margin: 5px 0;
 }
-.recipe img {
+.myRecipe img {
   max-width: 100%;
   border-radius: 10px;
 }
@@ -85,7 +85,7 @@
   resize: vertical;
   min-height: 100px;
 }
-#add-ingredient, #submit, #add-step {
+#add-ingredient, #addREc, #add-step {
   font-size: 16px;
   padding: 12px 24px;
   background-color: var(--color-primary-a30);
@@ -96,13 +96,13 @@
   margin: 10px;
   transition: background-color 0.3s;
 }
-#add-ingredient:hover, #submit:hover, #add-step:hover {
+#add-ingredient:hover, #addREc:hover, #add-step:hover {
   background-color: var(--color-primary-a50);
 }
 .category-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 1px;
+  gap: 10px;
   margin-bottom: 20px;
 }
 .category-btn {
@@ -189,10 +189,10 @@
     font-size: 14px;
     padding: 6px 12px;
   }
-  .recipe h4 {
+  .myRecipe h4 {
     font-size: 16px;
   }
-  .recipe p {
+  .myRecipe p {
     font-size: 14px;
   }
 }

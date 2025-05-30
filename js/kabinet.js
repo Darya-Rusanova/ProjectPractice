@@ -73,7 +73,7 @@ async function fetchRecipes() {
         } else {
             recipes.forEach(recipe => {
                 const recipeDiv = document.createElement('div');
-                recipeDiv.className = 'recipe';
+                recipeDiv.className = 'myRecipe';
                 recipeDiv.innerHTML = `
                     <h4>${recipe.title}</h4>
                     <p>Категории: ${recipe.categories.join(', ')}</p>
@@ -95,7 +95,7 @@ async function fetchRecipes() {
                             if (!response.ok) {
                                 throw new Error(`Ошибка HTTP! Статус: ${response.status}`);
                             }
-                            const recipeDiv = button.closest('.recipe');
+                            const recipeDiv = button.closest('.myRecipe');
                             recipeDiv.style.transition = 'opacity 0.5s';
                             recipeDiv.style.opacity = '0';
                             setTimeout(() => {
