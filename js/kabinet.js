@@ -154,11 +154,25 @@ async function fetchRecipes() {
             recipes.forEach(recipe => {
                 const recipeDiv = document.createElement('div');
                 recipeDiv.className = 'myRecipe';
+                // Маппинг единиц измерения для отображения
+                const unitDisplayMap = {
+                    'г': 'г',
+                    'кг': 'кг',
+                    'мл': 'мл',
+                    'л': 'л',
+                    'шт': 'шт.',
+                    'ст': 'ст.',
+                    'стл': 'ст.л.',
+                    'чл': 'ч.л.',
+                    'пв': 'по вкусу'
+                };
                 // Формируем список ингредиентов с количеством и единицами
                 const ingredientsList = recipe.ingredients.map((ing, index) => {
-                    const unit = recipe.ingredientUnits[index] === 'пв' ? 'по вкусу' : recipe.ingredientUnits[index] || 'г';
+                    const rawUnit = recipe.ingredientUnits[index] || 'г';
+                    const displayUnit = unitDisplayMap[rawUnit] || rawUnit;
                     const quantity = recipe.ingredientUnits[index] === 'пв' ? '' : recipe.ingredientQuantities[index];
-                    return `${ing}: ${quantity}${unit}`;
+                    const space = ['г', 'кг', 'мл', 'л'].includes(rawUnit) && quantity ? ' ' : '';
+                    return `${ing}: ${quantity}${space}${displayUnit}`;
                 }).join(', ');
                 recipeDiv.innerHTML = `
                     <h4>${recipe.title}</h4>
