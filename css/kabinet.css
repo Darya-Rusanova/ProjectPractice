@@ -1,10 +1,6 @@
-/* Стили для страницы личного кабинета (kabinet.html) */
-
-/* Ссылка на логотип */
 .header a {
   text-decoration: none;
 }
-
 #lk {
   font-weight: bold;
   text-decoration: none;
@@ -12,49 +8,39 @@
 #lk:hover {
   text-decoration: none;
 }
-
-/* Центрирующий контейнер для личного кабинета */
 .cabinet-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 150px); /* Учитываем высоту .start и .error */
+  min-height: calc(100vh - 150px);
 }
-
-/* Основные секции */
 .cabinet-section {
-  background-color: var(--color-primary-a10);
+  background-color: var(--color-primary-a0);
   border-radius: 20px;
+  outline: 5px solid var(--color-primary-a30);
   padding: 20px;
   margin: 20px auto;
   max-width: 600px;
   box-shadow: 5px 5px 10px 3px var(--color-primary-a60);
 }
-
-/* Секция личного кабинета */
 #cabinet-section {
   max-width: 700px;
   padding: 30px;
 }
-
 #cabinet-section h2 {
   font-size: 28px;
   color: var(--color-primary-a90);
   text-align: center;
   text-shadow: 1px 1px 1px var(--color-primary-a0);
 }
-
 #recipes-section, #add-recipe-section {
   margin-top: 20px;
 }
-
 #recipes-section h3, #add-recipe-section h3 {
   font-size: 22px;
   color: var(--color-primary-a90);
   text-align: center;
 }
-
-/* Стили для списка рецептов */
 .recipe {
   border: 1px solid var(--color-primary-a30);
   border-radius: 10px;
@@ -62,25 +48,20 @@
   margin-bottom: 15px;
   background-color: var(--color-primary-a40);
 }
-
 .recipe h4 {
   font-size: 18px;
   color: var(--color-primary-a90);
   margin-bottom: 10px;
 }
-
 .recipe p {
   font-size: 16px;
   color: var(--color-primary-a90);
   margin: 5px 0;
 }
-
 .recipe img {
   max-width: 100%;
   border-radius: 10px;
 }
-
-/* Стили для формы добавления рецепта */
 #recipe-form label {
   font-size: 18px;
   color: var(--color-primary-a90);
@@ -89,7 +70,6 @@
   max-width: 100%;
   display: block;
 }
-
 #recipe-form input, #recipe-form textarea {
   font-size: 16px;
   padding: 12px;
@@ -101,12 +81,10 @@
   color: var(--color-primary-a90);
   font-family: Verdana, Geneva, sans-serif;
 }
-
 #recipe-form textarea {
   resize: vertical;
   min-height: 100px;
 }
-
 #recipe-form button {
   font-size: 16px;
   padding: 12px 24px;
@@ -118,47 +96,33 @@
   margin: 10px;
   transition: background-color 0.3s;
 }
-
 #recipe-form button:hover {
   background-color: var(--color-primary-a50);
 }
-
-/* Стили для кнопок категорий */
 .category-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 1px;
   margin-bottom: 20px;
 }
-
 .category-btn {
   font-size: 16px;
   padding: 8px 16px;
   border: 1px solid var(--color-primary-a30);
-  background-color: var(--color-primary-a0);
   color: var(--color-primary-a90);
+  background-color: var(--color-primary-a0);
   cursor: pointer;
   border-radius: 10px;
   transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
   font-family: Verdana, Geneva, sans-serif;
 }
-
 .category-btn.active {
   background-color: var(--color-primary-a50);
   color:var(--color-primary-a90);
   border-color: var(--color-primary-a30);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
-
-[data-theme="dark"] .category-btn.active {
-  background-color: #574935; /* Насыщенный коричневый для темной темы */
-  color: #ffffff; /* Белый текст */
-  border-color: #574935;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-}
-
-/* Стили для кнопки выхода и удаления */
-#logout, .delete-btn {
+#logout {
   font-size: 16px;
   padding: 12px 24px;
   background-color: var(--color-primary-a30);
@@ -169,20 +133,29 @@
   margin: 10px;
   transition: background-color 0.3s;
 }
-
-#logout:hover, .delete-btn:hover {
+.delete-btn {
+  font-size: 16px;
+  padding: 12px 24px;
+  background-color: #ff5050;
+  color: var(--color-primary-a90);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 10px;
+  transition: background-color 0.3s;
+}
+#logout:hover {
   background-color: var(--color-primary-a50);
 }
-
-/* Сообщения об ошибках */
+.delete-btn:hover {
+  background-color: red;
+}
 .error {
   color: #ff4d4d;
   text-align: center;
   margin-bottom: 10px;
   font-size: 16px;
 }
-
-/* Адаптивность */
 @media (width < 800px) {
   .cabinet-container {
     min-height: calc(100vh - 120px);
@@ -223,7 +196,6 @@
     font-size: 14px;
   }
 }
-
 @media (800px <= width < 1300px) {
   .cabinet-section {
     max-width: 80%;
