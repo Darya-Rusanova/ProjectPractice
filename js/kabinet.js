@@ -50,7 +50,18 @@ function enforceMinMax(input, isDecimal = false) {
     input.addEventListener('change', () => {
         const min = parseFloat(input.min);
         const max = parseFloat(input.max);
-        let value = isDecimal ? parseFloat(input.value.replace(',', '.')) : parseFloat(input.value);
+        let value = input.value;
+        if (isDecimal) {
+            // Если значение заканчивается запятой, убираем её
+            if (value.endsWith(',')) {
+                input.value = value.slice(0, -1);
+                value = input.value;
+            }
+            // Преобразуем запятую в точку для парсинга
+            value = parseFloat(value.replace(',', '.'));
+        } else {
+            value = parseFloat(value);
+        }
         if (isNaN(value)) {
             input.value = isDecimal ? min.toString().replace('.', ',') : min;
         } else if (value < min) {
@@ -256,7 +267,12 @@ recipeForm.addEventListener('submit', async (e) => {
     const ingredientDivs = ingredientsContainer.getElementsByClassName('ingredient');
     for (let div of ingredientDivs) {
         const name = div.querySelector('.ingredient-name').value;
-        const quantity = parseFloat(div.querySelector('.ingredient-quantity').value.replace(',', '.'));
+        let quantity = div.querySelector('.ingredient-quantity').value;
+        // Если значение заканчивается запятой, убираем её перед парсингом
+        if (quantity.endsWith(',')) {
+            quantity = quantity.slice(0, -1);
+        }
+        quantity = parseFloat(quantity.replace(',', '.'));
         recipe.ingredients.push(name);
         recipe.ingredientQuantities.push(quantity);
     }
