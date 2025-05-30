@@ -167,12 +167,12 @@ async function fetchRecipes() {
                     'пв': 'по вкусу'
                 };
                 // Формируем список ингредиентов с количеством и единицами
-                const ingredientsList = recipe.ingredients.map((recipe, index) => {
+                const ingredientsList = recipe.ingredients.map((ing, index) => {
                     const rawUnit = recipe.ingredientUnits[index] || 'г';
                     const displayUnit = unitDisplayMap[rawUnit] || rawUnit;
                     const quantity = recipe.ingredientUnits[index] === 'пв' ? '' : recipe.ingredientQuantities[index];
-                    const space = quantity ? ' ' : ''; // Пробел, если есть количество
-                    return `${recipe.ingredients[index]}: ${quantity}${space}${displayUnit}`;
+                    const space = quantity ? ' ' : '';
+                    return `${ing}: ${quantity}${space}${displayUnit}`;
                 }).join(', ');
                 recipeDiv.innerHTML = `
                     <h4>${recipe.title}</h4>
@@ -194,7 +194,7 @@ async function fetchRecipes() {
                                 headers: { 'Authorization': `Bearer ${token}` }
                             });
                             if (!response.ok) {
-                                throw new Error(`HTTP error! Status: ${response.status}`);
+                                throw new Error(`Ошибка HTTP! Статус: ${response.status}`);
                             }
                             const recipeDiv = button.closest('.myRecipe');
                             recipeDiv.style.transition = 'opacity 0.5s';
@@ -204,7 +204,7 @@ async function fetchRecipes() {
                                 fetchRecipes();
                             }, 500);
                         } catch (err) {
-                            console.error('Ошибка при удалении:', err.message, err.stack);
+                            console.error('Ошибка удаления:', err.message, err.stack);
                             errorDiv.textContent = err.message.includes('Failed to fetch') || err.name === 'AbortError'
                                 ? 'Не удалось удалить рецепт. Сервер недоступен.'
                                 : 'Ошибка удаления рецепта: ' + err.message;
@@ -214,7 +214,7 @@ async function fetchRecipes() {
             });
         }
     } catch (err) {
-        console.error('Ошибка при загрузке рецептов:', err.message);
+        console.error('Ошибка загрузки рецептов:', err.message, err.stack);
         errorDiv.textContent = err.message.includes('Failed to fetch') || err.name === 'AbortError'
             ? 'Не удалось загрузить рецепты. Сервер недоступен.'
             : 'Ошибка загрузки рецептов: ' + err.message;
@@ -222,12 +222,12 @@ async function fetchRecipes() {
 }
 
 // Обработчик выбора категорий
-for (const button of categoryButtons) {
+categoryButtons.forEach(button => {
     button.addEventListener('click', () => {
         button.classList.toggle('active');
         console.log('Категория переключена:', button.dataset.category, 'Active:', button.classList.contains('active'), 'Classes:', button.className);
     });
-}
+});
 
 // Обработчик добавления ингредиента
 addIngredientButton.addEventListener('click', () => {
@@ -242,18 +242,18 @@ addIngredientButton.addEventListener('click', () => {
     ingredientDiv.innerHTML = `
         <label>Ингредиент: <input type="text" class="ingredient-name" required></label>
         <label>Количество: 
-            <input type="text" class="ingredient-quantity" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required>
-            <select class="ingredient-unit" required>
-                <option value="г">г</option>
-                <option value="кг">кг</option>
-                <option value="мл">мл</option>
-                <option value="л">л</option>
-                <option value="шт">шт.</option>
-                <option value="ст">ст.</option>
-                <option value="стл">ст.л.</option>
-                <option value="чл">ч.л.</option>
-                <option value="пв">по вкусу</option>
-            </select>
+          <input type="text" class="ingredient-quantity" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required>
+          <select class="ingredient-unit" required>
+            <option value="г">г</option>
+            <option value="кг">кг</option>
+            <option value="мл">мл</option>
+            <option value="л">л</option>
+            <option value="шт">шт.</option>
+            <option value="ст">ст.</option>
+            <option value="стл">ст.л.</option>
+            <option value="чл">ч.л.</option>
+            <option value="пв">по вкусу</option>
+          </select>
         </label>
     `;
     ingredientsContainer.appendChild(ingredientDiv);
@@ -319,7 +319,7 @@ recipeForm.addEventListener('submit', async (e) => {
     };
 
     const ingredientDivs = ingredientsContainer.getElementsByClassName('ingredient');
-    for (const div of ingredientDivs) {
+    for (let div of ingredientDivs) {
         const name = div.querySelector('.ingredient-name').value;
         let quantity = div.querySelector('.ingredient-quantity').value;
         const unit = div.querySelector('.ingredient-unit').value;
@@ -333,7 +333,7 @@ recipeForm.addEventListener('submit', async (e) => {
     }
 
     const stepDivs = stepsContainer.getElementsByClassName('step');
-    for (const div of stepDivs) {
+    for (let div of stepDivs) {
         const description = div.querySelector('.step-description').value;
         const image = div.querySelector('.step-image').value;
         recipe.steps.push({ description, image });
@@ -357,18 +357,18 @@ recipeForm.addEventListener('submit', async (e) => {
                 <div class="ingredient">
                     <label>Ингредиент: <input type="text" class="ingredient-name" required></label>
                     <label>Количество: 
-                        <input type="text" class="ingredient-quantity" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required>
-                        <select class="ingredient-unit" required>
-                            <option value="г">г</option>
-                            <option value="кг">кг</option>
-                            <option value="мл">мл</option>
-                            <option value="л">л</option>
-                            <option value="шт">шт.</option>
-                            <option value="ст">ст.</option>
-                            <option value="стл">ст.л.</option>
-                            <option value="чл">ч.л.</option>
-                            <option value="пв">по вкусу</option>
-                        </select>
+                      <input type="text" class="ingredient-quantity" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required>
+                      <select class="ingredient-unit" required>
+                        <option value="г">г</option>
+                        <option value="кг">кг</option>
+                        <option value="мл">мл</option>
+                        <option value="л">л</option>
+                        <option value="шт">шт.</option>
+                        <option value="ст">ст.</option>
+                        <option value="стл">ст.л.</option>
+                        <option value="чл">ч.л.</option>
+                        <option value="пв">по вкусу</option>
+                      </select>
                     </label>
                 </div>
             `;
