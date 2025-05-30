@@ -24,6 +24,10 @@ function restrictInput(input, isDecimal = false) {
         if (isDecimal) {
             // Заменяем точку на запятую и разрешаем цифры и одну запятую
             value = value.replace(/\./g, ',').replace(/[^0-9,]/g, '');
+            // Обрабатываем начальную запятую
+            if (value.startsWith(',')) {
+                value = '0' + value;
+            }
             const parts = value.split(',');
             if (parts.length > 2) {
                 value = parts[0] + ',' + parts[1];
