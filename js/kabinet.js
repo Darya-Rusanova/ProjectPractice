@@ -63,20 +63,16 @@ function enforceMinMax(input, isDecimal = false) {
         } else if (value < min) {
             input.value = isDecimal ? min.toString().replace('.', ',') : min;
         } else if (value > max) {
-            input.value = isDecimal ? max.toString().replace('.', ',') : max;
+            input.value = isDecimal ? min.toString().replace('.', ',') : max;
         }
     });
 }
 
-// Функция управления полем количества в зависимости от единицы измерения
-function handleUnitChange(select, quantityInput) {
-    if (select.value === 'пв') {
-        quantityInput.value = '0';
-        quantityInput.disabled = true;
-    } else {
-        quantityInput.disabled = false;
-    }
-}
+// Применяем ограничения к начальным полям
+restrictInput(servingsInput);
+restrictInput(cookingTimeInput);
+enforceMinMax(servingsInput);
+enforceMinMax(cookingTimeInput);
 
 // Применяем ограничения к начальным полям
 restrictInput(servingsInput);
@@ -86,11 +82,8 @@ enforceMinMax(cookingTimeInput);
 
 // Применяем ограничения и обработчик к начальному полю Количество
 const initialQuantityInput = document.querySelector('.ingredient-quantity');
-const initialUnitSelect = document.querySelector('.ingredient-unit');
 restrictInput(initialQuantityInput, true);
 enforceMinMax(initialQuantityInput, true);
-initialUnitSelect.addEventListener('change', () => handleUnitChange(initialUnitSelect, initialQuantityInput));
-handleUnitChange(initialUnitSelect, initialQuantityInput); // Инициализация
 
 // Проверка токена при загрузке
 async function checkToken() {
@@ -156,7 +149,7 @@ async function fetchRecipes() {
                 recipeDiv.className = 'myRecipe';
                 // Формируем список ингредиентов с количеством и единицами
                 const ingredientsList = recipe.ingredients.map((ing, index) => 
-                    `${ing}: ${recipe.ingredientUnits[index] === 'пв' ? '' : recipe.ingredientQuantities[index]}${recipe.ingredientUnits[index] || 'г'}`
+                    `${ing}: ${recipe.ingredientQuantities[index]}${recipe.ingredientUnits ? recipe.ingredientUnits[index] : 'г'}`
                 ).join(', ');
                 recipeDiv.innerHTML = `
                     <h4>${recipe.title}</h4>

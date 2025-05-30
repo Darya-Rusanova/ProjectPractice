@@ -17,61 +17,67 @@
 .cabinet-section {
   background-color: var(--color-primary-a40);
   border-radius: 20px;
-  outline: 2px solid var(--color-primary-a30);
+  outline: 5px solid var(--color-primary-a30);
   padding: 20px;
   margin: 20px auto;
   max-width: 600px;
+  box-shadow: 5px 5px 10px 3px var(--color-primary-a60);
 }
 #cabinet-section {
-  max-width: 1000px;
+  max-width: 700px;
   padding: 30px;
 }
 #cabinet-section h2 {
   font-size: 28px;
   color: var(--color-primary-a90);
   text-align: center;
+  text-shadow: 1px 1px 1px var(--color-primary-a0);
 }
 #recipes-section, #add-recipe-section {
   margin-top: 20px;
 }
 #recipes-section h3, #add-recipe-section h3 {
-  margin-bottom: 20px;
-  font-size: 20px;
-  color: var(--color-primary-a);
+  font-size: 22px;
+  color: var(--color-primary-a90);
+  text-align: center;
 }
 .myRecipe {
   border: 1px solid var(--color-primary-a30);
   border-radius: 10px;
   padding: 15px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+  background-color: var(--color-primary-a40);
 }
 .myRecipe h4 {
   font-size: 18px;
+  color: var(--color-primary-a90);
+  margin-bottom: 10px;
 }
 .myRecipe p {
   font-size: 16px;
-  color: var(--color-primary-a);
-  margin: 5px 0px;
+  color: var(--color-primary-a90);
+  margin: 5px 0;
 }
 .myRecipe img {
   max-width: 100%;
   border-radius: 10px;
 }
 #recipe-form label {
-  font-size: 16px;
+  font-size: 18px;
   color: var(--color-primary-a90);
-  margin: 5px 0px;
+  margin: 5px 0;
   width: 100%;
   display: block;
 }
 #recipe-form input, #recipe-form textarea, #recipe-form select {
   font-size: 16px;
-  padding: 14px;
-  margin: 5px 0px;
-  border: 10px solid var(--color-primary-a30);
-  border-radius: 5px;
+  padding: 12px;
+  margin: 5px 0;
+  border: 1px solid var(--color-primary-a30);
+  border-radius: 10px;
   background-color: var(--color-primary-a40);
   color: var(--color-primary-a90);
+  font-family: Verdana, Geneva, sans-serif;
 }
 #recipe-form input.ingredient-quantity:disabled {
   background-color: var(--color-primary-a60);
@@ -82,6 +88,7 @@
   width: 150px;
   padding: 10px;
   margin-left: 5px;
+  vertical-align: middle;
 }
 #recipe-form textarea {
   resize: vertical;
@@ -90,8 +97,9 @@
 }
 #add-ingredient, #addREc, #add-step {
   font-size: 16px;
-  padding: 10px 20px;
+  padding: 12px 24px;
   background-color: var(--color-primary-a30);
+  color: var(--color-primary-a90);
   border: none;
   border-radius: 10px;
   cursor: pointer;
@@ -109,20 +117,25 @@
 }
 .category-btn {
   font-size: 16px;
-  padding: 10px 12px;
+  padding: 8px 16px;
   border: 1px solid var(--color-primary-a30);
+  color: var(--color-primary-a90);
   background-color: var(--color-primary-a40);
-  border-radius: 10px;
   cursor: pointer;
-  transition: all 0.3s;
+  border-radius: 10px;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+  font-family: Verdana, Geneva, sans-serif;
 }
 .category-btn.active {
   background-color: var(--color-primary-a50);
   color: var(--color-primary-a90);
+  border-color: var(--color-primary-a30);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
-#recipe-servings, #recipe-cookingTime, .ingredient-amount {
+#recipe-servings, #recipe-cookingTime, .ingredient-quantity {
   -webkit-appearance: none;
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 #recipe-form input[type="number"]::-webkit-inner-spin-button,
 #recipe-form input[type="number"]::-webkit-outer-spin-button {
@@ -131,21 +144,25 @@
 }
 #logout {
   font-size: 16px;
-  padding: 10px 20px;
+  padding: 12px 24px;
   background-color: var(--color-primary-a30);
+  color: var(--color-primary-a90);
   border: none;
   border-radius: 10px;
   cursor: pointer;
   margin: 10px;
+  transition: background-color 0.3s;
 }
 .delete-btn {
   font-size: 16px;
-  padding: 10px 20px;
-  background-color: #333;
+  padding: 12px 24px;
+  background-color: #ff5050;
+  color: var(--color-primary-a90);
+  border: none;
   border-radius: 10px;
   cursor: pointer;
-  border: none;
-  color: white;
+  margin: 10px;
+  transition: background-color 0.3s;
 }
 #logout:hover {
   background-color: var(--color-primary-a50);
@@ -154,35 +171,34 @@
   background-color: red;
 }
 .error {
-  color: #ff4444;
+  color: #ff4d4d;
   text-align: center;
   margin-bottom: 10px;
   font-size: 16px;
 }
 @media (width < 600px) {
   .cabinet-container {
-    margin-height: calc(100vh - 120px);
+    min-height: calc(100vh - 120px);
   }
   .cabinet-section {
     margin: 10px;
     padding: 15px;
   }
   #cabinet-section {
-    max-width: 100%;
+    max-width: 90%;
     padding: 20px;
   }
-  #cabinet-section hh2 {
+  #cabinet-section h2 {
     font-size: 24px;
   }
   #recipes-section h3, #add-recipe-section h3 {
-    font-size: 18px;
-    margin-bottom: 20px;
+    font-size: 20px;
   }
   #recipe-form label {
-    font-size: 14px;
+    font-size: 16px;
   }
-  #recipe-form input, #recipe-form-textarea, #recipe-form select {
-    font-size: 12px;
+  #recipe-form input, #recipe-form textarea, #recipe-form select {
+    font-size: 14px;
     padding: 10px;
   }
   #recipe-form select.ingredient-unit {
@@ -190,23 +206,23 @@
     padding: 8px;
   }
   #recipe-form button, #logout, .delete-btn {
-    font-size: 12px;
-    padding: 8px 16px;
+    font-size: 14px;
+    padding: 10px 20px;
   }
   .category-btn {
-    font-size: 12px;
-    padding: 8px 10px;
-}
+    font-size: 14px;
+    padding: 6px 12px;
+  }
   .myRecipe h4 {
     font-size: 16px;
-}
+  }
   .myRecipe p {
-    font-size: 12px;
-}
+    font-size: 14px;
+  }
 }
 @media (600px <= width < 1000px) {
   .cabinet-section {
-    max-width: 100%;
+    max-width: 80%;
   }
   #cabinet-section {
     max-width: 600px;
