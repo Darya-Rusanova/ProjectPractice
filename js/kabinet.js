@@ -270,7 +270,7 @@ addStepButton.addEventListener('click', () => {
 recipeForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     console.log('Форма рецепта отправлена');
-    const button = document.getElementById('addREc');
+    const button = recipeForm.querySelector('button[type="submit"]');
     const originalText = button.textContent;
     button.disabled = true;
     button.textContent = 'Загрузка...';
@@ -365,7 +365,7 @@ recipeForm.addEventListener('submit', async (e) => {
             stepsContainer.innerHTML = `
                 <div class="step">
                     <label>Шаг: <input type="text" class="step-description" required></label>
-                    <label>Изображение шага: <input type="text" class="step-image"></label>
+                    <label>Изображение шага (URL): <input type="text" class="step-image"></label>
                 </div>
             `;
             errorDiv.textContent = 'Рецепт добавлен!';
@@ -374,7 +374,7 @@ recipeForm.addEventListener('submit', async (e) => {
             errorDiv.textContent = data.message || 'Ошибка добавления рецепта';
         }
     } catch (err) {
-        console.error('Ошибка:', err.message, err);
+        console.error('Ошибка добавления:', err.message, err.stack);
         errorDiv.textContent = err.message.includes('Failed to fetch') || err.name === 'AbortError'
             ? 'Не удалось добавить рецепт. Сервер недоступен.'
             : 'Ошибка добавления рецепта: ' + err.message;
