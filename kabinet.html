@@ -10,7 +10,7 @@
   <link rel="icon" href="images/logo.png" type="image/png">
 </head>
 <body>
-  <div class="container">
+    <div class="container">
     <div class="start">
       <div class="header">
         <a href="index.html">
@@ -46,15 +46,27 @@
         <h3>Добавить новый рецепт</h3>
         <form id="recipe-form">
           <label>Название: <input type="text" id="recipe-title" required></label>
-          <label>Категория: <input type="text" id="recipe-category" required></label>
+          <label>Категории (выберите хотя бы одну):</label>
+          <div id="recipe-categories" class="category-buttons">
+            <button type="button" class="category-btn" data-category="Завтрак">Завтрак</button>
+            <button type="button" class="category-btn" data-category="Обед">Обед</button>
+            <button type="button" class="category-btn" data-category="Ужин">Ужин</button>
+            <button type="button" class="category-btn" data-category="Китайская кухня">Китайская кухня</button>
+            <button type="button" class="category-btn" data-category="Итальянская кухня">Итальянская кухня</button>
+            <button type="button" class="category-btn" data-category="Русская кухня">Русская кухня</button>
+            <button type="button" class="category-btn" data-category="Горячее блюдо">Горячее блюдо</button>
+            <button type="button" class="category-btn" data-category="Закуски">Закуски</button>
+            <button type="button" class="category-btn" data-category="Десерт">Десерт</button>
+            <button type="button" class="category-btn" data-category="Напитки">Напитки</button>
+          </div>
           <label>Описание: <textarea id="recipe-description" required></textarea>
-          <label>Порции: <input type="number" id="recipe-servings" required></label>
-          <label>Время приготовления (мин): <input type="number" id="recipe-cookingTime" required></label>
+          <label>Порции: <input type="number" id="recipe-servings" min="1" max="100" step="1" required></label>
+          <label>Время приготовления (мин): <input type="number" id="recipe-cookingTime" min="1" max="100000" step="1" required></label>
 
           <div id="ingredients-container">
             <div class="ingredient">
               <label>Ингредиент: <input type="text" class="ingredient-name" required></label>
-              <label>Количество (г): <input type="number" class="ingredient-quantity" required></label>
+              <label>Количество (г): <input type="number" class="ingredient-quantity" min="0" max="1000" step="0.01" required></label>
             </div>
           </div>
           
