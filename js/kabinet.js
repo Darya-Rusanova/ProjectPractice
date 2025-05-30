@@ -20,6 +20,7 @@ console.log('Найдено кнопок категорий:', categoryButtons.l
 // Функция ограничения ввода
 function restrictInput(input, isDecimal = false) {
     input.addEventListener('input', () => {
+        if (input.disabled) return; // Игнорируем ввод, если поле неактивно
         let value = input.value;
         if (isDecimal) {
             value = value.replace(/\./g, ',').replace(/[^0-9,]/g, '');
@@ -44,6 +45,7 @@ function restrictInput(input, isDecimal = false) {
 // Функция проверки границ
 function enforceMinMax(input, isDecimal = false) {
     input.addEventListener('change', () => {
+        if (input.disabled) return; // Игнорируем, если поле неактивно
         const min = parseFloat(input.min);
         const max = parseFloat(input.max);
         let value = input.value;
@@ -61,9 +63,19 @@ function enforceMinMax(input, isDecimal = false) {
         } else if (value < min) {
             input.value = isDecimal ? min.toString().replace('.', ',') : min;
         } else if (value > max) {
-            input.value = isDecimal ? min.toString().replace('.', ',') : max;
+            input.value = isDecimal ? max.toString().replace('.', ',') : max;
         }
     });
+}
+
+// Функция управления полем количества в зависимости от единицы измерения
+function handleUnitChange(select, quantityInput) {
+    if (select.value === 'пв') {
+        quantityInput.value = '0';
+        quantityInput.disabled = true;
+    } else {
+        quantityInput.disabled = false;
+    }
 }
 
 // Применяем ограничения к начальным полям
@@ -72,10 +84,13 @@ restrictInput(cookingTimeInput);
 enforceMinMax(servingsInput);
 enforceMinMax(cookingTimeInput);
 
-// Применяем ограничения к начальному полю Количество
+// Применяем ограничения и обработчик к начальному полю Количество
 const initialQuantityInput = document.querySelector('.ingredient-quantity');
+const initialUnitSelect = document.querySelector('.ingredient-unit');
 restrictInput(initialQuantityInput, true);
 enforceMinMax(initialQuantityInput, true);
+initialUnitSelect.addEventListener('change', () => handleUnitChange(initialUnitSelect, initialQuantityInput));
+handleUnitChange(initialUnitSelect, initialQuantityInput); // Инициализация
 
 // Проверка токена при загрузке
 async function checkToken() {
@@ -141,7 +156,7 @@ async function fetchRecipes() {
                 recipeDiv.className = 'myRecipe';
                 // Формируем список ингредиентов с количеством и единицами
                 const ingredientsList = recipe.ingredients.map((ing, index) => 
-                    `${ing}: ${recipe.ingredientQuantities[index]}${recipe.ingredientUnits ? recipe.ingredientUnits[index] : 'г'}`
+                    `${ing}: ${recipe.ingredientUnits[index] === 'пв' ? '' : recipe.ingredientQuantities[index]}${recipe.ingredientUnits[index] || 'г'}`
                 ).join(', ');
                 recipeDiv.innerHTML = `
                     <h4>${recipe.title}</h4>
@@ -200,6 +215,11 @@ categoryButtons.forEach(button => {
 
 // Обработчик добавления ингредиента
 addIngredientButton.addEventListener('click', () => {
+    const ingredientCount = ingredientsContainer.getElementsByClassName('ingredient').length;
+    if (ingredientCount >= 100) {
+        errorDiv.textContent = 'Максимальное количество ингредиентов (100) достигнуто';
+        return;
+    }
     console.log('Добавление ингредиента');
     const ingredientDiv = document.createElement('div');
     ingredientDiv.className = 'ingredient';
@@ -222,8 +242,11 @@ addIngredientButton.addEventListener('click', () => {
     `;
     ingredientsContainer.appendChild(ingredientDiv);
     const newQuantityInput = ingredientDiv.querySelector('.ingredient-quantity');
+    const newUnitSelect = ingredientDiv.querySelector('.ingredient-unit');
     restrictInput(newQuantityInput, true);
     enforceMinMax(newQuantityInput, true);
+    newUnitSelect.addEventListener('change', () => handleUnitChange(newUnitSelect, newQuantityInput));
+    handleUnitChange(newUnitSelect, newQuantityInput); // Инициализация
 });
 
 // Обработчик добавления шага
@@ -247,7 +270,7 @@ addStepButton.addEventListener('click', () => {
 recipeForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     console.log('Форма рецепта отправлена');
-    const button = recipeForm.querySelector('button[type="submit"]');
+    const button = document.getElementById('addREc');
     const originalText = button.textContent;
     button.disabled = true;
     button.textContent = 'Загрузка...';
@@ -287,7 +310,7 @@ recipeForm.addEventListener('submit', async (e) => {
         if (quantity.endsWith(',')) {
             quantity = quantity.slice(0, -1);
         }
-        quantity = parseFloat(quantity.replace(',', '.'));
+        quantity = unit === 'пв' ? 0 : parseFloat(quantity.replace(',', '.'));
         recipe.ingredients.push(name);
         recipe.ingredientQuantities.push(quantity);
         recipe.ingredientUnits.push(unit);
@@ -334,12 +357,15 @@ recipeForm.addEventListener('submit', async (e) => {
                 </div>
             `;
             const newInitialQuantityInput = ingredientsContainer.querySelector('.ingredient-quantity');
+            const newInitialUnitSelect = ingredientsContainer.querySelector('.ingredient-unit');
             restrictInput(newInitialQuantityInput, true);
             enforceMinMax(newInitialQuantityInput, true);
+            newInitialUnitSelect.addEventListener('change', () => handleUnitChange(newInitialUnitSelect, newInitialQuantityInput));
+            handleUnitChange(newInitialUnitSelect, newInitialQuantityInput);
             stepsContainer.innerHTML = `
                 <div class="step">
                     <label>Шаг: <input type="text" class="step-description" required></label>
-                    <label>Изображение шага (URL): <input type="text" class="step-image"></label>
+                    <label>Изображение шага: <input type="text" class="step-image"></label>
                 </div>
             `;
             errorDiv.textContent = 'Рецепт добавлен!';
@@ -348,10 +374,8 @@ recipeForm.addEventListener('submit', async (e) => {
             errorDiv.textContent = data.message || 'Ошибка добавления рецепта';
         }
     } catch (err) {
-        console.error('Ошибка добавления:', err.message, err.stack);
-        errorDiv.textContent = err.message.includes('Failed to fetch') || err.name === 'AbortError'
-            ? 'Не удалось добавить рецепт. Сервер недоступен.'
-            : 'Ошибка добавления рецепта: ' + err.message;
+        console.error('Ошибка:', err.message, err);
+        errorDiv.textContent = err.message.includes('Failed to fetch') || err.name === 'Ошибка добавления рецепта: ' + err.message;
     } finally {
         button.disabled = false;
         button.textContent = originalText;
