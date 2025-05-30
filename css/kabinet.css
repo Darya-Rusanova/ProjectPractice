@@ -1,3 +1,6 @@
+/* Стили для страницы личного кабинета (kabinet.html) */
+
+/* Ссылка на логотип */
 .header a {
   text-decoration: none;
 }
@@ -15,7 +18,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 150px);
+  min-height: calc(100vh - 150px); /* Учитываем высоту .start и .error */
 }
 
 /* Основные секции */
@@ -83,7 +86,7 @@
   color: var(--color-primary-a90);
   margin: 5px 0;
   width: 100%;
-  max-width: 400px;
+  max-width: 100%;
   display: block;
 }
 
@@ -136,20 +139,22 @@
   color: var(--color-primary-a90);
   cursor: pointer;
   border-radius: 10px;
-  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
   font-family: Verdana, Geneva, sans-serif;
 }
 
 .category-btn.active {
-  background-color: var(--color-primary-a20);
-  color: var(--color-primary-a0);
-  border-color: var(--color-primary-a20);
+  background-color: #f4b659; /* Яркий оранжевый для светлой темы */
+  color: #ffffff; /* Белый текст */
+  border-color: #f4b659;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 [data-theme="dark"] .category-btn.active {
-  background-color: var(--color-primary-a20);
-  color: var(--color-primary-a0);
-  border-color: var(--color-primary-a20);
+  background-color: #574935; /* Насыщенный коричневый для темной темы */
+  color: #ffffff; /* Белый текст */
+  border-color: #574935;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 /* Стили для кнопки выхода и удаления */
