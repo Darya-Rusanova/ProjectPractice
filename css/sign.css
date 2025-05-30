@@ -1,0 +1,100 @@
+:root {
+    --theme-image: url('../images/functional/lightLogo.jpg');
+}
+[data-theme="dark"] {  
+    --theme-image: url('../images/functional/darkLogo.jpg');      
+   
+}
+.container{
+    display:grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 150px 100px auto;
+    grid-template-areas:
+        "header theme"
+        "error error" 
+        "main main"       
+}
+.theme-bg {
+  background-image: var(--theme-image);
+  width: 70px;
+  height: 100px;
+  background-size: cover;       
+  background-position: center; 
+  background-repeat: no-repeat; 
+}
+
+.auth-container{
+    grid-area: main;
+    border-radius: 20px;
+    outline: 5px solid var(--color-primary-a30);
+    min-height: 400px;
+    margin: 0 auto;
+    border-radius: 20px;
+    padding: 20px;
+    max-width: 600px;
+}
+.error {
+    grid-area: error;
+    text-align: center;
+    font-size: 20px;
+    color: red;
+}
+h2{
+    text-align: center;
+    color: var(--color-primary-a50);
+    font-size: 30px;
+}
+#login-section, #register-section{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#login-section input, #register-section input{
+  font-size: 16px;
+  padding: 12px;
+  width: 90%;
+  margin: 2%;
+  border: 2px solid var(--color-primary-a30);
+  border-radius: 10px;
+  background-color: var(--color-primary-a40);
+  color: var(--color-primary-a90);
+}
+#login-section label, #register-section label{
+  font-size: 18px;
+  color: var(--color-primary-a90);
+  margin: 5px 0;
+  width: 100%;
+  max-width: 400px;
+}
+#login-section button, #register-section button{
+    font-size: 16px;
+    width: 220px;
+    padding: 12px 24px;
+    background-color: var(--color-primary-a30);
+    color: var(--color-primary-a90);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 10px auto; /* Центрирование кнопки */
+    display: block; /* Необходимо для margin auto */
+    transition: background-color 0.3s;
+}
+
+#login-section button:hover, #register-section button:hover{
+  background-color: var(--color-primary-a50);
+}
+
+
+#login-section p, #register-section p{
+    font-size: 16px;
+    color: var(--color-primary-a90);
+    text-align: center;
+}
+
+#login-section a, #register-section a{
+    color: var(--color-primary-a50);
+    transition: font-size 0.3s;
+}
+#login-section p a:hover, #register-section p a:hover{
+    font-size: 17px;
+}

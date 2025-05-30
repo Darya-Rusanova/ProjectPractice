@@ -325,7 +325,7 @@ a, a:hover {
         font-size: 14px;
     }
     .i {
-        width: 350px;
+        width: 320px;
         height: 230px;
         margin: auto;
     }
@@ -551,6 +551,12 @@ img {
     cursor: pointer;
     width: 200px;
     border-radius: 20px;
+    transition: background-color 0.3s;
+    margin: 10px auto; /* Центрирование кнопки */
+    display: block; /* Необходимо для margin auto */
+}
+#count:hover{
+    background-color: var(--color-primary-a50);
 }
 
 .changeTheme > * {
@@ -613,6 +619,7 @@ a {
     cursor: pointer;
     width: 300px;
     border-radius: 20px;
+    transition: background-color 0.3s;
   }
   
 .dropdown {
@@ -663,7 +670,6 @@ a {
 }
   
 .dropdown:hover .dropbtn {
-    font-weight: bold;
     background-color: var(--color-primary-a50);
 }
 
