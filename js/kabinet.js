@@ -11,6 +11,57 @@ const addStepButton = document.getElementById('add-step');
 const ingredientsContainer = document.getElementById('ingredients-container');
 const stepsContainer = document.getElementById('steps-container');
 const categoryButtons = document.querySelectorAll('.category-btn');
+const servingsInput = document.getElementById('recipe-servings');
+const cookingTimeInput = document.getElementById('recipe-cookingTime');
+
+// Отладка: проверяем количество найденных кнопок
+console.log('Найдено кнопок категорий:', categoryButtons.length, Array.from(categoryButtons).map(btn => btn.dataset.category));
+
+// Функция ограничения ввода
+function restrictInput(input, isDecimal = false) {
+    input.addEventListener('input', () => {
+        let value = input.value;
+        if (isDecimal) {
+            // Разрешаем цифры и одну точку
+            value = value.replace(/[^0-9.]/g, '');
+            const parts = value.split('.');
+            if (parts.length > 2) {
+                value = parts[0] + '.' + parts[1];
+            }
+        } else {
+            // Только цифры
+            value = value.replace(/[^0-9]/g, '');
+        }
+        input.value = value;
+    });
+}
+
+// Функция проверки границ
+function enforceMinMax(input) {
+    input.addEventListener('change', () => {
+        const min = parseFloat(input.min);
+        const max = parseFloat(input.max);
+        let value = parseFloat(input.value);
+        if (isNaN(value)) {
+            input.value = min;
+        } else if (value < min) {
+            input.value = min;
+        } else if (value > max) {
+            input.value = max;
+        }
+    });
+}
+
+// Применяем ограничения к начальным полям
+restrictInput(servingsInput); // Только цифры
+restrictInput(cookingTimeInput); // Только цифры
+enforceMinMax(servingsInput); // min=1, max=100
+enforceMinMax(cookingTimeInput); // min=1, max=100000
+
+// Применяем ограничения к начальному полю Количество
+const initialQuantityInput = document.querySelector('.ingredient-quantity');
+restrictInput(initialQuantityInput, true); // Цифры и точка
+enforceMinMax(initialQuantityInput); // min=0, max=1000
 
 // Проверка токена при загрузке
 async function checkToken() {
@@ -124,7 +175,7 @@ async function fetchRecipes() {
 categoryButtons.forEach(button => {
     button.addEventListener('click', () => {
         button.classList.toggle('active');
-        console.log('Категория переключена:', button.dataset.category, button.classList.contains('active'));
+        console.log('Категория переключена:', button.dataset.category, 'Active:', button.classList.contains('active'), 'Classes:', button.className);
     });
 });
 
@@ -138,6 +189,10 @@ addIngredientButton.addEventListener('click', () => {
         <label>Количество (г): <input type="number" class="ingredient-quantity" min="0" max="1000" step="0.01" required></label>
     `;
     ingredientsContainer.appendChild(ingredientDiv);
+    // Применяем ограничения к новому полю Количество
+    const newQuantityInput = ingredientDiv.querySelector('.ingredient-quantity');
+    restrictInput(newQuantityInput, true);
+    enforceMinMax(newQuantityInput);
 });
 
 // Обработчик добавления шага
@@ -174,23 +229,9 @@ recipeForm.addEventListener('submit', async (e) => {
     }
 
     // Собираем данные рецепта
-    const servings = parseInt(document.getElementById('recipe-servings').value);
-    const cookingTime = parseInt(document.getElementById('recipe-cookingTime').value);
+    const servings = parseInt(servingsInput.value);
+    const cookingTime = parseInt(cookingTimeInput.value);
     
-    // Валидация числовых полей
-    if (servings < 1 || servings > 100) {
-        errorDiv.textContent = 'Порции должны быть от 1 до 100';
-        button.disabled = false;
-        button.textContent = originalText;
-        return;
-    }
-    if (cookingTime < 1 || cookingTime > 100000) {
-        errorDiv.textContent = 'Время приготовления должно быть от 1 до 100000 минут';
-        button.disabled = false;
-        button.textContent = originalText;
-        return;
-    }
-
     const recipe = {
         title: document.getElementById('recipe-title').value,
         categories: selectedCategories,
@@ -207,12 +248,6 @@ recipeForm.addEventListener('submit', async (e) => {
     for (let div of ingredientDivs) {
         const name = div.querySelector('.ingredient-name').value;
         const quantity = parseFloat(div.querySelector('.ingredient-quantity').value);
-        if (quantity < 0 || quantity > 1000) {
-            errorDiv.textContent = 'Количество ингредиента должно быть от 0 до 1000';
-            button.disabled = false;
-            button.textContent = originalText;
-            return;
-        }
         recipe.ingredients.push(name);
         recipe.ingredientQuantities.push(quantity);
     }
@@ -244,6 +279,10 @@ recipeForm.addEventListener('submit', async (e) => {
                     <label>Количество (г): <input type="number" class="ingredient-quantity" min="0" max="1000" step="0.01" required></label>
                 </div>
             `;
+            // Применяем ограничения к новому начальному полю Количество
+            const newInitialQuantityInput = ingredientsContainer.querySelector('.ingredient-quantity');
+            restrictInput(newInitialQuantityInput, true);
+            enforceMinMax(newInitialQuantityInput);
             stepsContainer.innerHTML = `
                 <div class="step">
                     <label>Шаг: <input type="text" class="step-description" required></label>
