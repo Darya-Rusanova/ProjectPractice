@@ -79,17 +79,6 @@
   color: var(--color-primary-a90);
   font-family: Verdana, Geneva, sans-serif;
 }
-#recipe-form input.ingredient-quantity:disabled {
-  background-color: var(--color-primary-a60);
-  color: var(--color-primary-a50);
-  cursor: not-allowed;
-}
-#recipe-form select.ingredient-unit {
-  width: 150px;
-  padding: 10px;
-  margin-left: 5px;
-  vertical-align: middle;
-}
 #recipe-form textarea {
   resize: vertical;
   min-height: 100px;
@@ -200,10 +189,6 @@
   #recipe-form input, #recipe-form textarea, #recipe-form select {
     font-size: 14px;
     padding: 10px;
-  }
-  #recipe-form select.ingredient-unit {
-    width: 120px;
-    padding: 8px;
   }
   #recipe-form button, #logout, .delete-btn {
     font-size: 14px;
