@@ -14,33 +14,40 @@
   align-items: center;
   min-height: calc(100vh - 150px);
 }
+/* Секция личного кабинета */
 .cabinet-section {
   background-color: var(--color-primary-a40);
   border-radius: 20px;
   outline: 5px solid var(--color-primary-a30);
-  padding: 20px;
+  padding: 30px;
   margin: 20px auto;
-  max-width: 600px;
+  max-width: 700px;
   box-shadow: 5px 5px 10px 3px var(--color-primary-a60);
 }
-#cabinet-section {
-  max-width: 700px;
-  padding: 30px;
-}
-#cabinet-section h2 {
+
+.cabinet-section h2 {
   font-size: 28px;
   color: var(--color-primary-a90);
   text-align: center;
   text-shadow: 1px 1px 1px var(--color-primary-a0);
+  margin-bottom: 20px;
 }
-#recipes-section, #add-recipe-section {
+
+/* Секции рецептов и добавления рецепта */
+#recipes-section,
+#add-recipe-section {
   margin-top: 20px;
 }
-#recipes-section h3, #add-recipe-section h3 {
+
+#recipes-section h3,
+#add-recipe-section h3 {
   font-size: 22px;
   color: var(--color-primary-a90);
   text-align: center;
+  margin-bottom: 15px;
 }
+
+/* Стили для списка рецептов */
 .myRecipe {
   border: 1px solid var(--color-primary-a30);
   border-radius: 10px;
@@ -48,39 +55,37 @@
   margin-bottom: 15px;
   background-color: var(--color-primary-a40);
 }
+
 .myRecipe h4 {
   font-size: 18px;
   color: var(--color-primary-a90);
   margin-bottom: 10px;
 }
+
 .myRecipe p {
   font-size: 16px;
   color: var(--color-primary-a90);
   margin: 5px 0;
 }
+
 .myRecipe img {
   max-width: 100%;
   border-radius: 10px;
+  margin-top: 10px;
 }
-.image-preview {
-    margin-top: 5px;
-}
-input[type="file"] {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
+
+/* Стили формы */
 #recipe-form label {
   font-size: 18px;
   color: var(--color-primary-a90);
-  margin: 5px 0;
+  margin: 10px 0 5px;
   width: 100%;
   display: block;
 }
-#recipe-form input, #recipe-form textarea, #recipe-form select {
+
+#recipe-form input,
+#recipe-form textarea,
+#recipe-form select {
   font-size: 16px;
   padding: 12px;
   margin: 5px 0;
@@ -89,36 +94,45 @@ input[type="file"] {
   background-color: var(--color-primary-a40);
   color: var(--color-primary-a90);
   font-family: Verdana, Geneva, sans-serif;
+  width: 100%;
+  box-sizing: border-box;
 }
-#recipe-form input.ingredient-quantity:disabled {
-  background-color: var(--color-primary-a60);
-  cursor: not-allowed;
-}
+
 #recipe-form textarea {
   resize: vertical;
   min-height: 100px;
-  width: 100%;
 }
-#add-ingredient, #addREc, #add-step {
-  font-size: 16px;
-  padding: 12px 24px;
-  background-color: var(--color-primary-a30);
-  color: var(--color-primary-a90);
+
+#recipe-form input.quantity-input:disabled,
+#recipe-form input[type="text"]:disabled {
+  background-color: var(--color-primary-a60);
+  cursor: not-allowed;
+}
+
+/* Стили для загрузки файлов */
+#recipe-form input[type="file"] {
+  padding: 8px;
   border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  margin: 10px;
-  transition: background-color 0.3s;
+  background: none;
 }
-#add-ingredient:hover, #addREc:hover, #add-step:hover {
-  background-color: var(--color-primary-a50);
+
+.image-preview {
+  margin-top: 5px;
 }
+
+.image-preview img {
+  max-width: 100px;
+  border-radius: 4px;
+}
+
+/* Кнопки категорий */
 .category-buttons {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 20px;
 }
+
 .category-btn {
   font-size: 16px;
   padding: 8px 16px;
@@ -130,22 +144,32 @@ input[type="file"] {
   transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
   font-family: Verdana, Geneva, sans-serif;
 }
+
 .category-btn.active {
   background-color: var(--color-primary-a50);
   color: var(--color-primary-a90);
   border-color: var(--color-primary-a30);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
-#recipe-servings, #recipe-cookingTime, .ingredient-quantity {
+
+/* Убираем спиннеры для числовых полей */
+#recipe-servings,
+#recipe-cooking-time {
   -webkit-appearance: none;
   -moz-appearance: textfield;
   appearance: textfield;
 }
+
 #recipe-form input[type="number"]::-webkit-inner-spin-button,
 #recipe-form input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+/* Кнопки формы */
+#add-ingredient-btn,
+#add-step-btn,
+#addRecipe-btn,
 #logout {
   font-size: 16px;
   padding: 12px 24px;
@@ -157,6 +181,14 @@ input[type="file"] {
   margin: 10px;
   transition: background-color 0.3s;
 }
+
+#add-ingredient-btn:hover,
+#add-step-btn:hover,
+#addRecipe-btn:hover,
+#logout:hover {
+  background-color: var(--color-primary-a50);
+}
+
 .delete-btn {
   font-size: 16px;
   padding: 12px 24px;
@@ -168,63 +200,76 @@ input[type="file"] {
   margin: 10px;
   transition: background-color 0.3s;
 }
-#logout:hover {
-  background-color: var(--color-primary-a50);
-}
+
 .delete-btn:hover {
-  background-color: red;
+  background-color: #cc0000;
 }
+
+/* Стили для ошибок */
 .error {
   color: #ff4d4d;
   text-align: center;
   margin-bottom: 10px;
   font-size: 16px;
 }
+
+/* Адаптивность */
 @media (width < 600px) {
-  .cabinet-container {
-    min-height: calc(100vh - 120px);
+  .container {
+    padding: 0 10px;
   }
+
   .cabinet-section {
     margin: 10px;
-    padding: 15px;
-  }
-  #cabinet-section {
-    max-width: 90%;
     padding: 20px;
+    max-width: 90%;
   }
-  #cabinet-section h2 {
+
+  .cabinet-section h2 {
     font-size: 24px;
   }
-  #recipes-section h3, #add-recipe-section h3 {
+
+  #recipes-section h3,
+  #add-recipe-section h3 {
     font-size: 20px;
   }
+
   #recipe-form label {
     font-size: 16px;
   }
-  #recipe-form input, #recipe-form textarea, #recipe-form select {
+
+  #recipe-form input,
+  #recipe-form textarea,
+  #recipe-form select {
     font-size: 14px;
     padding: 10px;
   }
-  #recipe-form button, #logout, .delete-btn {
+
+  #add-ingredient-btn,
+  #add-step-btn,
+  #addRecipe-btn,
+  #logout,
+  .delete-btn {
     font-size: 14px;
     padding: 10px 20px;
   }
+
   .category-btn {
     font-size: 14px;
     padding: 6px 12px;
   }
+
   .myRecipe h4 {
     font-size: 16px;
   }
+
   .myRecipe p {
     font-size: 14px;
   }
 }
+
 @media (600px <= width < 1000px) {
   .cabinet-section {
     max-width: 80%;
-  }
-  #cabinet-section {
-    max-width: 600px;
   }
 }
