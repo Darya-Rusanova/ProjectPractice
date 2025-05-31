@@ -30,7 +30,7 @@
       
       <div class="user">
         <div class="user-bg" href="#" id="lk"></div>
-        <a class="text-toggle" id="lk">Личный кабинет</a>
+        <a class="category-btn" id="lk">Личный кабинет</a>
       </div>
     </div>
     <div id="error" class="error section"></div>
@@ -40,7 +40,7 @@
       <button id="logout">Выйти</button>
       <div id="recipes-section" class="section">
         <h3>Ваши рецепты</h3>
-        <div id="recipes-list"></div>
+        <div id="recipes"></div>
       </div>
       <div id="add-recipe-section" class="section">
         <h3>Добавить новый рецепт</h3>
@@ -55,51 +55,53 @@
             <button type="button" class="category-btn" data-category="Итальянская кухня">Итальянская кухня</button>
             <button type="button" class="category-btn" data-category="Русская кухня">Русская кухня</button>
             <button type="button" class="category-btn" data-category="Горячее блюдо">Горячее блюдо</button>
-            <button type="button" class="category-btn" data-category="Закуски">Закуски</button>
+            <button type="button" class="category-btn" data-category="Закуски">Закцски</button>
             <button type="button" class="category-btn" data-category="Десерт">Десерт</button>
             <button type="button" class="category-btn" data-category="Напитки">Напитки</button>
           </div>
           <label>Описание: <textarea id="recipe-description" maxlength="1000" required></textarea></label>
           <label>Порции: <input type="number" id="recipe-servings" min="1" max="100" required></label>
-          <label>Время приготовления (мин): <input type="number" id="recipe-cookingTime" min="1" max="100000" required></label>
+          <label>Время приготовления (мин): <input type="number" id="recipe-cooking-time" min="1" max="100000" required></label>
 
           <div id="ingredients-container">
             <div class="ingredient">
               <label>Ингредиент: <input type="text" class="ingredient-name" maxlength="50" required></label>
               <label>Количество: 
-                <input type="text" class="ingredient-quantity" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required>
-                <select class="ingredient-unit" required>
+                <input type="text" class="quantity-input" id="quantityInput" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required>
+                <select class="type-unit" id="typeUnit" required>
                   <option value="г">г</option>
                   <option value="кг">кг</option>
                   <option value="мл">мл</option>
                   <option value="л">л</option>
                   <option value="шт">шт.</option>
                   <option value="ст">ст.</option>
-                  <option value="стл">ст.л.</option>
-                  <option value="чл">ч.л.</option>
-                  <option value="пв">по вкусу</option>
+                  <option value="стл">стл</option>
+                  <option value="чл">чл</option>
+                  <option value="пв">пв</option>
                 </select>
               </label> 
             </div>
           </div>
           
-          <button type="button" id="add-ingredient">Добавить ингредиент</button>
-          <label>Изображение (URL): <input type="text" id="recipe-image"></label>
+          <button type="button" id="add-ingredient-btn">Добавить ингредиент</button>
+          <label>Изображение: <input type="file" id="recipe-image" name="recipeImage" accept="image/jpeg,image/png"></label>
+          <div id="recipe-image-preview" class="image-preview"></div>
           <div id="steps-container">
             <div class="step">
               <label>Шаг 1 (описание): <textarea class="step-description" maxlength="1000" required></textarea></label>
-              <label>Изображение шага (URL): <input type="text" class="step-image"></label>
+              <label>Изображение шага: <input type="file" class="step-image" name="step-image" accept="image/*"></label>
+              <div class="step-image-preview"></div>
             </div>
           </div>
-          <button type="button" id="add-step">Добавить шаг</button>
-          <button type="submit" id="addREc">Добавить рецепт</button>
+          <button type="button" id="add-step-btn">Добавить шаг</button>
+          <button type="submit" id="addRecipe-btn">Добавить рецепт</button>
         </form>
       </div>
     </div>
   </div>
   <script src="js/utils.js" defer></script>
   <script src="js/theme.js" type="text/javascript" defer></script>
-  <script src="js/common.js" defer></script>
+  <script src="js/main.js" defer></script>
   <script src="js/kabinet.js" defer></script>
 </body>
 </html>
