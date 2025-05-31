@@ -1,37 +1,77 @@
 :root {
-    --theme-image: url('../images/functional/lightLogo.jpg');
+    --theme-image: url('../images/functional/homeLight.png'); 
+    --bg-image:url('../images/bg.jpg');  
+    --bg-image-big:url('../images/bg1.jpg');
 }
 [data-theme="dark"] {  
-    --theme-image: url('../images/functional/darkLogo.jpg');      
+    --theme-image: url('../images/functional/homeDark.png');    
+    --bg-image:url('../images/bg-dark.jpg');
+    --bg-image-big:url('../images/bg1-dark.jpg');  
    
+}
+@media (min-width:1120px){
+    body{
+        background-image: var(--bg-image-big);     
+    }
+
+}
+
+
+@media (width < 1120px){
+    body{
+        background-image: var(--bg-image);     
+    }
+}
+body{  
+    background-position: center center; 
+    background-repeat: no-repeat; 
+    transition: background-image 0.3s;
+}
+.start{
+    margin-bottom: -100px;
+    display:grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 150px;
+    grid-template-areas:
+        "header theme"
 }
 .container{
     display:grid;
-    grid-template-columns: 50% 50%;
-    grid-template-rows: 150px 100px auto;
+    grid-template-columns: 100%;
+    grid-template-rows: 100px auto;
     grid-template-areas:
-        "header theme"
-        "error error" 
-        "main main"       
+        "error" 
+        "main"    
 }
 .theme-bg {
   background-image: var(--theme-image);
-  width: 70px;
-  height: 100px;
+  width: 40px;
+  height: 40px;
   background-size: cover;       
   background-position: center; 
   background-repeat: no-repeat; 
 }
+.header{
+    margin-left: 20px;
+    margin-right: auto;
+    margin-top: 30px;
+    margin-bottom: 0px;
+}
+.theme-switcher-wrapper{
+    margin-right: 0px;
+}
 
 .auth-container{
     grid-area: main;
+    background-color: var(--color-primary-a40);
     border-radius: 20px;
     outline: 5px solid var(--color-primary-a30);
-    min-height: 400px;
+    min-height: 500px;
     margin: 0 auto;
     border-radius: 20px;
     padding: 20px;
     max-width: 600px;
+    box-shadow: 0 5px 15px var(--color-primary-a20);
 }
 .error {
     grid-area: error;
