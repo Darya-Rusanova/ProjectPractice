@@ -2,7 +2,7 @@
 <html lang="ru" data-theme="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Личный кабинет | ЧудоБлюдо</title>
   <link href="css/style.css" type="text/css" rel="stylesheet" media="screen">
   <link href="css/theme.css" type="text/css" rel="stylesheet" media="screen">
@@ -10,7 +10,7 @@
   <link rel="icon" href="images/logo.png" type="image/png">
 </head>
 <body>
-    <div class="container">
+  <div class="container">
     <div class="start">
       <div class="header">
         <a href="index.html">
@@ -20,21 +20,19 @@
       <div class="theme-switcher-wrapper">
         <button id="theme-toggle" class="theme-toggle">
           <span class="sun">
-            <img src="images/functional/sun.png"/>
+            <img src="images/functional/sun.png" alt="Светлая тема"/>
           </span>
           <span class="moon">
-            <img src="images/functional/moon.png" width="40px" height="40px"/>
+            <img src="images/functional/moon.png" width="40px" height="40px" alt="Тёмная тема"/>
           </span>
         </button>
       </div>
-      
       <div class="user">
-        <div class="user-bg" href="#" id="lk"></div>
+        <div class="user-bg"></div>
         <a class="category-btn" id="lk">Личный кабинет</a>
       </div>
     </div>
     <div id="error" class="error section"></div>
-    <!-- Секция личного кабинета -->
     <div id="cabinet-section" class="cabinet-section section">
       <h2>Личный кабинет</h2>
       <button id="logout">Выйти</button>
@@ -55,42 +53,52 @@
             <button type="button" class="category-btn" data-category="Итальянская кухня">Итальянская кухня</button>
             <button type="button" class="category-btn" data-category="Русская кухня">Русская кухня</button>
             <button type="button" class="category-btn" data-category="Горячее блюдо">Горячее блюдо</button>
-            <button type="button" class="category-btn" data-category="Закуски">Закцски</button>
+            <button type="button" class="category-btn" data-category="Закуски">Закуски</button>
             <button type="button" class="category-btn" data-category="Десерт">Десерт</button>
             <button type="button" class="category-btn" data-category="Напитки">Напитки</button>
           </div>
           <label>Описание: <textarea id="recipe-description" maxlength="1000" required></textarea></label>
           <label>Порции: <input type="number" id="recipe-servings" min="1" max="100" required></label>
           <label>Время приготовления (мин): <input type="number" id="recipe-cooking-time" min="1" max="100000" required></label>
-
           <div id="ingredients-container">
             <div class="ingredient">
               <label>Ингредиент: <input type="text" class="ingredient-name" maxlength="50" required></label>
-              <label>Количество: 
-                <input type="text" class="quantity-input" id="quantityInput" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required>
-                <select class="type-unit" id="typeUnit" required>
+              <label>Количество:
+                <input type="text" class="quantity-input" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required>
+                <select class="type-unit" required>
                   <option value="г">г</option>
                   <option value="кг">кг</option>
                   <option value="мл">мл</option>
                   <option value="л">л</option>
                   <option value="шт">шт.</option>
                   <option value="ст">ст.</option>
-                  <option value="стл">стл</option>
-                  <option value="чл">чл</option>
-                  <option value="пв">пв</option>
+                  <option value="стл">ст.л.</option>
+                  <option value="чл">ч.л.</option>
+                  <option value="пв">по вкусу</option>
                 </select>
-              </label> 
+              </label>
+              <button type="button" class="remove-btn remove-ingredient-btn">Удалить ингредиент</button>
             </div>
           </div>
-          
           <button type="button" id="add-ingredient-btn">Добавить ингредиент</button>
-          <label>Изображение: <input type="file" id="recipe-image" name="recipeImage" accept="image/jpeg,image/png"></label>
-          <div id="recipe-image-preview" class="image-preview"></div>
+          <label>Изображение (обязательно): 
+            <input type="file" id="recipe-image" name="recipeImage" accept="image/jpeg,image/png" required>
+          </label>
+          <div class="image-controls">
+            <div id="recipe-image-preview" class="image-preview"></div>
+            <button type="button" id="remove-recipe-image-btn" class="remove-btn" style="display: none;">Удалить изображение</button>
+          </div>
           <div id="steps-container">
             <div class="step">
               <label>Шаг 1 (описание): <textarea class="step-description" maxlength="1000" required></textarea></label>
-              <label>Изображение шага: <input type="file" class="step-image" name="step-image" accept="image/*"></label>
-              <div class="step-image-preview"></div>
+              <label>Изображение шага (опционально): 
+                <input type="file" class="step-image" name="step-image" accept="image/jpeg,image/png">
+              </label>
+              <div class="image-controls">
+                <div class="step-image-preview"></div>
+                <button type="button" class="remove-btn remove-step-image-btn" style="display: none;">Удалить изображение</button>
+              </div>
+              <button type="button" class="remove-btn remove-step-btn">Удалить шаг</button>
             </div>
           </div>
           <button type="button" id="add-step-btn">Добавить шаг</button>

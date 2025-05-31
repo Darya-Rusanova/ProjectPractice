@@ -8,13 +8,6 @@
 #lk:hover {
   text-decoration: none;
 }
-.cabinet-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: calc(100vh - 150px);
-}
-/* Секция личного кабинета */
 .cabinet-section {
   background-color: var(--color-primary-a40);
   border-radius: 20px;
@@ -33,7 +26,6 @@
   margin-bottom: 20px;
 }
 
-/* Секции рецептов и добавления рецепта */
 #recipes-section,
 #add-recipe-section {
   margin-top: 20px;
@@ -47,7 +39,6 @@
   margin-bottom: 15px;
 }
 
-/* Стили для списка рецептов */
 .myRecipe {
   border: 1px solid var(--color-primary-a30);
   border-radius: 10px;
@@ -74,7 +65,6 @@
   margin-top: 10px;
 }
 
-/* Стили формы */
 #recipe-form label {
   font-size: 18px;
   color: var(--color-primary-a90);
@@ -109,11 +99,17 @@
   cursor: not-allowed;
 }
 
-/* Стили для загрузки файлов */
 #recipe-form input[type="file"] {
   padding: 8px;
   border: none;
   background: none;
+}
+
+.image-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 5px;
 }
 
 .image-preview {
@@ -125,7 +121,6 @@
   border-radius: 4px;
 }
 
-/* Кнопки категорий */
 .category-buttons {
   display: flex;
   flex-wrap: wrap;
@@ -152,7 +147,6 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Убираем спиннеры для числовых полей */
 #recipe-servings,
 #recipe-cooking-time {
   -webkit-appearance: none;
@@ -166,7 +160,6 @@
   margin: 0;
 }
 
-/* Кнопки формы */
 #add-ingredient-btn,
 #add-step-btn,
 #addRecipe-btn,
@@ -179,7 +172,7 @@
   border-radius: 10px;
   cursor: pointer;
   margin: 10px;
-  transition: background-color 0.3s;
+  transition: all 0.3s;
 }
 
 #add-ingredient-btn:hover,
@@ -187,6 +180,7 @@
 #addRecipe-btn:hover,
 #logout:hover {
   background-color: var(--color-primary-a50);
+  transform: translateY(-2px);
 }
 
 .delete-btn {
@@ -205,16 +199,30 @@
   background-color: #cc0000;
 }
 
-/* Стили для ошибок */
-.error {
+.remove-btn {
+  font-size: 14px;
+  padding: 8px 16px;
+  background-color: #ff5050;
+  color: var(--color-primary-a90);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 5px 0;
+  transition: background-color 0.3s;
+}
+
+.remove-btn:hover {
+  background-color: #cc0000;
+}
+
+#error.error {
   color: #ff4d4d;
   text-align: center;
   margin-bottom: 10px;
   font-size: 16px;
 }
 
-/* Адаптивность */
-@media (width < 600px) {
+@media (max-width: 599px) {
   .container {
     padding: 0 10px;
   }
@@ -254,6 +262,11 @@
     padding: 10px 20px;
   }
 
+  .remove-btn {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
   .category-btn {
     font-size: 14px;
     padding: 6px 12px;
@@ -268,7 +281,7 @@
   }
 }
 
-@media (600px <= width < 1000px) {
+@media (min-width: 600px) and (max-width: 999px) {
   .cabinet-section {
     max-width: 80%;
   }
