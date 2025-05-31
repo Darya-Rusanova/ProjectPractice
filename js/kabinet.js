@@ -208,7 +208,7 @@ function initializeStep(stepDiv) {
             return;
         }
         stepDiv.remove();
-        updateStepLabels();
+        updateStepLabels(); // Пересчитываем номера шагов после удаления
         errorDiv.textContent = '';
     });
 }
@@ -224,6 +224,7 @@ if (initialIngredient) {
 const initialStep = stepsContainer.querySelector('.step');
 if (initialStep) {
     initializeStep(initialStep);
+    updateStepLabels(); // Устанавливаем начальную нумерацию
 } else {
     console.error('Initial step not found');
 }
@@ -232,40 +233,40 @@ if (initialStep) {
 function updateStepLabels() {
     const stepDivs = stepsContainer.getElementsByClassName('step');
     Array.from(stepDivs).forEach((stepDiv, index) => {
+        const stepNumber = index + 1;
         const label = stepDiv.querySelector('label[for^="step-description-"]');
-        if (label) {
-            const stepNumber = index + 1;
-            const textarea = stepDiv.querySelector('.step-description');
-            if (textarea) {
-                label.textContent = `Шаг ${stepNumber} (описание): `;
-                const stepComputedStyle = window.getComputedStyle(stepDiv);
-                const containerComputedStyle = window.getComputedStyle(stepsContainer);
-                const textareaComputedStyle = window.getComputedStyle(textarea);
-                console.log(`Обновлён шаг ${stepNumber}, textarea id=${textarea.id}`);
-                console.log(`Стили #steps-container: display=${containerComputedStyle.display}, visibility=${containerComputedStyle.visibility}, height=${containerComputedStyle.height}`);
-                console.log(`Стили .step: display=${stepComputedStyle.display}, visibility=${stepComputedStyle.visibility}, height=${stepComputedStyle.height}`);
-                console.log(`Стили textarea: display=${textareaComputedStyle.display}, visibility=${textareaComputedStyle.visibility}, height=${textareaComputedStyle.height}`);
-                if (containerComputedStyle.display === 'none' || containerComputedStyle.visibility === 'hidden') {
-                    console.warn(`#steps-container скрыт, исправляю`);
-                    stepsContainer.style.display = 'block';
-                    stepsContainer.style.visibility = 'visible';
-                }
-                if (stepComputedStyle.display === 'none' || stepComputedStyle.visibility === 'hidden') {
-                    console.warn(`.step для шага ${stepNumber} скрыт, исправляю`);
-                    stepDiv.style.display = 'block';
-                    stepDiv.style.visibility = 'visible';
-                    stepDiv.style.minHeight = '150px';
-                }
-                if (textareaComputedStyle.display === 'none' || textareaComputedStyle.visibility === 'hidden' || textareaComputedStyle.height === '0px') {
-                    console.warn(`Textarea для шага ${stepNumber} скрыта, исправляю`);
-                    textarea.style.display = 'block';
-                    textarea.style.visibility = 'visible';
-                    textarea.style.minHeight = '100px';
-                    textarea.style.opacity = '1';
-                }
-            } else {
-                console.error(`Textarea не найдена для шага ${stepNumber}`);
+        const textarea = stepDiv.querySelector('.step-description');
+        if (label && textarea) {
+            label.textContent = `Шаг ${stepNumber} (описание): `;
+            label.setAttribute('for', `step-description-${stepNumber}`);
+            textarea.id = `step-description-${stepNumber}`;
+            const stepComputedStyle = window.getComputedStyle(stepDiv);
+            const containerComputedStyle = window.getComputedStyle(stepsContainer);
+            const textareaComputedStyle = window.getComputedStyle(textarea);
+            console.log(`Обновлён шаг ${stepNumber}, textarea id=${textarea.id}`);
+            console.log(`Стили #steps-container: display=${containerComputedStyle.display}, visibility=${containerComputedStyle.visibility}, height=${containerComputedStyle.height}`);
+            console.log(`Стили .step: display=${stepComputedStyle.display}, visibility=${stepComputedStyle.visibility}, height=${stepComputedStyle.height}`);
+            console.log(`Стили textarea: display=${textareaComputedStyle.display}, visibility=${textareaComputedStyle.visibility}, height=${textareaComputedStyle.height}`);
+            if (containerComputedStyle.display === 'none' || containerComputedStyle.visibility === 'hidden') {
+                console.warn(`#steps-container скрыт, исправляю`);
+                stepsContainer.style.display = 'block';
+                stepsContainer.style.visibility = 'visible';
             }
+            if (stepComputedStyle.display === 'none' || stepComputedStyle.visibility === 'hidden') {
+                console.warn(`.step для шага ${stepNumber} скрыт, исправляю`);
+                stepDiv.style.display = 'block';
+                stepDiv.style.visibility = 'visible';
+                stepDiv.style.minHeight = '150px';
+            }
+            if (textareaComputedStyle.display === 'none' || textareaComputedStyle.visibility === 'hidden' || textareaComputedStyle.height === '0px') {
+                console.warn(`Textarea для шага ${stepNumber} скрыта, исправляю`);
+                textarea.style.display = 'block';
+                textarea.style.visibility = 'visible';
+                textarea.style.minHeight = '100px';
+                textarea.style.opacity = '1';
+            }
+        } else {
+            console.error(`Textarea или label не найдены для шага ${stepNumber}`);
         }
     });
 }
