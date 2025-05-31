@@ -17,6 +17,31 @@ const recipeImageInput = document.getElementById('recipe-image');
 const recipeImagePreview = document.getElementById('recipe-image-preview');
 const removeRecipeImageButton = document.getElementById('remove-recipe-image-btn');
 
+// Функция для преобразования первой буквы первого слова в заглавную
+function capitalizeFirstWord(text) {
+    if (!text) return text;
+    const trimmed = text.trimStart();
+    if (!trimmed) return text;
+    const words = trimmed.split(/\s+/);
+    const firstWord = words[0];
+    const capitalizedFirstWord = firstWord.charAt(0).toUpperCase() + firstWord.slice(1);
+    words[0] = capitalizedFirstWord;
+    const newText = text.slice(0, text.indexOf(firstWord)) + words.join(' ');
+    return newText;
+}
+
+// Функция для добавления точки в конце текста, если отсутствуют знаки ".", "!", "?", "..."
+function ensureEndingWithPeriod(text) {
+    if (!text) return text;
+    const trimmed = text.trim();
+    if (!trimmed) return text;
+    const endings = ['.', '!', '?', '...'];
+    if (!endings.some(ending => trimmed.endsWith(ending))) {
+        return trimmed + '.';
+    }
+    return text;
+}
+
 // Функция для отображения предварительного просмотра изображения
 function showImagePreview(input, previewElement, removeButton) {
     if (input.files && input.files[0]) {
@@ -169,11 +194,40 @@ restrictInput(cookingTimeInput);
 enforceMinMax(servingsInput);
 enforceMinMax(cookingTimeInput);
 
+// Добавляем обработчики для заглавной буквы и точки
+function initializeTextField(input, capitalize = false, addPeriod = false) {
+    if (capitalize) {
+        input.addEventListener('input', () => {
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+            const originalValue = input.value;
+            input.value = capitalizeFirstWord(input.value);
+            // Восстанавливаем позицию курсора
+            if (input.value !== originalValue) {
+                input.setSelectionRange(start, end);
+            }
+        });
+    }
+    if (addPeriod) {
+        input.addEventListener('change', () => {
+            input.value = ensureEndingWithPeriod(input.value);
+        });
+    }
+}
+
+// Инициализация полей "Название" и "Описание"
+const titleInput = document.getElementById('recipe-title');
+const descriptionInput = document.getElementById('recipe-description');
+initializeTextField(titleInput, true); // Заглавная буква для "Название"
+initializeTextField(descriptionInput, true, true); // Заглавная буква и точка для "Описание"
+
 // Функция для инициализации ингредиента
 function initializeIngredient(ingredientDiv) {
     const quantityInput = ingredientDiv.querySelector('.quantity-input');
     const unitSelect = ingredientDiv.querySelector('.type-unit');
     const removeButton = ingredientDiv.querySelector('.remove-ingredient-btn');
+    const ingredientNameInput = ingredientDiv.querySelector('.ingredient-name');
+    
     restrictInput(quantityInput, true);
     enforceMinMax(quantityInput, true);
     unitSelect.addEventListener('change', () => handleUnitChange(unitSelect, quantityInput));
@@ -187,6 +241,9 @@ function initializeIngredient(ingredientDiv) {
         ingredientDiv.remove();
         errorDiv.textContent = '';
     });
+    
+    // Добавляем обработчик для заглавной буквы в поле "Ингредиент"
+    initializeTextField(ingredientNameInput, true);
 }
 
 // Функция для создания шага через DOM-методы
@@ -252,6 +309,7 @@ function initializeStep(stepDiv) {
     const stepImagePreview = stepDiv.querySelector('.step-image-preview');
     const removeStepImageButton = stepDiv.querySelector('.remove-step-image-btn');
     const removeStepButton = stepDiv.querySelector('.remove-step-btn');
+    const stepDescriptionTextarea = stepDiv.querySelector('.step-description');
     
     stepImageInput.addEventListener('change', () => {
         showImagePreview(stepImageInput, stepImagePreview, removeStepImageButton);
@@ -266,20 +324,22 @@ function initializeStep(stepDiv) {
             return;
         }
         stepDiv.remove();
-        updateStepLabels(); // Пересчитываем номера шагов после удаления
+        updateStepLabels();
         errorDiv.textContent = '';
     });
+    
+    // Добавляем обработчики для заглавной буквы и точки в поле "Шаг N (описание)"
+    initializeTextField(stepDescriptionTextarea, true, true);
 }
 
 // Функция для обновления нумерации шагов
 function updateStepLabels() {
     const stepDivs = stepsContainer.getElementsByClassName('step');
     Array.from(stepDivs).forEach((stepDiv, index) => {
-        const stepNumber = index + 1; // Нумерация начинается с 1
+        const stepNumber = index + 1;
         const label = stepDiv.querySelector('label[for^="step-description-"]');
         const textarea = stepDiv.querySelector('.step-description');
         if (label && textarea) {
-            // Обновляем только текстовый узел внутри label, сохраняя textarea
             const labelTextNode = label.childNodes[0];
             if (labelTextNode && labelTextNode.nodeType === Node.TEXT_NODE) {
                 labelTextNode.textContent = `Шаг ${stepNumber} (описание): `;
@@ -289,8 +349,6 @@ function updateStepLabels() {
             label.setAttribute('for', `step-description-${stepNumber}`);
             textarea.id = `step-description-${stepNumber}`;
             console.log(`Обновлён шаг ${stepNumber}, textarea id=${textarea.id}`);
-            const computedStyle = window.getComputedStyle(textarea);
-            console.log(`Стили textarea для шага ${stepNumber}: display=${computedStyle.display}, visibility=${computedStyle.visibility}, height=${computedStyle.height}`);
         } else {
             console.error(`Ошибка: label или textarea не найдены для шага ${stepNumber}`);
         }
@@ -309,7 +367,7 @@ const initialStep = stepsContainer.querySelector('.step');
 if (initialStep) {
     console.log('Инициализация начального шага');
     initializeStep(initialStep);
-    updateStepLabels(); // Устанавливаем начальную нумерацию
+    updateStepLabels();
     const initialTextarea = initialStep.querySelector('.step-description');
     if (initialTextarea) {
         console.log('Начальный шаг: textarea найдена, id=', initialTextarea.id);
@@ -318,7 +376,6 @@ if (initialStep) {
     }
 } else {
     console.error('Initial step not found');
-    // Создаём первый шаг вручную, если его нет в HTML
     const firstStep = createStep(1);
     stepsContainer.appendChild(firstStep);
     initializeStep(firstStep);
@@ -340,12 +397,9 @@ addStepButton.addEventListener('click', () => {
     initializeStep(stepDiv);
     updateStepLabels();
 
-    // Отладка
     const addedTextarea = stepDiv.querySelector('.step-description');
     if (addedTextarea) {
         console.log(`Добавлен шаг ${stepNumber}, textarea присутствует: true, id=${addedTextarea.id}`);
-        const computedStyle = window.getComputedStyle(addedTextarea);
-        console.log(`Стили textarea: display=${computedStyle.display}, height=${computedStyle.height}, visibility=${computedStyle.visibility}`);
     } else {
         console.error(`Textarea не найдена для шага ${stepNumber} после добавления`);
     }
