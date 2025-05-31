@@ -277,7 +277,7 @@ addStepButton.addEventListener('click', () => {
     stepDiv.className = 'step';
     const stepNumber = stepCount + 1;
     stepDiv.innerHTML = `
-        <label>Шаг ${stepNumber} (описание): <input type="text" class="step-description" maxlength="1000" required></label>
+        <label>Шаг ${stepNumber} (описание): <textarea class="step-description" maxlength="1000" required></textarea></label>
         <label>Изображение шага (URL): <input type="text" class="step-image"></label>
     `;
     stepsContainer.appendChild(stepDiv);
@@ -416,7 +416,7 @@ recipeForm.addEventListener('submit', async (e) => {
             handleUnitChange(newInitialUnitSelect, newInitialQuantityInput);
             stepsContainer.innerHTML = `
                 <div class="step">
-                    <label>Шаг 1 (описание): <input type="text" class="step-description" maxlength="1000" required></label>
+                    <label>Шаг 1 (описание): <textarea class="step-description" maxlength="1000" required></textarea></label>
                     <label>Изображение шага (URL): <input type="text" class="step-image"></label>
                 </div>
             `;
