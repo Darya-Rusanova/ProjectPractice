@@ -189,12 +189,69 @@ function initializeIngredient(ingredientDiv) {
     });
 }
 
+// Функция для создания шага через DOM-методы
+function createStep(stepNumber) {
+    const stepDiv = document.createElement('div');
+    stepDiv.className = 'step';
+
+    // Создание первого label для описания
+    const descriptionLabel = document.createElement('label');
+    descriptionLabel.setAttribute('for', `step-description-${stepNumber}`);
+    descriptionLabel.textContent = `Шаг ${stepNumber} (описание): `;
+
+    const textarea = document.createElement('textarea');
+    textarea.id = `step-description-${stepNumber}`;
+    textarea.className = 'step-description';
+    textarea.setAttribute('rows', '4');
+    textarea.setAttribute('maxlength', '1000');
+    textarea.setAttribute('required', 'required');
+    descriptionLabel.appendChild(textarea);
+    stepDiv.appendChild(descriptionLabel);
+
+    // Создание второго label для изображения
+    const imageLabel = document.createElement('label');
+    imageLabel.textContent = 'Изображение шага: ';
+    const imageInput = document.createElement('input');
+    imageInput.type = 'file';
+    imageInput.className = 'step-image';
+    imageInput.name = 'step-image';
+    imageInput.accept = 'image/jpeg,image/png';
+    imageLabel.appendChild(imageInput);
+    stepDiv.appendChild(imageLabel);
+
+    // Создание блока image-controls
+    const imageControls = document.createElement('div');
+    imageControls.className = 'image-controls';
+
+    const imagePreview = document.createElement('div');
+    imagePreview.className = 'step-image-preview';
+    imageControls.appendChild(imagePreview);
+
+    const removeImageButton = document.createElement('button');
+    removeImageButton.type = 'button';
+    removeImageButton.className = 'remove-btn remove-step-image-btn';
+    removeImageButton.textContent = 'Удалить изображение';
+    removeImageButton.style.display = 'none';
+    imageControls.appendChild(removeImageButton);
+    stepDiv.appendChild(imageControls);
+
+    // Создание кнопки удаления шага
+    const removeStepButton = document.createElement('button');
+    removeStepButton.type = 'button';
+    removeStepButton.className = 'remove-btn remove-step-btn';
+    removeStepButton.textContent = 'Удалить шаг';
+    stepDiv.appendChild(removeStepButton);
+
+    return stepDiv;
+}
+
 // Функция для инициализации шага
 function initializeStep(stepDiv) {
     const stepImageInput = stepDiv.querySelector('.step-image');
     const stepImagePreview = stepDiv.querySelector('.step-image-preview');
     const removeStepImageButton = stepDiv.querySelector('.remove-step-image-btn');
     const removeStepButton = stepDiv.querySelector('.remove-step-btn');
+    
     stepImageInput.addEventListener('change', () => {
         showImagePreview(stepImageInput, stepImagePreview, removeStepImageButton);
     });
@@ -213,6 +270,26 @@ function initializeStep(stepDiv) {
     });
 }
 
+// Функция для обновления нумерации шагов
+function updateStepLabels() {
+    const stepDivs = stepsContainer.getElementsByClassName('step');
+    Array.from(stepDivs).forEach((stepDiv, index) => {
+        const stepNumber = index + 1; // Нумерация начинается с 1
+        const label = stepDiv.querySelector('label[for^="step-description-"]');
+        const textarea = stepDiv.querySelector('.step-description');
+        if (label && textarea) {
+            label.textContent = `Шаг ${stepNumber} (описание): `;
+            label.setAttribute('for', `step-description-${stepNumber}`);
+            textarea.id = `step-description-${stepNumber}`;
+            console.log(`Обновлён шаг ${stepNumber}, textarea id=${textarea.id}`);
+            const computedStyle = window.getComputedStyle(textarea);
+            console.log(`Стили textarea для шага ${stepNumber}: display=${computedStyle.display}, visibility=${computedStyle.visibility}, height=${computedStyle.height}`);
+        } else {
+            console.error(`Ошибка: label или textarea не найдены для шага ${stepNumber}`);
+        }
+    });
+}
+
 // Инициализация начальных элементов
 const initialIngredient = ingredientsContainer.querySelector('.ingredient');
 if (initialIngredient) {
@@ -223,53 +300,49 @@ if (initialIngredient) {
 
 const initialStep = stepsContainer.querySelector('.step');
 if (initialStep) {
+    console.log('Инициализация начального шага');
     initializeStep(initialStep);
     updateStepLabels(); // Устанавливаем начальную нумерацию
+    const initialTextarea = initialStep.querySelector('.step-description');
+    if (initialTextarea) {
+        console.log('Начальный шаг: textarea найдена, id=', initialTextarea.id);
+    } else {
+        console.error('Начальный шаг: textarea НЕ найдена');
+    }
 } else {
     console.error('Initial step not found');
+    // Создаём первый шаг вручную, если его нет в HTML
+    const firstStep = createStep(1);
+    stepsContainer.appendChild(firstStep);
+    initializeStep(firstStep);
+    updateStepLabels();
+    console.log('Создан первый шаг вручную');
 }
 
-// Функция для обновления нумерации шагов
-function updateStepLabels() {
-    const stepDivs = stepsContainer.getElementsByClassName('step');
-    Array.from(stepDivs).forEach((stepDiv, index) => {
-        const stepNumber = index + 1;
-        const label = stepDiv.querySelector('label[for^="step-description-"]');
-        const textarea = stepDiv.querySelector('.step-description');
-        if (label && textarea) {
-            label.textContent = `Шаг ${stepNumber} (описание): `;
-            label.setAttribute('for', `step-description-${stepNumber}`);
-            textarea.id = `step-description-${stepNumber}`;
-            const stepComputedStyle = window.getComputedStyle(stepDiv);
-            const containerComputedStyle = window.getComputedStyle(stepsContainer);
-            const textareaComputedStyle = window.getComputedStyle(textarea);
-            console.log(`Обновлён шаг ${stepNumber}, textarea id=${textarea.id}`);
-            console.log(`Стили #steps-container: display=${containerComputedStyle.display}, visibility=${containerComputedStyle.visibility}, height=${containerComputedStyle.height}`);
-            console.log(`Стили .step: display=${stepComputedStyle.display}, visibility=${stepComputedStyle.visibility}, height=${stepComputedStyle.height}`);
-            console.log(`Стили textarea: display=${textareaComputedStyle.display}, visibility=${textareaComputedStyle.visibility}, height=${textareaComputedStyle.height}`);
-            if (containerComputedStyle.display === 'none' || containerComputedStyle.visibility === 'hidden') {
-                console.warn(`#steps-container скрыт, исправляю`);
-                stepsContainer.style.display = 'block';
-                stepsContainer.style.visibility = 'visible';
-            }
-            if (stepComputedStyle.display === 'none' || stepComputedStyle.visibility === 'hidden') {
-                console.warn(`.step для шага ${stepNumber} скрыт, исправляю`);
-                stepDiv.style.display = 'block';
-                stepDiv.style.visibility = 'visible';
-                stepDiv.style.minHeight = '150px';
-            }
-            if (textareaComputedStyle.display === 'none' || textareaComputedStyle.visibility === 'hidden' || textareaComputedStyle.height === '0px') {
-                console.warn(`Textarea для шага ${stepNumber} скрыта, исправляю`);
-                textarea.style.display = 'block';
-                textarea.style.visibility = 'visible';
-                textarea.style.minHeight = '100px';
-                textarea.style.opacity = '1';
-            }
-        } else {
-            console.error(`Textarea или label не найдены для шага ${stepNumber}`);
-        }
-    });
-}
+// Добавление шага
+addStepButton.addEventListener('click', () => {
+    const stepCount = stepsContainer.getElementsByClassName('step').length;
+    if (stepCount >= 50) {
+        errorDiv.textContent = 'Максимум 50 шагов';
+        return;
+    }
+
+    const stepNumber = stepCount + 1;
+    const stepDiv = createStep(stepNumber);
+    stepsContainer.appendChild(stepDiv);
+    initializeStep(stepDiv);
+    updateStepLabels();
+
+    // Отладка
+    const addedTextarea = stepDiv.querySelector('.step-description');
+    if (addedTextarea) {
+        console.log(`Добавлен шаг ${stepNumber}, textarea присутствует: true, id=${addedTextarea.id}`);
+        const computedStyle = window.getComputedStyle(addedTextarea);
+        console.log(`Стили textarea: display=${computedStyle.display}, height=${computedStyle.height}, visibility=${computedStyle.visibility}`);
+    } else {
+        console.error(`Textarea не найдена для шага ${stepNumber} после добавления`);
+    }
+});
 
 // Проверка токена
 async function checkToken() {
@@ -403,87 +476,6 @@ addIngredientButton.addEventListener('click', () => {
     `;
     ingredientsContainer.appendChild(ingredientDiv);
     initializeIngredient(ingredientDiv);
-});
-
-// Функция для создания шага через DOM-методы
-function createStep(stepNumber) {
-    const stepDiv = document.createElement('div');
-    stepDiv.className = 'step';
-
-    // Создание первого label для описания
-    const descriptionLabel = document.createElement('label');
-    descriptionLabel.setAttribute('for', `step-description-${stepNumber}`);
-    descriptionLabel.textContent = `Шаг ${stepNumber} (описание): `;
-
-    const textarea = document.createElement('textarea');
-    textarea.id = `step-description-${stepNumber}`;
-    textarea.className = 'step-description';
-    textarea.setAttribute('rows', '4');
-    textarea.setAttribute('maxlength', '1000');
-    textarea.setAttribute('required', 'required');
-    descriptionLabel.appendChild(textarea);
-    stepDiv.appendChild(descriptionLabel);
-
-    // Создание второго label для изображения
-    const imageLabel = document.createElement('label');
-    imageLabel.textContent = 'Изображение шага: ';
-    const imageInput = document.createElement('input');
-    imageInput.type = 'file';
-    imageInput.className = 'step-image';
-    imageInput.name = 'step-image';
-    imageInput.accept = 'image/jpeg,image/png';
-    imageLabel.appendChild(imageInput);
-    stepDiv.appendChild(imageLabel);
-
-    // Создание блока image-controls
-    const imageControls = document.createElement('div');
-    imageControls.className = 'image-controls';
-
-    const imagePreview = document.createElement('div');
-    imagePreview.className = 'step-image-preview';
-    imageControls.appendChild(imagePreview);
-
-    const removeImageButton = document.createElement('button');
-    removeImageButton.type = 'button';
-    removeImageButton.className = 'remove-btn remove-step-image-btn';
-    removeImageButton.textContent = 'Удалить изображение';
-    removeImageButton.style.display = 'none';
-    imageControls.appendChild(removeImageButton);
-    stepDiv.appendChild(imageControls);
-
-    // Создание кнопки удаления шага
-    const removeStepButton = document.createElement('button');
-    removeStepButton.type = 'button';
-    removeStepButton.className = 'remove-btn remove-step-btn';
-    removeStepButton.textContent = 'Удалить шаг';
-    stepDiv.appendChild(removeStepButton);
-
-    return stepDiv;
-}
-
-// Добавление шага
-addStepButton.addEventListener('click', () => {
-    const stepCount = stepsContainer.getElementsByClassName('step').length;
-    if (stepCount >= 50) {
-        errorDiv.textContent = 'Максимум 50 шагов';
-        return;
-    }
-
-    const stepNumber = stepCount + 1;
-    const stepDiv = createStep(stepNumber);
-    stepsContainer.appendChild(stepDiv);
-    initializeStep(stepDiv);
-    updateStepLabels();
-
-    // Отладка
-    const addedTextarea = stepDiv.querySelector('.step-description');
-    if (addedTextarea) {
-        console.log(`Добавлен шаг ${stepNumber}, textarea присутствует: true, id=${addedTextarea.id}`);
-        const computedStyle = window.getComputedStyle(addedTextarea);
-        console.log(`Стили textarea: display=${computedStyle.display}, height=${computedStyle.height}, visibility=${computedStyle.visibility}`);
-    } else {
-        console.error(`Textarea не найдена для шага ${stepNumber} после добавления`);
-    }
 });
 
 // Обработчик отправки формы
