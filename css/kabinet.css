@@ -105,6 +105,13 @@
   background: none;
 }
 
+.image-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 5px;
+}
+
 .image-preview {
   margin-top: 5px;
 }
@@ -192,6 +199,22 @@
   background-color: #cc0000;
 }
 
+.remove-btn {
+  font-size: 14px;
+  padding: 8px 16px;
+  background-color: #ff5050;
+  color: var(--color-primary-a90);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 5px 0;
+  transition: background-color 0.3s;
+}
+
+.remove-btn:hover {
+  background-color: #cc0000;
+}
+
 #error.error {
   color: #ff4d4d;
   text-align: center;
@@ -237,6 +260,11 @@
   .delete-btn {
     font-size: 14px;
     padding: 10px 20px;
+  }
+
+  .remove-btn {
+    font-size: 12px;
+    padding: 6px 12px;
   }
 
   .category-btn {

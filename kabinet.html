@@ -77,16 +77,28 @@
                   <option value="пв">по вкусу</option>
                 </select>
               </label>
+              <button type="button" class="remove-btn remove-ingredient-btn">Удалить ингредиент</button>
             </div>
           </div>
           <button type="button" id="add-ingredient-btn">Добавить ингредиент</button>
-          <label>Изображение: <input type="file" id="recipe-image" name="recipeImage" accept="image/jpeg,image/png"></label>
-          <div id="recipe-image-preview" class="image-preview"></div>
+          <label>Изображение (обязательно): 
+            <input type="file" id="recipe-image" name="recipeImage" accept="image/jpeg,image/png" required>
+          </label>
+          <div class="image-controls">
+            <div id="recipe-image-preview" class="image-preview"></div>
+            <button type="button" id="remove-recipe-image-btn" class="remove-btn" style="display: none;">Удалить изображение</button>
+          </div>
           <div id="steps-container">
             <div class="step">
               <label>Шаг 1 (описание): <textarea class="step-description" maxlength="1000" required></textarea></label>
-              <label>Изображение шага: <input type="file" class="step-image" name="step-image" accept="image/jpeg,image/png"></label>
-              <div class="step-image-preview"></div>
+              <label>Изображение шага (опционально): 
+                <input type="file" class="step-image" name="step-image" accept="image/jpeg,image/png">
+              </label>
+              <div class="image-controls">
+                <div class="step-image-preview"></div>
+                <button type="button" class="remove-btn remove-step-image-btn" style="display: none;">Удалить изображение</button>
+              </div>
+              <button type="button" class="remove-btn remove-step-btn">Удалить шаг</button>
             </div>
           </div>
           <button type="button" id="add-step-btn">Добавить шаг</button>
