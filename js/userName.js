@@ -2,7 +2,7 @@
 const lkText = document.getElementById('lk-text');
 document.addEventListener('DOMContentLoaded', async () => {
     const username = await checkAuthAndGetUsername();
-    if (username && lkText) {
+    if (username) {
         lkText.textContent = username;
     }
     else {
