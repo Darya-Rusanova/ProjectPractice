@@ -110,6 +110,7 @@
   flex-direction: column;
   gap: 5px;
   margin-top: 5px;
+  align-items: flex-start;
 }
 
 .image-preview {
@@ -281,8 +282,14 @@
   }
 }
 
-@media (min-width: 600px) and (max-width: 999px) {
+@media (min-width: 600px) {
   .cabinet-section {
     max-width: 80%;
+  }
+
+  .image-controls {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
   }
 }
