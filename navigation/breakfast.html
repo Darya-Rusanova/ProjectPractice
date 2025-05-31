@@ -79,6 +79,7 @@
 
             <a href="../navigation/waffles.html">
                 <div class="recipe">
+                    <div class="favorite" onclick="toggleFavorite(event)"></div>
                     <div class="image">
                         <img src="https://i.postimg.cc/XJ3rckHf/waffles.jpg" class="picture" alt="waffles" />
                     </div>
@@ -94,6 +95,7 @@
             </a>
 
             <div class="recipe">
+                <div class="favorite" onclick="toggleFavorite(event)"></div>
                 <div class="image">
                     <img src="https://i.postimg.cc/25nqZKwj/souffle.jpg" class="picture" alt="souffle" />
                 </div>
@@ -110,6 +112,7 @@
 
         <div class="secondCol">
             <div class="recipe">
+                <div class="favorite" onclick="toggleFavorite(event)"></div>
                 <div class="image">
                     <img src="https://i.postimg.cc/brmSvSRQ/bits.jpg"  class="picture" alt="bits" />
                 </div>
@@ -137,6 +140,19 @@
             </div>
         </div>
     </div>
+    <script>
+        function toggleFavorite(event) {
+            // Останавливаем всплытие события, чтобы не сработал переход по ссылке
+            event.stopPropagation();
+            event.preventDefault();
+            
+            // Переключаем класс checked у элемента favorite
+            event.currentTarget.classList.toggle('checked');
+            
+            // Здесь можно добавить логику сохранения в избранное
+            // Например, через localStorage или отправку на сервер
+        }
+    </script>
     <script src="../js/commonNav.js" defer></script>
     <script src="../js/utils.js" defer></script>
 </body>

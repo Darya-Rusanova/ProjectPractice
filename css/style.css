@@ -9,6 +9,8 @@
     --color-primary-a90: #000000;
     --theme-image: url('../images/functional/light-theme.jpg');
     --user-image: url('../images/functional/user-light.png');
+    --star: url('../images/functional/starLight.png');
+    --star-checked: url('../images/functional/starLightChecked.png');
 
 }
 [data-theme="dark"] {  
@@ -21,7 +23,9 @@
     --color-primary-a60: #291c0a;
     --color-primary-a90: #ffffff;    
     --theme-image: url('../images/functional/dark-theme.jpg');      
-    --user-image: url('../images/functional/user-dark.png');       
+    --user-image: url('../images/functional/user-dark.png');   
+    --star: url('../images/functional/starDark.png');
+    --star-checked: url('../images/functional/starDarkChecked.png');    
 }
 
 @media (min-width:1300px){
@@ -56,6 +60,10 @@
             grid-template-rows: auto;
             grid-template-areas:
                 "img discription"
+    }
+    .favorite{
+        top: 30px;
+        right: 40px;
     }
     
     .navigation {
@@ -126,6 +134,10 @@
             grid-template-areas:
                 "img discription"
     }
+    .favorite{
+        top: 30px;
+        right: 40px;
+    }
     .dropbtn{
         width: 170px;
         height: 75px;
@@ -189,6 +201,10 @@
                 "img"
                 "discription"
     }
+    .favorite{
+        top: 250px;
+        right: auto;
+    }
     
     .navigation {
         grid-area: navigation;
@@ -221,8 +237,27 @@
 .text-toggle{
     color: var(--color-primary-a50);
 }
-.recipe{
+.recipe {
     transition: outline 0.3s;
+    position: relative; /* Это создает контекст позиционирования для absolute-потомков */
+    z-index: 1; /* Устанавливаем базовый z-index для контейнера */
+}
+
+.favorite {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    z-index: 100;
+    background-image: var(--star);
+    background-size: cover;       
+    background-position: center; 
+    background-repeat: no-repeat; 
+    transition: background-image 0.3s;
+}
+.favorite.checked {
+    background-image: var(--star-checked);
+    transform: scale(1.1);
 }
 .header {    
     grid-area: header;
