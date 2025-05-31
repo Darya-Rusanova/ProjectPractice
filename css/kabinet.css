@@ -88,9 +88,10 @@
   box-sizing: border-box;
 }
 
-#recipe-form textarea {
+#recipe-form textarea.step-description {
   resize: vertical;
   min-height: 100px;
+  display: block;
 }
 
 #recipe-form input.quantity-input:disabled,

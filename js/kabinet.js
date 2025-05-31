@@ -235,7 +235,13 @@ function updateStepLabels() {
         const label = stepDiv.querySelector('label[for^="step-description-"]');
         if (label) {
             const stepNumber = index + 1;
-            label.textContent = `Шаг ${stepNumber} (описание): `;
+            const textarea = stepDiv.querySelector('.step-description');
+            if (textarea) {
+                label.textContent = `Шаг ${stepNumber} (описание): `;
+                console.log(`Обновлён шаг ${stepNumber}, textarea id=${textarea.id}`);
+            } else {
+                console.error(`Textarea не найдена для шага ${stepNumber}`);
+            }
         }
     });
 }
@@ -385,8 +391,8 @@ addStepButton.addEventListener('click', () => {
     stepDiv.className = 'step';
     const stepNumber = stepCount + 1;
     stepDiv.innerHTML = `
-        <label for="step-description-${stepNumber}">Шаг ${stepNumber} (описание): <textarea id="step-description-${stepNumber}" class="step-description" rows="4" cols="50" maxlength="1000" required></textarea></label>
-        <label>Изображение шага (опционально): 
+        <label for="step-description-${stepNumber}">Шаг ${stepNumber} (описание): <textarea id="step-description-${stepNumber}" class="step-description" rows="4" maxlength="1000" required></textarea></label>
+        <label>Изображение шага: 
           <input type="file" class="step-image" name="step-image" accept="image/jpeg,image/png">
         </label>
         <div class="image-controls">
@@ -398,7 +404,8 @@ addStepButton.addEventListener('click', () => {
     stepsContainer.appendChild(stepDiv);
     initializeStep(stepDiv);
     updateStepLabels();
-    console.log(`Добавлен шаг ${stepNumber} с textarea id=step-description-${stepNumber}`);
+    const textarea = stepDiv.querySelector('.step-description');
+    console.log(`Добавлен шаг ${stepNumber}, textarea присутствует: ${!!textarea}, id=${textarea ? textarea.id : 'не найдена'}`);
 });
 
 // Обработчик отправки формы
@@ -547,8 +554,8 @@ recipeForm.addEventListener('submit', async (e) => {
             `;
             stepsContainer.innerHTML = `
                 <div class="step">
-                    <label for="step-description-1">Шаг 1 (описание): <textarea id="step-description-1" class="step-description" rows="4" cols="50" maxlength="1000" required></textarea></label>
-                    <label>Изображение шага (опционально): 
+                    <label for="step-description-1">Шаг 1 (описание): <textarea id="step-description-1" class="step-description" rows="4" maxlength="1000" required></textarea></label>
+                    <label>Изображение шага: 
                       <input type="file" class="step-image" name="step-image" accept="image/jpeg,image/png">
                     </label>
                     <div class="image-controls">
