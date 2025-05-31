@@ -5,7 +5,7 @@ const errorDiv = document.getElementById('error');
 const cabinetSection = document.getElementById('cabinet-section');
 const logoutButton = document.getElementById('logout');
 const recipeForm = document.getElementById('recipe-form');
-const recipesList = document.getElementById('recipes'); // Исправлено с recipes-list на recipes
+const recipesList = document.getElementById('recipes');
 const addIngredientButton = document.getElementById('add-ingredient-btn');
 const addStepButton = document.getElementById('add-step-btn');
 const ingredientsContainer = document.getElementById('ingredients-container');
@@ -337,24 +337,32 @@ recipeForm.addEventListener('submit', async (e) => {
             return;
         }
 
-        const ingredientDivs = ingredientsContainer.getElementsByClassName('ingredient');
+        const ingredientDivs = ingredientsContainer ? Array.from(ingredientsContainer.getElementsByClassName('ingredient')) : [];
+        if (ingredientDivs.length === 0) {
+            errorDiv.textContent = 'Добавьте хотя бы один ингредиент';
+            return;
+        }
         for (let div of ingredientDivs) {
-            const name = div.querySelector('.ingredient-name').value;
-            const quantity = div.querySelector('.quantity-input').value;
-            if (name.length > 50) {
-                errorDiv.textContent = `Ингредиент "${name}" не должен превышать 50 символов`;
+            const name = div.querySelector('.ingredient-name')?.value;
+            const quantity = div.querySelector('.quantity-input')?.value;
+            if (!name || name.length > 50) {
+                errorDiv.textContent = `Ингредиент "${name || ''}" не должен превышать 50 символов`;
                 return;
             }
-            if (!/^[0-9]+(,[0-9]*)?$/.test(quantity) && quantity !== '0') {
+            if (!quantity || (!/^[0-9]+(,[0-9]*)?$/.test(quantity) && quantity !== '0')) {
                 errorDiv.textContent = `Количество для "${name}" должно быть числом (например, 100 или 12,5)`;
                 return;
             }
         }
 
         const stepDivs = stepsContainer ? Array.from(stepsContainer.getElementsByClassName('step')) : [];
+        if (stepDivs.length === 0) {
+            errorDiv.textContent = 'Добавьте хотя бы один шаг';
+            return;
+        }
         for (let div of stepDivs) {
-            const description = div.querySelector('.step-description').value;
-            if (description.length > 1000) {
+            const description = div.querySelector('.step-description')?.value;
+            if (!description || description.length > 1000) {
                 errorDiv.textContent = `Описание шага не должно превышать 1000 символов`;
                 return;
             }
@@ -364,8 +372,8 @@ recipeForm.addEventListener('submit', async (e) => {
             title,
             categories: selectedCategories,
             description,
-            servings: parseInt(servingsInput.value),
-            cookingTime: parseInt(cookingTimeInput.value),
+            servings: parseInt(servingsInput.value) || 1,
+            cookingTime: parseInt(cookingTimeInput.value) || 0,
             ingredients: [],
             ingredientQuantities: [],
             ingredientUnits: [],
@@ -389,6 +397,8 @@ recipeForm.addEventListener('submit', async (e) => {
             const description = div.querySelector('.step-description').value;
             recipe.steps.push({ description });
         }
+
+        console.log('Recipe data before sending:', recipe); // Логирование для отладки
 
         const formData = new FormData();
         formData.append('recipeData', JSON.stringify(recipe));
