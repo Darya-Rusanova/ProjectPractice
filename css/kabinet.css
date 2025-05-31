@@ -16,6 +16,8 @@
   margin: 20px auto;
   max-width: 700px;
   box-shadow: 5px 5px 10px 3px var(--color-primary-a60);
+  display: block !important;
+  visibility: visible !important;
 }
 
 .cabinet-section h2 {
@@ -29,6 +31,8 @@
 #recipes-section,
 #add-recipe-section {
   margin-top: 20px;
+  display: block !important;
+  visibility: visible !important;
 }
 
 #recipes-section h3,
@@ -86,10 +90,20 @@
   font-family: Verdana, Geneva, sans-serif;
   width: 100%;
   box-sizing: border-box;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+#steps-container {
+  display: block !important;
+  visibility: visible !important;
+  min-height: 150px;
 }
 
 .step {
   display: block !important;
+  visibility: visible !important;
   min-height: 150px;
 }
 
@@ -261,6 +275,9 @@
   #recipe-form select {
     font-size: 14px;
     padding: 10px;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 
   #add-ingredient-btn,

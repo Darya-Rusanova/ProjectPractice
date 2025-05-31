@@ -78,11 +78,12 @@ removeRecipeImageButton.addEventListener('click', () => {
 
 // Функция ограничения ввода
 function restrictInput(input, isDecimal = false) {
-    input.addEventListener('input', () => {
+    input.addEventListener('input', (e) => {
         if (input.disabled) return;
         let value = input.value;
+        console.log(`Ввод в поле: ${value}, key: ${e.data}`); // Отладка
         if (isDecimal) {
-            value = value.replace(/[^0-9,]/g, ''); // Разрешаем только цифры и запятую
+            value = value.replace(/[^0-9,]/g, '');
             if (value.startsWith(',')) {
                 value = '0' + value;
             }
@@ -98,15 +99,14 @@ function restrictInput(input, isDecimal = false) {
                 parts[1] = parts[1].slice(0, 2);
                 value = parts[0] + ',' + parts[1];
             }
-            if (value.endsWith(',')) {
-                value = value.slice(0, -1);
-            }
         } else {
             value = value.replace(/[^0-9]/g, '').replace(/^0+/, '') || '0';
         }
         input.value = value;
     });
+
     input.addEventListener('keydown', (e) => {
+        console.log(`Нажата клавиша: ${e.key}`); // Отладка
         const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
         if (isDecimal) {
             if ((e.key >= '0' && e.key <= '9') || e.key === ',' || allowedKeys.includes(e.key)) {
@@ -174,7 +174,7 @@ function initializeIngredient(ingredientDiv) {
     const quantityInput = ingredientDiv.querySelector('.quantity-input');
     const unitSelect = ingredientDiv.querySelector('.type-unit');
     const removeButton = ingredientDiv.querySelector('.remove-ingredient-btn');
-    restrictInput(quantityInput, true); // Включаем поддержку запятой
+    restrictInput(quantityInput, true);
     enforceMinMax(quantityInput, true);
     unitSelect.addEventListener('change', () => handleUnitChange(unitSelect, quantityInput));
     handleUnitChange(unitSelect, quantityInput);
@@ -238,13 +238,30 @@ function updateStepLabels() {
             const textarea = stepDiv.querySelector('.step-description');
             if (textarea) {
                 label.textContent = `Шаг ${stepNumber} (описание): `;
-                const computedStyle = window.getComputedStyle(textarea);
-                console.log(`Обновлён шаг ${stepNumber}, textarea id=${textarea.id}, стили: display=${computedStyle.display}, height=${computedStyle.height}, visibility=${computedStyle.visibility}`);
-                if (computedStyle.display === 'none' || computedStyle.visibility === 'hidden' || computedStyle.height === '0px') {
-                    console.warn(`Textarea для шага ${stepNumber} скрыта, пытаюсь исправить`);
+                const stepComputedStyle = window.getComputedStyle(stepDiv);
+                const containerComputedStyle = window.getComputedStyle(stepsContainer);
+                const textareaComputedStyle = window.getComputedStyle(textarea);
+                console.log(`Обновлён шаг ${stepNumber}, textarea id=${textarea.id}`);
+                console.log(`Стили #steps-container: display=${containerComputedStyle.display}, visibility=${containerComputedStyle.visibility}, height=${containerComputedStyle.height}`);
+                console.log(`Стили .step: display=${stepComputedStyle.display}, visibility=${stepComputedStyle.visibility}, height=${stepComputedStyle.height}`);
+                console.log(`Стили textarea: display=${textareaComputedStyle.display}, visibility=${textareaComputedStyle.visibility}, height=${textareaComputedStyle.height}`);
+                if (containerComputedStyle.display === 'none' || containerComputedStyle.visibility === 'hidden') {
+                    console.warn(`#steps-container скрыт, исправляю`);
+                    stepsContainer.style.display = 'block';
+                    stepsContainer.style.visibility = 'visible';
+                }
+                if (stepComputedStyle.display === 'none' || stepComputedStyle.visibility === 'hidden') {
+                    console.warn(`.step для шага ${stepNumber} скрыт, исправляю`);
+                    stepDiv.style.display = 'block';
+                    stepDiv.style.visibility = 'visible';
+                    stepDiv.style.minHeight = '150px';
+                }
+                if (textareaComputedStyle.display === 'none' || textareaComputedStyle.visibility === 'hidden' || textareaComputedStyle.height === '0px') {
+                    console.warn(`Textarea для шага ${stepNumber} скрыта, исправляю`);
                     textarea.style.display = 'block';
                     textarea.style.visibility = 'visible';
                     textarea.style.minHeight = '100px';
+                    textarea.style.opacity = '1';
                 }
             } else {
                 console.error(`Textarea не найдена для шага ${stepNumber}`);
@@ -368,7 +385,7 @@ addIngredientButton.addEventListener('click', () => {
     ingredientDiv.innerHTML = `
         <label>Ингредиент: <input type="text" class="ingredient-name" maxlength="50" required></label>
         <label>Количество: 
-          <input type="text" class="quantity-input" min="0" max="1000" pattern="[0-9]+(,[0-9]{0,2})?" inputmode="decimal" required>
+          <input type="text" class="quantity-input" min="0" max="1000" pattern="[0-9]+(,[0-9]{0,2})?" required>
           <select class="type-unit" required>
             <option value="г">г</option>
             <option value="кг">кг</option>
@@ -463,12 +480,6 @@ addStepButton.addEventListener('click', () => {
         console.log(`Добавлен шаг ${stepNumber}, textarea присутствует: true, id=${addedTextarea.id}`);
         const computedStyle = window.getComputedStyle(addedTextarea);
         console.log(`Стили textarea: display=${computedStyle.display}, height=${computedStyle.height}, visibility=${computedStyle.visibility}`);
-        if (computedStyle.display === 'none' || computedStyle.visibility === 'hidden' || computedStyle.height === '0px') {
-            console.warn(`Textarea для шага ${stepNumber} скрыта, пытаюсь исправить`);
-            addedTextarea.style.display = 'block';
-            addedTextarea.style.visibility = 'visible';
-            addedTextarea.style.minHeight = '100px';
-        }
     } else {
         console.error(`Textarea не найдена для шага ${stepNumber} после добавления`);
     }
@@ -606,7 +617,7 @@ recipeForm.addEventListener('submit', async (e) => {
             ingredientDiv.innerHTML = `
                 <label>Ингредиент: <input type="text" class="ingredient-name" maxlength="50" required></label>
                 <label>Количество: 
-                  <input type="text" class="quantity-input" min="0" max="1000" pattern="[0-9]+(,[0-9]{0,2})?" inputmode="decimal" required>
+                  <input type="text" class="quantity-input" min="0" max="1000" pattern="[0-9]+(,[0-9]{0,2})?" required>
                   <select class="type-unit" required>
                     <option value="г">г</option>
                     <option value="кг">кг</option>
