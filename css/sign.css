@@ -91,7 +91,98 @@ h2{
     align-items: center;
 }
 
-#login-section input, #register-section input{
+.admin-switch {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+  padding: 10px 0;
+}
+
+.admin-switch-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.admin-label {
+  font-size: 18px;
+  color: #333;
+  transition: color 0.3s;
+}
+
+.admin-slider {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 30px;
+  background-color: #fff;
+  border: 2px solid var(--color-primary-a30);
+  border-radius: 34px;
+  transition: all 0.4s;
+}
+
+.admin-slider:before {
+  content: "";
+  position: absolute;
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 2px;
+  background-color: var(--color-primary-a30);
+  border-radius: 50%;
+  transition: all 0.4s;
+}
+
+.admin-switch-input:checked + .admin-slider {
+  background-color: var(--color-primary-a50);
+  border-color: var(--color-primary-a50);
+}
+
+.admin-switch-input:checked + .admin-slider:before {
+  transform: translateX(24px);
+  background-color: white;
+}
+
+
+.admin-switch-input:focus-visible + .admin-slider {
+  box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.3);
+}
+.code {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.admin-switch-input:checked ~ .code {
+  opacity: 1;
+  height: auto;
+  overflow: visible;
+}
+
+.code input {
+  text-align: center;
+  font-size: 16px;
+  padding: 12px;
+  width: 50%;
+  border: 2px solid var(--color-primary-a30);
+  border-radius: 10px;
+  background-color: var(--color-primary-a40);
+  color: var(--color-primary-a90);
+  transition: all 0.3s;
+}
+
+.code input:focus {
+  border-color: var(--color-primary-a50);
+  outline: none;
+  box-shadow: 0 0 5px rgba(234, 158, 11, 0.5);
+}
+
+#login-section .field input, #register-section .field input{
   font-size: 16px;
   padding: 12px;
   width: 95%;

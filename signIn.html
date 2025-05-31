@@ -41,6 +41,15 @@
           <form id="login-form">
             <div class="field"><p>Email:</p><input type="email" id="email" required></div>
             <div class="field"><p>Пароль:</p> <input type="password" id="password" required></div>
+            <label class="admin-switch">
+              <input type="checkbox" class="admin-switch-input">
+              <span class="admin-slider"></span>
+              <span class="admin-label">Я администратор</span>
+            </label>
+
+            <div class="code" hidden>
+              <input type="text" placeholder="Введите код подтверждения">
+            </div>
             <button type="submit">Войти</button>
           </form>
           <p>Нет аккаунта? <a href="signUp.html">Зарегистрироваться</a></p>
@@ -52,5 +61,18 @@
   <script src="js/theme.js" type="text/javascript" defer></script>
   <script src="js/common.js" defer></script>
   <script src="js/signIn.js" defer></script>
+  <script>
+    document.querySelector('.admin-switch-input').addEventListener('change', function() {
+      const codeField = document.querySelector('.code');
+      if(this.checked) {
+        codeField.hidden = false;
+        setTimeout(() => {
+          codeField.querySelector('input').focus();
+        }, 300);
+      } else {
+        codeField.hidden = true;
+      }
+    });
+  </script>
 </body>
 </html>
