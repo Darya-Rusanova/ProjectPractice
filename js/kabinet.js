@@ -239,6 +239,8 @@ function updateStepLabels() {
             if (textarea) {
                 label.textContent = `Шаг ${stepNumber} (описание): `;
                 console.log(`Обновлён шаг ${stepNumber}, textarea id=${textarea.id}`);
+                const computedStyle = window.getComputedStyle(textarea);
+                console.log(`После обновления шага ${stepNumber}, стили textarea: display=${computedStyle.display}, height=${computedStyle.height}, visibility=${computedStyle.visibility}`);
             } else {
                 console.error(`Textarea не найдена для шага ${stepNumber}`);
             }
@@ -380,6 +382,62 @@ addIngredientButton.addEventListener('click', () => {
     initializeIngredient(ingredientDiv);
 });
 
+// Функция для создания шага через DOM-методы
+function createStep(stepNumber) {
+    const stepDiv = document.createElement('div');
+    stepDiv.className = 'step';
+
+    // Создание первого label для описания
+    const descriptionLabel = document.createElement('label');
+    descriptionLabel.setAttribute('for', `step-description-${stepNumber}`);
+    descriptionLabel.textContent = `Шаг ${stepNumber} (описание): `;
+
+    const textarea = document.createElement('textarea');
+    textarea.id = `step-description-${stepNumber}`;
+    textarea.className = 'step-description';
+    textarea.setAttribute('rows', '4');
+    textarea.setAttribute('maxlength', '1000');
+    textarea.setAttribute('required', 'required');
+    descriptionLabel.appendChild(textarea);
+    stepDiv.appendChild(descriptionLabel);
+
+    // Создание второго label для изображения
+    const imageLabel = document.createElement('label');
+    imageLabel.textContent = 'Изображение шага: ';
+    const imageInput = document.createElement('input');
+    imageInput.type = 'file';
+    imageInput.className = 'step-image';
+    imageInput.name = 'step-image';
+    imageInput.accept = 'image/jpeg,image/png';
+    imageLabel.appendChild(imageInput);
+    stepDiv.appendChild(imageLabel);
+
+    // Создание блока image-controls
+    const imageControls = document.createElement('div');
+    imageControls.className = 'image-controls';
+
+    const imagePreview = document.createElement('div');
+    imagePreview.className = 'step-image-preview';
+    imageControls.appendChild(imagePreview);
+
+    const removeImageButton = document.createElement('button');
+    removeImageButton.type = 'button';
+    removeImageButton.className = 'remove-btn remove-step-image-btn';
+    removeImageButton.textContent = 'Удалить изображение';
+    removeImageButton.style.display = 'none';
+    imageControls.appendChild(removeImageButton);
+    stepDiv.appendChild(imageControls);
+
+    // Создание кнопки удаления шага
+    const removeStepButton = document.createElement('button');
+    removeStepButton.type = 'button';
+    removeStepButton.className = 'remove-btn remove-step-btn';
+    removeStepButton.textContent = 'Удалить шаг';
+    stepDiv.appendChild(removeStepButton);
+
+    return stepDiv;
+}
+
 // Добавление шага
 addStepButton.addEventListener('click', () => {
     const stepCount = stepsContainer.getElementsByClassName('step').length;
@@ -387,25 +445,22 @@ addStepButton.addEventListener('click', () => {
         errorDiv.textContent = 'Максимум 50 шагов';
         return;
     }
-    const stepDiv = document.createElement('div');
-    stepDiv.className = 'step';
+
     const stepNumber = stepCount + 1;
-    stepDiv.innerHTML = `
-        <label for="step-description-${stepNumber}">Шаг ${stepNumber} (описание): <textarea id="step-description-${stepNumber}" class="step-description" rows="4" maxlength="1000" required></textarea></label>
-        <label>Изображение шага: 
-          <input type="file" class="step-image" name="step-image" accept="image/jpeg,image/png">
-        </label>
-        <div class="image-controls">
-          <div class="step-image-preview"></div>
-          <button type="button" class="remove-btn remove-step-image-btn" style="display: none;">Удалить изображение</button>
-        </div>
-        <button type="button" class="remove-btn remove-step-btn">Удалить шаг</button>
-    `;
+    const stepDiv = createStep(stepNumber);
     stepsContainer.appendChild(stepDiv);
     initializeStep(stepDiv);
     updateStepLabels();
-    const textarea = stepDiv.querySelector('.step-description');
-    console.log(`Добавлен шаг ${stepNumber}, textarea присутствует: ${!!textarea}, id=${textarea ? textarea.id : 'не найдена'}`);
+
+    // Отладка
+    const addedTextarea = stepDiv.querySelector('.step-description');
+    if (addedTextarea) {
+        console.log(`Добавлен шаг ${stepNumber}, textarea присутствует: true, id=${addedTextarea.id}`);
+        const computedStyle = window.getComputedStyle(addedTextarea);
+        console.log(`Стили textarea: display=${computedStyle.display}, height=${computedStyle.height}, visibility=${computedStyle.visibility}`);
+    } else {
+        console.error(`Textarea не найдена для шага ${stepNumber} после добавления`);
+    }
 });
 
 // Обработчик отправки формы
@@ -532,41 +587,39 @@ recipeForm.addEventListener('submit', async (e) => {
         if (data._id) {
             recipeForm.reset();
             categoryButtons.forEach(button => button.classList.remove('active'));
-            ingredientsContainer.innerHTML = `
-                <div class="ingredient">
-                    <label>Ингредиент: <input type="text" class="ingredient-name" maxlength="50" required></label>
-                    <label>Количество: 
-                      <input type="text" class="quantity-input" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required>
-                      <select class="type-unit" required>
-                        <option value="г">г</option>
-                        <option value="кг">кг</option>
-                        <option value="мл">мл</option>
-                        <option value="л">л</option>
-                        <option value="шт">шт.</option>
-                        <option value="ст">ст.</option>
-                        <option value="стл">ст.л.</option>
-                        <option value="чл">ч.л.</option>
-                        <option value="пв">по вкусу</option>
-                      </select>
-                    </label>
-                    <button type="button" class="remove-btn remove-ingredient-btn">Удалить ингредиент</button>
-                </div>
+
+            // Сброс ингредиентов
+            ingredientsContainer.innerHTML = '';
+            const ingredientDiv = document.createElement('div');
+            ingredientDiv.className = 'ingredient';
+            ingredientDiv.innerHTML = `
+                <label>Ингредиент: <input type="text" class="ingredient-name" maxlength="50" required></label>
+                <label>Количество: 
+                  <input type="text" class="quantity-input" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required>
+                  <select class="type-unit" required>
+                    <option value="г">г</option>
+                    <option value="кг">кг</option>
+                    <option value="мл">мл</option>
+                    <option value="л">л</option>
+                    <option value="шт">шт.</option>
+                    <option value="ст">ст.</option>
+                    <option value="стл">ст.л.</option>
+                    <option value="чл">ч.л.</option>
+                    <option value="пв">по вкусу</option>
+                  </select>
+                </label>
+                <button type="button" class="remove-btn remove-ingredient-btn">Удалить ингредиент</button>
             `;
-            stepsContainer.innerHTML = `
-                <div class="step">
-                    <label for="step-description-1">Шаг 1 (описание): <textarea id="step-description-1" class="step-description" rows="4" maxlength="1000" required></textarea></label>
-                    <label>Изображение шага: 
-                      <input type="file" class="step-image" name="step-image" accept="image/jpeg,image/png">
-                    </label>
-                    <div class="image-controls">
-                      <div class="step-image-preview"></div>
-                      <button type="button" class="remove-btn remove-step-image-btn" style="display: none;">Удалить изображение</button>
-                    </div>
-                    <button type="button" class="remove-btn remove-step-btn">Удалить шаг</button>
-                </div>
-            `;
-            initializeIngredient(ingredientsContainer.querySelector('.ingredient'));
-            initializeStep(stepsContainer.querySelector('.step'));
+            ingredientsContainer.appendChild(ingredientDiv);
+            initializeIngredient(ingredientDiv);
+
+            // Сброс шагов через DOM-методы
+            stepsContainer.innerHTML = '';
+            const stepDiv = createStep(1);
+            stepsContainer.appendChild(stepDiv);
+            initializeStep(stepDiv);
+            updateStepLabels();
+
             recipeImagePreview.innerHTML = '';
             removeRecipeImageButton.style.display = 'none';
             stepsContainer.querySelectorAll('.step-image-preview').forEach(preview => preview.innerHTML = '');

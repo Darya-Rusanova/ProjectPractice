@@ -88,10 +88,18 @@
   box-sizing: border-box;
 }
 
-#recipe-form textarea.step-description {
+.step {
+  display: block !important;
+  min-height: 150px;
+}
+
+#steps-container .step textarea.step-description {
+  display: block !important;
+  min-height: 100px !important;
+  width: 100% !important;
+  visibility: visible !important;
+  opacity: 1 !important;
   resize: vertical;
-  min-height: 100px;
-  display: block;
 }
 
 #recipe-form input.quantity-input:disabled,
