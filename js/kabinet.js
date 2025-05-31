@@ -233,14 +233,14 @@ categoryButtons.forEach(button => {
 addIngredientButton.addEventListener('click', () => {
     const ingredientCount = ingredientsContainer.getElementsByClassName('ingredient').length;
     if (ingredientCount >= 100) {
-        errorDiv.textContent = 'Максимальное количество ингредиентов достигнуто';
+        errorDiv.textContent = 'Максимальное количество ингредиентов (100) достигнуто';
         return;
     }
     console.log('Добавление ингредиента');
     const ingredientDiv = document.createElement('div');
     ingredientDiv.className = 'ingredient';
     ingredientDiv.innerHTML = `
-        <label>Ингредиент: <input type="text" class="ingredient-name" required></label>
+        <label>Ингредиент: <input type="text" class="ingredient-name" maxlength="50" required></label>
         <label>Количество: 
           <input type="text" class="ingredient-quantity" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required>
           <select class="ingredient-unit" required>
@@ -269,14 +269,15 @@ addIngredientButton.addEventListener('click', () => {
 addStepButton.addEventListener('click', () => {
     const stepCount = stepsContainer.getElementsByClassName('step').length;
     if (stepCount >= 50) {
-        errorDiv.textContent = 'Максимальное количество шагов достигнуто';
+        errorDiv.textContent = 'Максимальное количество шагов (50) достигнуто';
         return;
     }
     console.log('Добавление шага');
     const stepDiv = document.createElement('div');
     stepDiv.className = 'step';
+    const stepNumber = stepCount + 1;
     stepDiv.innerHTML = `
-        <label>Шаг: <input type="text" class="step-description" required></label>
+        <label>Шаг ${stepNumber} (описание): <input type="text" class="step-description" maxlength="1000" required></label>
         <label>Изображение шага (URL): <input type="text" class="step-image"></label>
     `;
     stepsContainer.appendChild(stepDiv);
@@ -291,10 +292,25 @@ recipeForm.addEventListener('submit', async (e) => {
     button.disabled = true;
     button.textContent = 'Загрузка...';
 
+    const title = document.getElementById('recipe-title').value;
+    const description = document.getElementById('recipe-description').value;
     const selectedCategories = Array.from(categoryButtons)
         .filter(button => button.classList.contains('active'))
         .map(button => button.dataset.category);
     
+    // Валидация длины полей
+    if (title.length > 50) {
+        errorDiv.textContent = 'Название рецепта не должно превышать 50 символов';
+        button.disabled = false;
+        button.textContent = originalText;
+        return;
+    }
+    if (description.length > 1000) {
+        errorDiv.textContent = 'Описание рецепта не должно превышать 1000 символов';
+        button.disabled = false;
+        button.textContent = originalText;
+        return;
+    }
     if (selectedCategories.length === 0) {
         errorDiv.textContent = 'Выберите хотя бы одну категорию';
         button.disabled = false;
@@ -302,13 +318,35 @@ recipeForm.addEventListener('submit', async (e) => {
         return;
     }
 
+    const ingredientDivs = ingredientsContainer.getElementsByClassName('ingredient');
+    for (let div of ingredientDivs) {
+        const name = div.querySelector('.ingredient-name').value;
+        if (name.length > 50) {
+            errorDiv.textContent = `Ингредиент "${name}" не должен превышать 50 символов`;
+            button.disabled = false;
+            button.textContent = originalText;
+            return;
+        }
+    }
+
+    const stepDivs = stepsContainer.getElementsByClassName('step');
+    for (let div of stepDivs) {
+        const description = div.querySelector('.step-description').value;
+        if (description.length > 1000) {
+            errorDiv.textContent = `Описание шага не должно превышать 1000 символов`;
+            button.disabled = false;
+            button.textContent = originalText;
+            return;
+        }
+    }
+
     const servings = parseInt(servingsInput.value);
     const cookingTime = parseInt(cookingTimeInput.value);
     
     const recipe = {
-        title: document.getElementById('recipe-title').value,
+        title: title,
         categories: selectedCategories,
-        description: document.getElementById('recipe-description').value,
+        description: description,
         servings: servings,
         cookingTime: cookingTime,
         ingredients: [],
@@ -318,7 +356,6 @@ recipeForm.addEventListener('submit', async (e) => {
         steps: []
     };
 
-    const ingredientDivs = ingredientsContainer.getElementsByClassName('ingredient');
     for (let div of ingredientDivs) {
         const name = div.querySelector('.ingredient-name').value;
         let quantity = div.querySelector('.ingredient-quantity').value;
@@ -332,7 +369,6 @@ recipeForm.addEventListener('submit', async (e) => {
         recipe.ingredientUnits.push(unit);
     }
 
-    const stepDivs = stepsContainer.getElementsByClassName('step');
     for (let div of stepDivs) {
         const description = div.querySelector('.step-description').value;
         const image = div.querySelector('.step-image').value;
@@ -355,7 +391,7 @@ recipeForm.addEventListener('submit', async (e) => {
             categoryButtons.forEach(button => button.classList.remove('active'));
             ingredientsContainer.innerHTML = `
                 <div class="ingredient">
-                    <label>Ингредиент: <input type="text" class="ingredient-name" required></label>
+                    <label>Ингредиент: <input type="text" class="ingredient-name" maxlength="50" required></label>
                     <label>Количество: 
                       <input type="text" class="ingredient-quantity" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required>
                       <select class="ingredient-unit" required>
@@ -380,7 +416,7 @@ recipeForm.addEventListener('submit', async (e) => {
             handleUnitChange(newInitialUnitSelect, newInitialQuantityInput);
             stepsContainer.innerHTML = `
                 <div class="step">
-                    <label>Шаг: <input type="text" class="step-description" required></label>
+                    <label>Шаг 1 (описание): <input type="text" class="step-description" maxlength="1000" required></label>
                     <label>Изображение шага (URL): <input type="text" class="step-image"></label>
                 </div>
             `;
