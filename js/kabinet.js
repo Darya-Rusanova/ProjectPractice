@@ -66,12 +66,14 @@ function restrictInput(input, isDecimal = false) {
                 parts[0] = parts[0].replace(/^0+/, '') || '0';
                 value = parts[0] + (parts[1] !== undefined ? ',' + parts[1] : '');
             }
+            if (value.endsWith(',')) {
+                value = value.slice(0, -1);
+            }
         } else {
             value = value.replace(/[^0-9]/g, '').replace(/^0+/, '') || '0';
         }
         input.value = value;
     });
-    // Блокируем невалидные клавиши
     input.addEventListener('keydown', (e) => {
         const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
         if (isDecimal) {
@@ -387,7 +389,7 @@ recipeForm.addEventListener('submit', async (e) => {
             if (quantity.endsWith(',')) {
                 quantity = quantity.slice(0, -1);
             }
-            quantity = unit === 'пв' ? 0 : parseFloat(quantity.replace(',', '.'));
+            quantity = unit === 'пв' ? 0 : parseFloat(quantity.replace(',', '.')) || 0;
             recipe.ingredients.push(name);
             recipe.ingredientQuantities.push(quantity);
             recipe.ingredientUnits.push(unit);
@@ -398,7 +400,12 @@ recipeForm.addEventListener('submit', async (e) => {
             recipe.steps.push({ description });
         }
 
-        console.log('Recipe data before sending:', recipe); // Логирование для отладки
+        if (recipe.ingredients.length !== recipe.ingredientQuantities.length || recipe.ingredients.length !== recipe.ingredientUnits.length) {
+            errorDiv.textContent = 'Ошибка: количество ингредиентов, их объёмов и единиц измерения не совпадает';
+            return;
+        }
+
+        console.log('Recipe data before sending:', recipe);
 
         const formData = new FormData();
         formData.append('recipeData', JSON.stringify(recipe));
