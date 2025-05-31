@@ -233,12 +233,9 @@ function updateStepLabels() {
     const stepDivs = stepsContainer.getElementsByClassName('step');
     Array.from(stepDivs).forEach((stepDiv, index) => {
         const label = stepDiv.querySelector('label[for^="step-description-"]');
-        const textarea = stepDiv.querySelector('.step-description');
-        if (label && textarea) {
+        if (label) {
             const stepNumber = index + 1;
             label.textContent = `Шаг ${stepNumber} (описание): `;
-            label.setAttribute('for', `step-description-${stepNumber}`);
-            textarea.id = `step-description-${stepNumber}`;
         }
     });
 }
@@ -388,7 +385,7 @@ addStepButton.addEventListener('click', () => {
     stepDiv.className = 'step';
     const stepNumber = stepCount + 1;
     stepDiv.innerHTML = `
-        <label for="step-description-${stepNumber}">Шаг ${stepNumber} (описание): <textarea id="step-description-${stepNumber}" class="step-description" maxlength="1000" required></textarea></label>
+        <label for="step-description-${stepNumber}">Шаг ${stepNumber} (описание): <textarea id="step-description-${stepNumber}" class="step-description" rows="4" cols="50" maxlength="1000" required></textarea></label>
         <label>Изображение шага (опционально): 
           <input type="file" class="step-image" name="step-image" accept="image/jpeg,image/png">
         </label>
@@ -401,6 +398,7 @@ addStepButton.addEventListener('click', () => {
     stepsContainer.appendChild(stepDiv);
     initializeStep(stepDiv);
     updateStepLabels();
+    console.log(`Добавлен шаг ${stepNumber} с textarea id=step-description-${stepNumber}`);
 });
 
 // Обработчик отправки формы
@@ -549,7 +547,7 @@ recipeForm.addEventListener('submit', async (e) => {
             `;
             stepsContainer.innerHTML = `
                 <div class="step">
-                    <label for="step-description-1">Шаг 1 (описание): <textarea id="step-description-1" class="step-description" maxlength="1000" required></textarea></label>
+                    <label for="step-description-1">Шаг 1 (описание): <textarea id="step-description-1" class="step-description" rows="4" cols="50" maxlength="1000" required></textarea></label>
                     <label>Изображение шага (опционально): 
                       <input type="file" class="step-image" name="step-image" accept="image/jpeg,image/png">
                     </label>
