@@ -5,14 +5,14 @@ const errorDiv = document.getElementById('error');
 const cabinetSection = document.getElementById('cabinet-section');
 const logoutButton = document.getElementById('logout');
 const recipeForm = document.getElementById('recipe-form');
-const recipesList = document.getElementById('recipes-list');
-const addIngredientButton = document.getElementById('add-ingredient');
-const addStepButton = document.getElementById('add-step');
+const recipesList = document.getElementById('recipes');
+const addIngredientButton = document.getElementById('add-ingredient-btn');
+const addStepButton = document.getElementById('add-step-btn');
 const ingredientsContainer = document.getElementById('ingredients-container');
 const stepsContainer = document.getElementById('steps-container');
 const categoryButtons = document.querySelectorAll('.category-btn');
 const servingsInput = document.getElementById('recipe-servings');
-const cookingTimeInput = document.getElementById('recipe-cookingTime');
+const cookingTimeInput = document.getElementById('recipe-cooking-time');
 const recipeImageInput = document.getElementById('recipe-image');
 const recipeImagePreview = document.getElementById('recipe-image-preview');
 
@@ -71,6 +71,24 @@ function restrictInput(input, isDecimal = false) {
         }
         input.value = value;
     });
+    // Блокируем невалидные клавиши
+    input.addEventListener('keydown', (e) => {
+        const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
+        if (isDecimal) {
+            if ((e.key >= '0' && e.key <= '9') || e.key === ',' || allowedKeys.includes(e.key)) {
+                // Предотвращаем ввод запятой, если она уже есть
+                if (e.key === ',' && input.value.includes(',')) {
+                    e.preventDefault();
+                }
+                return;
+            }
+        } else {
+            if ((e.key >= '0' && e.key <= '9') || allowedKeys.includes(e.key)) {
+                return;
+            }
+        }
+        e.preventDefault();
+    });
 }
 
 // Функция проверки границ
@@ -106,6 +124,9 @@ function handleUnitChange(select, quantityInput) {
         quantityInput.disabled = true;
     } else {
         quantityInput.disabled = false;
+        if (quantityInput.value === '0') {
+            quantityInput.value = '';
+        }
     }
 }
 
@@ -115,12 +136,17 @@ restrictInput(cookingTimeInput);
 enforceMinMax(servingsInput);
 enforceMinMax(cookingTimeInput);
 
-const initialQuantityInput = document.querySelector('.ingredient-quantity');
-const initialUnitSelect = document.querySelector('.ingredient-unit');
-restrictInput(initialQuantityInput, true);
-enforceMinMax(initialQuantityInput, true);
-initialUnitSelect.addEventListener('change', () => handleUnitChange(initialUnitSelect, initialQuantityInput));
-handleUnitChange(initialUnitSelect, initialQuantityInput);
+// Применяем ограничения к начальному полю количества
+const initialQuantityInput = document.querySelector('.quantity-input');
+const initialUnitSelect = document.querySelector('.type-unit');
+if (initialQuantityInput && initialUnitSelect) {
+    restrictInput(initialQuantityInput, true);
+    enforceMinMax(initialQuantityInput, true);
+    initialUnitSelect.addEventListener('change', () => handleUnitChange(initialUnitSelect, initialQuantityInput));
+    handleUnitChange(initialUnitSelect, initialQuantityInput);
+} else {
+    console.error('Initial quantity input or unit select not found');
+}
 
 // Проверка токена
 async function checkToken() {
@@ -237,8 +263,8 @@ addIngredientButton.addEventListener('click', () => {
     ingredientDiv.innerHTML = `
         <label>Ингредиент: <input type="text" class="ingredient-name" maxlength="50" required></label>
         <label>Количество: 
-          <input type="text" class="ingredient-quantity" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required>
-          <select class="ingredient-unit" required>
+          <input type="text" class="quantity-input" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required>
+          <select class="type-unit" required>
             <option value="г">г</option>
             <option value="кг">кг</option>
             <option value="мл">мл</option>
@@ -252,8 +278,8 @@ addIngredientButton.addEventListener('click', () => {
         </label>
     `;
     ingredientsContainer.appendChild(ingredientDiv);
-    const newQuantityInput = ingredientDiv.querySelector('.ingredient-quantity');
-    const newUnitSelect = ingredientDiv.querySelector('.ingredient-unit');
+    const newQuantityInput = ingredientDiv.querySelector('.quantity-input');
+    const newUnitSelect = ingredientDiv.querySelector('.type-unit');
     restrictInput(newQuantityInput, true);
     enforceMinMax(newQuantityInput, true);
     newUnitSelect.addEventListener('change', () => handleUnitChange(newUnitSelect, newQuantityInput));
@@ -286,7 +312,7 @@ addStepButton.addEventListener('click', () => {
 // Обработчик отправки формы
 recipeForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const button = document.getElementById('addREc');
+    const button = document.getElementById('addRecipe-btn');
     const originalText = button.textContent;
     button.disabled = true;
     button.textContent = 'Загрузка...';
@@ -320,8 +346,15 @@ recipeForm.addEventListener('submit', async (e) => {
     const ingredientDivs = ingredientsContainer.getElementsByClassName('ingredient');
     for (let div of ingredientDivs) {
         const name = div.querySelector('.ingredient-name').value;
+        const quantity = div.querySelector('.quantity-input').value;
         if (name.length > 50) {
             errorDiv.textContent = `Ингредиент "${name}" не должен превышать 50 символов`;
+            button.disabled = false;
+            button.textContent = originalText;
+            return;
+        }
+        if (!/^[0-9]+(,[0-9]*)?$/.test(quantity) && quantity !== '0') {
+            errorDiv.textContent = `Количество для "${name}" должно быть числом (например, 100 или 12,5)`;
             button.disabled = false;
             button.textContent = originalText;
             return;
@@ -353,8 +386,8 @@ recipeForm.addEventListener('submit', async (e) => {
 
     for (let div of ingredientDivs) {
         const name = div.querySelector('.ingredient-name').value;
-        let quantity = div.querySelector('.ingredient-quantity').value;
-        const unit = div.querySelector('.ingredient-unit').value;
+        let quantity = div.querySelector('.quantity-input').value;
+        const unit = div.querySelector('.type-unit').value;
         if (quantity.endsWith(',')) {
             quantity = quantity.slice(0, -1);
         }
@@ -397,8 +430,8 @@ recipeForm.addEventListener('submit', async (e) => {
                 <div class="ingredient">
                     <label>Ингредиент: <input type="text" class="ingredient-name" maxlength="50" required></label>
                     <label>Количество: 
-                      <input type="text" class="ingredient-quantity" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required>
-                      <select class="ingredient-unit" required>
+                      <input type="text" class="quantity-input" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required>
+                      <select class="type-unit" required>
                         <option value="г">г</option>
                         <option value="кг">кг</option>
                         <option value="мл">мл</option>
@@ -412,8 +445,8 @@ recipeForm.addEventListener('submit', async (e) => {
                     </label>
                 </div>
             `;
-            const newInitialQuantityInput = ingredientsContainer.querySelector('.ingredient-quantity');
-            const newInitialUnitSelect = ingredientsContainer.querySelector('.ingredient-unit');
+            const newInitialQuantityInput = ingredientsContainer.querySelector('.quantity-input');
+            const newInitialUnitSelect = ingredientsContainer.querySelector('.type-unit');
             restrictInput(newInitialQuantityInput, true);
             enforceMinMax(newInitialQuantityInput, true);
             newInitialUnitSelect.addEventListener('change', () => handleUnitChange(newInitialUnitSelect, newInitialQuantityInput));
