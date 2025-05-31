@@ -197,7 +197,8 @@ function createStep(stepNumber) {
     // Создание первого label для описания
     const descriptionLabel = document.createElement('label');
     descriptionLabel.setAttribute('for', `step-description-${stepNumber}`);
-    descriptionLabel.textContent = `Шаг ${stepNumber} (описание): `;
+    const labelText = document.createTextNode(`Шаг ${stepNumber} (описание): `);
+    descriptionLabel.appendChild(labelText);
 
     const textarea = document.createElement('textarea');
     textarea.id = `step-description-${stepNumber}`;
@@ -278,7 +279,13 @@ function updateStepLabels() {
         const label = stepDiv.querySelector('label[for^="step-description-"]');
         const textarea = stepDiv.querySelector('.step-description');
         if (label && textarea) {
-            label.textContent = `Шаг ${stepNumber} (описание): `;
+            // Обновляем только текстовый узел внутри label, сохраняя textarea
+            const labelTextNode = label.childNodes[0];
+            if (labelTextNode && labelTextNode.nodeType === Node.TEXT_NODE) {
+                labelTextNode.textContent = `Шаг ${stepNumber} (описание): `;
+            } else {
+                label.replaceChild(document.createTextNode(`Шаг ${stepNumber} (описание): `), labelTextNode);
+            }
             label.setAttribute('for', `step-description-${stepNumber}`);
             textarea.id = `step-description-${stepNumber}`;
             console.log(`Обновлён шаг ${stepNumber}, textarea id=${textarea.id}`);
