@@ -72,6 +72,7 @@ body{
     padding: 20px;
     max-width: 600px;
     box-shadow: 0 5px 15px var(--color-primary-a20);
+    width: 70%;
 }
 .error {
     grid-area: error;
@@ -89,22 +90,21 @@ h2{
     flex-direction: column;
     align-items: center;
 }
+
 #login-section input, #register-section input{
   font-size: 16px;
   padding: 12px;
-  width: 90%;
-  margin: 2%;
+  width: 95%;
   border: 2px solid var(--color-primary-a30);
   border-radius: 10px;
   background-color: var(--color-primary-a40);
   color: var(--color-primary-a90);
 }
-#login-section label, #register-section label{
-  font-size: 18px;
-  color: var(--color-primary-a90);
-  margin: 5px 0;
-  width: 100%;
-  max-width: 400px;
+#login-section .field, #register-section .field{
+    font-size: 18px;
+    color: var(--color-primary-a90);
+    margin: 35px 0;
+    width: 100%;
 }
 #login-section button, #register-section button{
     font-size: 16px;
@@ -120,6 +120,12 @@ h2{
     transition: background-color 0.3s;
 }
 
+#login-form, #register-form{
+    width: 90%;
+    margin: 0 auto;
+}
+
+
 #login-section button:hover, #register-section button:hover{
   background-color: var(--color-primary-a50);
 }
@@ -128,7 +134,6 @@ h2{
 #login-section p, #register-section p{
     font-size: 16px;
     color: var(--color-primary-a90);
-    text-align: center;
 }
 
 #login-section a, #register-section a{

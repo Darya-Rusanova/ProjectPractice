@@ -79,6 +79,7 @@
         <div class="firstCol">
             <a href="../navigation/chiken.html">
                 <div class="recipe">
+                    <div class="favorite" onclick="toggleFavorite(event)"></div>
                     <div class="image">
                         <img  src="https://i.postimg.cc/tCmVQPJb/chiken.jpg" class="picture" alt="chicken" />
                     </div>
@@ -94,6 +95,7 @@
             </a>
 
             <div class="recipe">
+                <div class="favorite" onclick="toggleFavorite(event)"></div>
                 <div class="image">
                     <img src="https://i.postimg.cc/SNKzvVyV/ribs.jpg"  class="picture" alt="ribs" />
                 </div>
@@ -108,6 +110,7 @@
             </div>
 
             <div class="recipe">
+                <div class="favorite" onclick="toggleFavorite(event)"></div>
                 <div class="image">
                     <img src="https://i.postimg.cc/zGbHJBHg/rice.jpg" class="picture" alt="rice" />
                 </div>
@@ -126,6 +129,7 @@
         <div class="secondCol">
 
             <div class="recipe">
+                <div class="favorite" onclick="toggleFavorite(event)"></div>
                 <div class="image">
                     <img src="https://i.postimg.cc/dQ6y6gKL/gato.jpg" class="picture" alt="gato" />
                 </div>
@@ -140,6 +144,7 @@
             </div>
 
             <div class="recipe">
+                <div class="favorite" onclick="toggleFavorite(event)"></div>
                 <div class="image">
                     <img src="https://i.postimg.cc/brmSvSRQ/bits.jpg" class="picture" alt="bits" />
                 </div>
@@ -167,6 +172,19 @@
             </div>
         </div>
     </div>
+    <script>
+        function toggleFavorite(event) {
+            // Останавливаем всплытие события, чтобы не сработал переход по ссылке
+            event.stopPropagation();
+            event.preventDefault();
+            
+            // Переключаем класс checked у элемента favorite
+            event.currentTarget.classList.toggle('checked');
+            
+            // Здесь можно добавить логику сохранения в избранное
+            // Например, через localStorage или отправку на сервер
+        }
+    </script>
     <script src="../js/commonNav.js" defer></script>
     <script src="../js/utils.js" defer></script>
 </body>
