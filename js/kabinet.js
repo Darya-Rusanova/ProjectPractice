@@ -5,7 +5,7 @@ const errorDiv = document.getElementById('error');
 const cabinetSection = document.getElementById('cabinet-section');
 const logoutButton = document.getElementById('logout');
 const recipeForm = document.getElementById('recipe-form');
-const recipesList = document.getElementById('recipes');
+const recipesList = document.getElementById('recipes'); // Исправлено с recipes-list на recipes
 const addIngredientButton = document.getElementById('add-ingredient-btn');
 const addStepButton = document.getElementById('add-step-btn');
 const ingredientsContainer = document.getElementById('ingredients-container');
@@ -76,7 +76,6 @@ function restrictInput(input, isDecimal = false) {
         const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
         if (isDecimal) {
             if ((e.key >= '0' && e.key <= '9') || e.key === ',' || allowedKeys.includes(e.key)) {
-                // Предотвращаем ввод запятой, если она уже есть
                 if (e.key === ',' && input.value.includes(',')) {
                     e.preventDefault();
                 }
@@ -317,104 +316,92 @@ recipeForm.addEventListener('submit', async (e) => {
     button.disabled = true;
     button.textContent = 'Загрузка...';
 
-    const title = document.getElementById('recipe-title').value;
-    const description = document.getElementById('recipe-description').value;
-    const selectedCategories = Array.from(categoryButtons)
-        .filter(button => button.classList.contains('active'))
-        .map(button => button.dataset.category);
-
-    // Валидация
-    if (title.length > 50) {
-        errorDiv.textContent = 'Название не должно превышать 50 символов';
-        button.disabled = false;
-        button.textContent = originalText;
-        return;
-    }
-    if (description.length > 1000) {
-        errorDiv.textContent = 'Описание не должно превышать 1000 символов';
-        button.disabled = false;
-        button.textContent = originalText;
-        return;
-    }
-    if (selectedCategories.length === 0) {
-        errorDiv.textContent = 'Выберите хотя бы одну категорию';
-        button.disabled = false;
-        button.textContent = originalText;
-        return;
-    }
-
-    const ingredientDivs = ingredientsContainer.getElementsByClassName('ingredient');
-    for (let div of ingredientDivs) {
-        const name = div.querySelector('.ingredient-name').value;
-        const quantity = div.querySelector('.quantity-input').value;
-        if (name.length > 50) {
-            errorDiv.textContent = `Ингредиент "${name}" не должен превышать 50 символов`;
-            button.disabled = false;
-            button.textContent = originalText;
-            return;
-        }
-        if (!/^[0-9]+(,[0-9]*)?$/.test(quantity) && quantity !== '0') {
-            errorDiv.textContent = `Количество для "${name}" должно быть числом (например, 100 или 12,5)`;
-            button.disabled = false;
-            button.textContent = originalText;
-            return;
-        }
-    }
-
-    const stepDivs = stepsContainer.getElementsByClassName('step');
-    for (let div of stepDivs) {
-        const description = div.querySelector('.step-description').value;
-        if (description.length > 1000) {
-            errorDiv.textContent = `Описание шага не должно превышать 1000 символов`;
-            button.disabled = false;
-            button.textContent = originalText;
-            return;
-        }
-    }
-
-    const recipe = {
-        title,
-        categories: selectedCategories,
-        description,
-        servings: parseInt(servingsInput.value),
-        cookingTime: parseInt(cookingTimeInput.value),
-        ingredients: [],
-        ingredientQuantities: [],
-        ingredientUnits: [],
-        steps: []
-    };
-
-    for (let div of ingredientDivs) {
-        const name = div.querySelector('.ingredient-name').value;
-        let quantity = div.querySelector('.quantity-input').value;
-        const unit = div.querySelector('.type-unit').value;
-        if (quantity.endsWith(',')) {
-            quantity = quantity.slice(0, -1);
-        }
-        quantity = unit === 'пв' ? 0 : parseFloat(quantity.replace(',', '.'));
-        recipe.ingredients.push(name);
-        recipe.ingredientQuantities.push(quantity);
-        recipe.ingredientUnits.push(unit);
-    }
-
-    for (let div of stepDivs) {
-        const description = div.querySelector('.step-description').value;
-        recipe.steps.push({ description });
-    }
-
-    const formData = new FormData();
-    formData.append('recipeData', JSON.stringify(recipe));
-    if (recipeImageInput.files[0]) {
-        formData.append('recipeImage', recipeImageInput.files[0]);
-    }
-    stepDivs.forEach((div, index) => {
-        const stepImageInput = div.querySelector('.step-image');
-        if (stepImageInput.files[0]) {
-            formData.append('stepImages', stepImageInput.files[0]);
-        }
-    });
-
     try {
+        const title = document.getElementById('recipe-title').value;
+        const description = document.getElementById('recipe-description').value;
+        const selectedCategories = Array.from(categoryButtons)
+            .filter(button => button.classList.contains('active'))
+            .map(button => button.dataset.category);
+
+        // Валидация
+        if (title.length > 50) {
+            errorDiv.textContent = 'Название не должно превышать 50 символов';
+            return;
+        }
+        if (description.length > 1000) {
+            errorDiv.textContent = 'Описание не должно превышать 1000 символов';
+            return;
+        }
+        if (selectedCategories.length === 0) {
+            errorDiv.textContent = 'Выберите хотя бы одну категорию';
+            return;
+        }
+
+        const ingredientDivs = ingredientsContainer.getElementsByClassName('ingredient');
+        for (let div of ingredientDivs) {
+            const name = div.querySelector('.ingredient-name').value;
+            const quantity = div.querySelector('.quantity-input').value;
+            if (name.length > 50) {
+                errorDiv.textContent = `Ингредиент "${name}" не должен превышать 50 символов`;
+                return;
+            }
+            if (!/^[0-9]+(,[0-9]*)?$/.test(quantity) && quantity !== '0') {
+                errorDiv.textContent = `Количество для "${name}" должно быть числом (например, 100 или 12,5)`;
+                return;
+            }
+        }
+
+        const stepDivs = stepsContainer ? Array.from(stepsContainer.getElementsByClassName('step')) : [];
+        for (let div of stepDivs) {
+            const description = div.querySelector('.step-description').value;
+            if (description.length > 1000) {
+                errorDiv.textContent = `Описание шага не должно превышать 1000 символов`;
+                return;
+            }
+        }
+
+        const recipe = {
+            title,
+            categories: selectedCategories,
+            description,
+            servings: parseInt(servingsInput.value),
+            cookingTime: parseInt(cookingTimeInput.value),
+            ingredients: [],
+            ingredientQuantities: [],
+            ingredientUnits: [],
+            steps: []
+        };
+
+        for (let div of ingredientDivs) {
+            const name = div.querySelector('.ingredient-name').value;
+            let quantity = div.querySelector('.quantity-input').value;
+            const unit = div.querySelector('.type-unit').value;
+            if (quantity.endsWith(',')) {
+                quantity = quantity.slice(0, -1);
+            }
+            quantity = unit === 'пв' ? 0 : parseFloat(quantity.replace(',', '.'));
+            recipe.ingredients.push(name);
+            recipe.ingredientQuantities.push(quantity);
+            recipe.ingredientUnits.push(unit);
+        }
+
+        for (let div of stepDivs) {
+            const description = div.querySelector('.step-description').value;
+            recipe.steps.push({ description });
+        }
+
+        const formData = new FormData();
+        formData.append('recipeData', JSON.stringify(recipe));
+        if (recipeImageInput.files[0]) {
+            formData.append('recipeImage', recipeImageInput.files[0]);
+        }
+        stepDivs.forEach((div, index) => {
+            const stepImageInput = div.querySelector('.step-image');
+            if (stepImageInput?.files[0]) {
+                formData.append('stepImages', stepImageInput.files[0]);
+            }
+        });
+
         const response = await fetchWithRetry(`${API_BASE_URL}/api/recipes`, {
             method: 'POST',
             headers: {
@@ -471,6 +458,7 @@ recipeForm.addEventListener('submit', async (e) => {
             errorDiv.textContent = data.message || 'Ошибка добавления рецепта';
         }
     } catch (err) {
+        console.error('Ошибка при отправке формы:', err);
         errorDiv.textContent = 'Ошибка добавления: ' + err.message;
     } finally {
         button.disabled = false;
