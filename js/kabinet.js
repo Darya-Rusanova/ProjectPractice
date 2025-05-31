@@ -41,6 +41,12 @@ function showImagePreview(input, previewElement, removeButton) {
             previewElement.innerHTML = `<img src="${e.target.result}" style="max-width: 100px; border-radius: 4px; margin-top: 5px;" />`;
             if (removeButton) removeButton.style.display = 'block';
         };
+        reader.onerror = () => {
+            errorDiv.textContent = 'Ошибка при загрузке изображения';
+            input.value = '';
+            previewElement.innerHTML = '';
+            if (removeButton) removeButton.style.display = 'none';
+        };
         reader.readAsDataURL(file);
     } else {
         previewElement.innerHTML = '';
@@ -53,12 +59,18 @@ function clearImageInput(input, previewElement, removeButton) {
     input.value = '';
     previewElement.innerHTML = '';
     if (removeButton) removeButton.style.display = 'none';
+    input.setAttribute('required', 'required');
     errorDiv.textContent = '';
 }
 
 // Обработчик предварительного просмотра и удаления для изображения рецепта
 recipeImageInput.addEventListener('change', () => {
     showImagePreview(recipeImageInput, recipeImagePreview, removeRecipeImageButton);
+    if (recipeImageInput.files[0]) {
+        recipeImageInput.removeAttribute('required');
+    } else {
+        recipeImageInput.setAttribute('required', 'required');
+    }
 });
 removeRecipeImageButton.addEventListener('click', () => {
     clearImageInput(recipeImageInput, recipeImagePreview, removeRecipeImageButton);
@@ -66,11 +78,12 @@ removeRecipeImageButton.addEventListener('click', () => {
 
 // Функция ограничения ввода
 function restrictInput(input, isDecimal = false) {
-    input.addEventListener('input', () => {
+    input.addEventListener('input', (e) => {
         if (input.disabled) return;
         let value = input.value;
+        console.log(`Ввод в поле: ${value}, key: ${e.data}`); // Отладка
         if (isDecimal) {
-            value = value.replace(/\./g, ',').replace(/[^0-9,]/g, '');
+            value = value.replace(/[^0-9,]/g, '');
             if (value.startsWith(',')) {
                 value = '0' + value;
             }
@@ -82,15 +95,18 @@ function restrictInput(input, isDecimal = false) {
                 parts[0] = parts[0].replace(/^0+/, '') || '0';
                 value = parts[0] + (parts[1] !== undefined ? ',' + parts[1] : '');
             }
-            if (value.endsWith(',')) {
-                value = value.slice(0, -1);
+            if (parts[1] && parts[1].length > 2) {
+                parts[1] = parts[1].slice(0, 2);
+                value = parts[0] + ',' + parts[1];
             }
         } else {
             value = value.replace(/[^0-9]/g, '').replace(/^0+/, '') || '0';
         }
         input.value = value;
     });
+
     input.addEventListener('keydown', (e) => {
+        console.log(`Нажата клавиша: ${e.key}`); // Отладка
         const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
         if (isDecimal) {
             if ((e.key >= '0' && e.key <= '9') || e.key === ',' || allowedKeys.includes(e.key)) {
@@ -120,9 +136,9 @@ function enforceMinMax(input, isDecimal = false) {
                 input.value = value.slice(0, -1);
                 value = input.value;
             }
-            value = parseFloat(value.replace(',', '.'));
+            value = parseFloat(value.replace(',', '.')) || 0;
         } else {
-            value = parseInt(value);
+            value = parseInt(value) || 0;
         }
         if (isNaN(value)) {
             input.value = isDecimal ? min.toString().replace('.', ',') : min;
@@ -153,28 +169,187 @@ restrictInput(cookingTimeInput);
 enforceMinMax(servingsInput);
 enforceMinMax(cookingTimeInput);
 
-// Применяем ограничения к начальному полю количества
-const initialQuantityInput = document.querySelector('.quantity-input');
-const initialUnitSelect = document.querySelector('.type-unit');
-if (initialQuantityInput && initialUnitSelect) {
-    restrictInput(initialQuantityInput, true);
-    enforceMinMax(initialQuantityInput, true);
-    initialUnitSelect.addEventListener('change', () => handleUnitChange(initialUnitSelect, initialQuantityInput));
-    handleUnitChange(initialUnitSelect, initialQuantityInput);
-} else {
-    console.error('Initial quantity input or unit select not found');
+// Функция для инициализации ингредиента
+function initializeIngredient(ingredientDiv) {
+    const quantityInput = ingredientDiv.querySelector('.quantity-input');
+    const unitSelect = ingredientDiv.querySelector('.type-unit');
+    const removeButton = ingredientDiv.querySelector('.remove-ingredient-btn');
+    restrictInput(quantityInput, true);
+    enforceMinMax(quantityInput, true);
+    unitSelect.addEventListener('change', () => handleUnitChange(unitSelect, quantityInput));
+    handleUnitChange(unitSelect, quantityInput);
+    removeButton.addEventListener('click', () => {
+        const currentCount = ingredientsContainer.getElementsByClassName('ingredient').length;
+        if (currentCount <= 1) {
+            errorDiv.textContent = 'Должен быть хотя бы один ингредиент';
+            return;
+        }
+        ingredientDiv.remove();
+        errorDiv.textContent = '';
+    });
+}
+
+// Функция для создания шага через DOM-методы
+function createStep(stepNumber) {
+    const stepDiv = document.createElement('div');
+    stepDiv.className = 'step';
+
+    // Создание первого label для описания
+    const descriptionLabel = document.createElement('label');
+    descriptionLabel.setAttribute('for', `step-description-${stepNumber}`);
+    const labelText = document.createTextNode(`Шаг ${stepNumber} (описание): `);
+    descriptionLabel.appendChild(labelText);
+
+    const textarea = document.createElement('textarea');
+    textarea.id = `step-description-${stepNumber}`;
+    textarea.className = 'step-description';
+    textarea.setAttribute('rows', '4');
+    textarea.setAttribute('maxlength', '1000');
+    textarea.setAttribute('required', 'required');
+    descriptionLabel.appendChild(textarea);
+    stepDiv.appendChild(descriptionLabel);
+
+    // Создание второго label для изображения
+    const imageLabel = document.createElement('label');
+    imageLabel.textContent = 'Изображение шага: ';
+    const imageInput = document.createElement('input');
+    imageInput.type = 'file';
+    imageInput.className = 'step-image';
+    imageInput.name = 'step-image';
+    imageInput.accept = 'image/jpeg,image/png';
+    imageLabel.appendChild(imageInput);
+    stepDiv.appendChild(imageLabel);
+
+    // Создание блока image-controls
+    const imageControls = document.createElement('div');
+    imageControls.className = 'image-controls';
+
+    const imagePreview = document.createElement('div');
+    imagePreview.className = 'step-image-preview';
+    imageControls.appendChild(imagePreview);
+
+    const removeImageButton = document.createElement('button');
+    removeImageButton.type = 'button';
+    removeImageButton.className = 'remove-btn remove-step-image-btn';
+    removeImageButton.textContent = 'Удалить изображение';
+    removeImageButton.style.display = 'none';
+    imageControls.appendChild(removeImageButton);
+    stepDiv.appendChild(imageControls);
+
+    // Создание кнопки удаления шага
+    const removeStepButton = document.createElement('button');
+    removeStepButton.type = 'button';
+    removeStepButton.className = 'remove-btn remove-step-btn';
+    removeStepButton.textContent = 'Удалить шаг';
+    stepDiv.appendChild(removeStepButton);
+
+    return stepDiv;
+}
+
+// Функция для инициализации шага
+function initializeStep(stepDiv) {
+    const stepImageInput = stepDiv.querySelector('.step-image');
+    const stepImagePreview = stepDiv.querySelector('.step-image-preview');
+    const removeStepImageButton = stepDiv.querySelector('.remove-step-image-btn');
+    const removeStepButton = stepDiv.querySelector('.remove-step-btn');
+    
+    stepImageInput.addEventListener('change', () => {
+        showImagePreview(stepImageInput, stepImagePreview, removeStepImageButton);
+    });
+    removeStepImageButton.addEventListener('click', () => {
+        clearImageInput(stepImageInput, stepImagePreview, removeStepImageButton);
+    });
+    removeStepButton.addEventListener('click', () => {
+        const currentCount = stepsContainer.getElementsByClassName('step').length;
+        if (currentCount <= 1) {
+            errorDiv.textContent = 'Должен быть хотя бы один шаг';
+            return;
+        }
+        stepDiv.remove();
+        updateStepLabels(); // Пересчитываем номера шагов после удаления
+        errorDiv.textContent = '';
+    });
 }
 
 // Функция для обновления нумерации шагов
 function updateStepLabels() {
     const stepDivs = stepsContainer.getElementsByClassName('step');
     Array.from(stepDivs).forEach((stepDiv, index) => {
-        const label = stepDiv.querySelector('label[for$="(описание)"]');
-        if (label) {
-            label.textContent = `Шаг ${index + 1} (описание): `;
+        const stepNumber = index + 1; // Нумерация начинается с 1
+        const label = stepDiv.querySelector('label[for^="step-description-"]');
+        const textarea = stepDiv.querySelector('.step-description');
+        if (label && textarea) {
+            // Обновляем только текстовый узел внутри label, сохраняя textarea
+            const labelTextNode = label.childNodes[0];
+            if (labelTextNode && labelTextNode.nodeType === Node.TEXT_NODE) {
+                labelTextNode.textContent = `Шаг ${stepNumber} (описание): `;
+            } else {
+                label.replaceChild(document.createTextNode(`Шаг ${stepNumber} (описание): `), labelTextNode);
+            }
+            label.setAttribute('for', `step-description-${stepNumber}`);
+            textarea.id = `step-description-${stepNumber}`;
+            console.log(`Обновлён шаг ${stepNumber}, textarea id=${textarea.id}`);
+            const computedStyle = window.getComputedStyle(textarea);
+            console.log(`Стили textarea для шага ${stepNumber}: display=${computedStyle.display}, visibility=${computedStyle.visibility}, height=${computedStyle.height}`);
+        } else {
+            console.error(`Ошибка: label или textarea не найдены для шага ${stepNumber}`);
         }
     });
 }
+
+// Инициализация начальных элементов
+const initialIngredient = ingredientsContainer.querySelector('.ingredient');
+if (initialIngredient) {
+    initializeIngredient(initialIngredient);
+} else {
+    console.error('Initial ingredient not found');
+}
+
+const initialStep = stepsContainer.querySelector('.step');
+if (initialStep) {
+    console.log('Инициализация начального шага');
+    initializeStep(initialStep);
+    updateStepLabels(); // Устанавливаем начальную нумерацию
+    const initialTextarea = initialStep.querySelector('.step-description');
+    if (initialTextarea) {
+        console.log('Начальный шаг: textarea найдена, id=', initialTextarea.id);
+    } else {
+        console.error('Начальный шаг: textarea НЕ найдена');
+    }
+} else {
+    console.error('Initial step not found');
+    // Создаём первый шаг вручную, если его нет в HTML
+    const firstStep = createStep(1);
+    stepsContainer.appendChild(firstStep);
+    initializeStep(firstStep);
+    updateStepLabels();
+    console.log('Создан первый шаг вручную');
+}
+
+// Добавление шага
+addStepButton.addEventListener('click', () => {
+    const stepCount = stepsContainer.getElementsByClassName('step').length;
+    if (stepCount >= 50) {
+        errorDiv.textContent = 'Максимум 50 шагов';
+        return;
+    }
+
+    const stepNumber = stepCount + 1;
+    const stepDiv = createStep(stepNumber);
+    stepsContainer.appendChild(stepDiv);
+    initializeStep(stepDiv);
+    updateStepLabels();
+
+    // Отладка
+    const addedTextarea = stepDiv.querySelector('.step-description');
+    if (addedTextarea) {
+        console.log(`Добавлен шаг ${stepNumber}, textarea присутствует: true, id=${addedTextarea.id}`);
+        const computedStyle = window.getComputedStyle(addedTextarea);
+        console.log(`Стили textarea: display=${computedStyle.display}, height=${computedStyle.height}, visibility=${computedStyle.visibility}`);
+    } else {
+        console.error(`Textarea не найдена для шага ${stepNumber} после добавления`);
+    }
+});
 
 // Проверка токена
 async function checkToken() {
@@ -184,7 +359,7 @@ async function checkToken() {
         return;
     }
     try {
-        const response = await fetchWithRetry(`${API_BASE_URL}/api/users/${userId}/recipes`, {
+        const response = await fetch(`${API_BASE_URL}/api/users/${userId}/recipes`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!response.ok) {
@@ -213,7 +388,7 @@ logoutButton.addEventListener('click', () => {
 // Загрузка рецептов
 async function fetchRecipes() {
     try {
-        const response = await fetchWithRetry(`${API_BASE_URL}/api/users/${userId}/recipes`, {
+        const response = await fetch(`${API_BASE_URL}/api/users/${userId}/recipes`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!response.ok) {
@@ -251,7 +426,7 @@ async function fetchRecipes() {
                     const recipeId = button.getAttribute('data-id');
                     if (confirm('Вы уверены, что хотите удалить этот рецепт?')) {
                         try {
-                            const response = await fetchWithRetry(`${API_BASE_URL}/api/recipes/${recipeId}`, {
+                            const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}`, {
                                 method: 'DELETE',
                                 headers: { 'Authorization': `Bearer ${token}` }
                             });
@@ -291,7 +466,7 @@ addIngredientButton.addEventListener('click', () => {
     ingredientDiv.innerHTML = `
         <label>Ингредиент: <input type="text" class="ingredient-name" maxlength="50" required></label>
         <label>Количество: 
-          <input type="text" class="quantity-input" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required>
+          <input type="text" class="quantity-input" min="0" max="1000" pattern="[0-9]+(,[0-9]{0,2})?" required>
           <select class="type-unit" required>
             <option value="г">г</option>
             <option value="кг">кг</option>
@@ -307,99 +482,7 @@ addIngredientButton.addEventListener('click', () => {
         <button type="button" class="remove-btn remove-ingredient-btn">Удалить ингредиент</button>
     `;
     ingredientsContainer.appendChild(ingredientDiv);
-    const newQuantityInput = ingredientDiv.querySelector('.quantity-input');
-    const newUnitSelect = ingredientDiv.querySelector('.type-unit');
-    restrictInput(newQuantityInput, true);
-    enforceMinMax(newQuantityInput, true);
-    newUnitSelect.addEventListener('change', () => handleUnitChange(newUnitSelect, newQuantityInput));
-    handleUnitChange(newUnitSelect, newQuantityInput);
-    // Обработчик удаления ингредиента
-    ingredientDiv.querySelector('.remove-ingredient-btn').addEventListener('click', () => {
-        const currentCount = ingredientsContainer.getElementsByClassName('ingredient').length;
-        if (currentCount <= 1) {
-            errorDiv.textContent = 'Должен быть хотя бы один ингредиент';
-            return;
-        }
-        ingredientDiv.remove();
-        errorDiv.textContent = '';
-    });
-});
-
-// Обработчик удаления начального ингредиента
-ingredientsContainer.querySelector('.remove-ingredient-btn').addEventListener('click', () => {
-    const currentCount = ingredientsContainer.getElementsByClassName('ingredient').length;
-    if (currentCount <= 1) {
-        errorDiv.textContent = 'Должен быть хотя бы один ингредиент';
-        return;
-    }
-    ingredientsContainer.querySelector('.ingredient').remove();
-    errorDiv.textContent = '';
-});
-
-// Добавление шага
-addStepButton.addEventListener('click', () => {
-    const stepCount = stepsContainer.getElementsByClassName('step').length;
-    if (stepCount >= 50) {
-        errorDiv.textContent = 'Максимум 50 шагов';
-        return;
-    }
-    const stepDiv = document.createElement('div');
-    stepDiv.className = 'step';
-    const stepNumber = stepCount + 1;
-    stepDiv.innerHTML = `
-        <label>Шаг ${stepNumber} (описание): <textarea class="step-description" maxlength="1000" required></textarea></label>
-        <label>Изображение шага (опционально): 
-          <input type="file" class="step-image" name="step-image" accept="image/jpeg,image/png">
-        </label>
-        <div class="image-controls">
-          <div class="step-image-preview"></div>
-          <button type="button" class="remove-btn remove-step-image-btn" style="display: none;">Удалить изображение</button>
-        </div>
-        <button type="button" class="remove-btn remove-step-btn">Удалить шаг</button>
-    `;
-    stepsContainer.appendChild(stepDiv);
-    const newStepImageInput = stepDiv.querySelector('.step-image');
-    const newStepImagePreview = stepDiv.querySelector('.step-image-preview');
-    const newRemoveStepImageButton = stepDiv.querySelector('.remove-step-image-btn');
-    newStepImageInput.addEventListener('change', () => {
-        showImagePreview(newStepImageInput, newStepImagePreview, newRemoveStepImageButton);
-    });
-    newRemoveStepImageButton.addEventListener('click', () => {
-        clearImageInput(newStepImageInput, newStepImagePreview, newRemoveStepImageButton);
-    });
-    // Обработчик удаления шага
-    stepDiv.querySelector('.remove-step-btn').addEventListener('click', () => {
-        const currentCount = stepsContainer.getElementsByClassName('step').length;
-        if (currentCount <= 1) {
-            errorDiv.textContent = 'Должен быть хотя бы один шаг';
-            return;
-        }
-        stepDiv.remove();
-        updateStepLabels();
-        errorDiv.textContent = '';
-    });
-    updateStepLabels();
-});
-
-// Обработчик удаления начального шага и изображения шага
-const initialStepImageInput = stepsContainer.querySelector('.step-image');
-const initialStepImagePreview = stepsContainer.querySelector('.step-image-preview');
-const initialRemoveStepImageButton = stepsContainer.querySelector('.remove-step-image-btn');
-initialStepImageInput.addEventListener('change', () => {
-    showImagePreview(initialStepImageInput, initialStepImagePreview, initialRemoveStepImageButton);
-});
-initialRemoveStepImageButton.addEventListener('click', () => {
-    clearImageInput(initialStepImageInput, initialStepImagePreview, initialRemoveStepImageButton);
-});
-stepsContainer.querySelector('.remove-step-btn').addEventListener('click', () => {
-    const currentCount = stepsContainer.getElementsByClassName('step').length;
-    if (currentCount <= 1) {
-        errorDiv.textContent = 'Должен быть хотя бы один шаг';
-        return;
-    }
-    stepsContainer.querySelector('.step').remove();
-    updateStepLabels();
-    errorDiv.textContent = '';
+    initializeIngredient(ingredientDiv);
 });
 
 // Обработчик отправки формы
@@ -447,7 +530,7 @@ recipeForm.addEventListener('submit', async (e) => {
                 errorDiv.textContent = `Ингредиент "${name || ''}" не должен превышать 50 символов`;
                 return;
             }
-            if (!quantity || (!/^[0-9]+(,[0-9]*)?$/.test(quantity) && quantity !== '0')) {
+            if (!quantity || (!/^[0-9]+(,[0-9]{0,2})?$/.test(quantity) && quantity !== '0')) {
                 errorDiv.textContent = `Количество для "${name}" должно быть числом (например, 100 или 12,5)`;
                 return;
             }
@@ -515,7 +598,7 @@ recipeForm.addEventListener('submit', async (e) => {
             }
         });
 
-        const response = await fetchWithRetry(`${API_BASE_URL}/api/recipes`, {
+        const response = await fetch(`${API_BASE_URL}/api/recipes`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -526,73 +609,39 @@ recipeForm.addEventListener('submit', async (e) => {
         if (data._id) {
             recipeForm.reset();
             categoryButtons.forEach(button => button.classList.remove('active'));
-            ingredientsContainer.innerHTML = `
-                <div class="ingredient">
-                    <label>Ингредиент: <input type="text" class="ingredient-name" maxlength="50" required></label>
-                    <label>Количество: 
-                      <input type="text" class="quantity-input" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required>
-                      <select class="type-unit" required>
-                        <option value="г">г</option>
-                        <option value="кг">кг</option>
-                        <option value="мл">мл</option>
-                        <option value="л">л</option>
-                        <option value="шт">шт.</option>
-                        <option value="ст">ст.</option>
-                        <option value="стл">ст.л.</option>
-                        <option value="чл">ч.л.</option>
-                        <option value="пв">по вкусу</option>
-                      </select>
-                    </label>
-                    <button type="button" class="remove-btn remove-ingredient-btn">Удалить ингредиент</button>
-                </div>
+
+            // Сброс ингредиентов
+            ingredientsContainer.innerHTML = '';
+            const ingredientDiv = document.createElement('div');
+            ingredientDiv.className = 'ingredient';
+            ingredientDiv.innerHTML = `
+                <label>Ингредиент: <input type="text" class="ingredient-name" maxlength="50" required></label>
+                <label>Количество: 
+                  <input type="text" class="quantity-input" min="0" max="1000" pattern="[0-9]+(,[0-9]{0,2})?" required>
+                  <select class="type-unit" required>
+                    <option value="г">г</option>
+                    <option value="кг">кг</option>
+                    <option value="мл">мл</option>
+                    <option value="л">л</option>
+                    <option value="шт">шт.</option>
+                    <option value="ст">ст.</option>
+                    <option value="стл">ст.л.</option>
+                    <option value="чл">ч.л.</option>
+                    <option value="пв">по вкусу</option>
+                  </select>
+                </label>
+                <button type="button" class="remove-btn remove-ingredient-btn">Удалить ингредиент</button>
             `;
-            const newInitialQuantityInput = ingredientsContainer.querySelector('.quantity-input');
-            const newInitialUnitSelect = ingredientsContainer.querySelector('.type-unit');
-            restrictInput(newInitialQuantityInput, true);
-            enforceMinMax(newInitialQuantityInput, true);
-            newInitialUnitSelect.addEventListener('change', () => handleUnitChange(newInitialUnitSelect, newInitialQuantityInput));
-            handleUnitChange(newInitialUnitSelect, newInitialQuantityInput);
-            ingredientsContainer.querySelector('.remove-ingredient-btn').addEventListener('click', () => {
-                const currentCount = ingredientsContainer.getElementsByClassName('ingredient').length;
-                if (currentCount <= 1) {
-                    errorDiv.textContent = 'Должен быть хотя бы один ингредиент';
-                    return;
-                }
-                ingredientsContainer.querySelector('.ingredient').remove();
-                errorDiv.textContent = '';
-            });
-            stepsContainer.innerHTML = `
-                <div class="step">
-                    <label>Шаг 1 (описание): <textarea class="step-description" maxlength="1000" required></textarea></label>
-                    <label>Изображение шага (опционально): 
-                      <input type="file" class="step-image" name="step-image" accept="image/jpeg,image/png">
-                    </label>
-                    <div class="image-controls">
-                      <div class="step-image-preview"></div>
-                      <button type="button" class="remove-btn remove-step-image-btn" style="display: none;">Удалить изображение</button>
-                    </div>
-                    <button type="button" class="remove-btn remove-step-btn">Удалить шаг</button>
-                </div>
-            `;
-            const newStepImageInput = stepsContainer.querySelector('.step-image');
-            const newStepImagePreview = stepsContainer.querySelector('.step-image-preview');
-            const newRemoveStepImageButton = stepsContainer.querySelector('.remove-step-image-btn');
-            newStepImageInput.addEventListener('change', () => {
-                showImagePreview(newStepImageInput, newStepImagePreview, newRemoveStepImageButton);
-            });
-            newRemoveStepImageButton.addEventListener('click', () => {
-                clearImageInput(newStepImageInput, newStepImagePreview, newRemoveStepImageButton);
-            });
-            stepsContainer.querySelector('.remove-step-btn').addEventListener('click', () => {
-                const currentCount = stepsContainer.getElementsByClassName('step').length;
-                if (currentCount <= 1) {
-                    errorDiv.textContent = 'Должен быть хотя бы один шаг';
-                    return;
-                }
-                stepsContainer.querySelector('.step').remove();
-                updateStepLabels();
-                errorDiv.textContent = '';
-            });
+            ingredientsContainer.appendChild(ingredientDiv);
+            initializeIngredient(ingredientDiv);
+
+            // Сброс шагов через DOM-методы
+            stepsContainer.innerHTML = '';
+            const stepDiv = createStep(1);
+            stepsContainer.appendChild(stepDiv);
+            initializeStep(stepDiv);
+            updateStepLabels();
+
             recipeImagePreview.innerHTML = '';
             removeRecipeImageButton.style.display = 'none';
             stepsContainer.querySelectorAll('.step-image-preview').forEach(preview => preview.innerHTML = '');

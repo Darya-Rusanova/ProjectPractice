@@ -58,7 +58,7 @@
             <button type="button" class="category-btn" data-category="Напитки">Напитки</button>
           </div>
           <label>Описание: <textarea id="recipe-description" maxlength="1000" required></textarea></label>
-          <label>Порции: <input type="number" id="recipe-servings" min="1" max="100" required></label>
+          <label>Количество порций: <input type="number" id="recipe-servings" min="1" max="100" required></label>
           <label>Время приготовления (мин): <input type="number" id="recipe-cooking-time" min="1" max="100000" required></label>
           <div id="ingredients-container">
             <div class="ingredient">
@@ -90,8 +90,8 @@
           </div>
           <div id="steps-container">
             <div class="step">
-              <label>Шаг 1 (описание): <textarea class="step-description" maxlength="1000" required></textarea></label>
-              <label>Изображение шага (опционально): 
+              <label for="step-description-1">Шаг 1 (описание): <textarea id="step-description-1" class="step-description" rows="4" maxlength="1000" required></textarea></label>
+              <label>Изображение шага: 
                 <input type="file" class="step-image" name="step-image" accept="image/jpeg,image/png">
               </label>
               <div class="image-controls">
@@ -109,7 +109,6 @@
   </div>
   <script src="js/utils.js" defer></script>
   <script src="js/theme.js" type="text/javascript" defer></script>
-  <script src="js/main.js" defer></script>
   <script src="js/kabinet.js" defer></script>
 </body>
 </html>
