@@ -456,28 +456,59 @@ async function fetchRecipes() {
             recipes.forEach(recipe => {
                 const recipeDiv = document.createElement('div');
                 recipeDiv.className = 'myRecipe';
-                const unitDisplayMap = {
-                    'г': 'г', 'кг': 'кг', 'мл': 'мл', 'л': 'л', 'шт': 'шт.', 'ст': 'ст.', 'стл': 'ст.л.', 'чл': 'ч.л.', 'пв': 'по вкусу'
-                };
-                const ingredientsList = recipe.ingredients.map((ing, index) => {
-                    const unit = recipe.ingredientUnits[index] || 'г';
-                    const displayUnit = unitDisplayMap[unit];
-                    const quantity = unit === 'пв' ? '' : recipe.ingredientQuantities[index];
-                    return `${ing}: ${quantity} ${displayUnit}`;
-                }).join(', ');
-                recipeDiv.innerHTML = `
+                
+                // Создаём кликабельный блок
+                const recipeLink = document.createElement('a');
+                recipeLink.href = '#'; // Пустая ссылка, будет заменена позже
+                recipeLink.className = 'recipe-link';
+                
+                // Внутренний контейнер для изображения и информации
+                const recipeContent = document.createElement('div');
+                recipeContent.className = 'recipe-content';
+                
+                // Изображение слева
+                const imageDiv = document.createElement('div');
+                imageDiv.className = 'recipe-image';
+                if (recipe.image) {
+                    imageDiv.innerHTML = `<img src="${recipe.image}" alt="${recipe.title}" />`;
+                } else {
+                    imageDiv.innerHTML = '<div class="no-image">Нет изображения</div>';
+                }
+                
+                // Информация справа
+                const infoDiv = document.createElement('div');
+                infoDiv.className = 'recipe-info';
+                infoDiv.innerHTML = `
                     <h4>${recipe.title}</h4>
-                    <p>Категории: ${recipe.categories.join(', ')}</p>
-                    <p>Описание: ${recipe.description}</p>
-                    <p>Ингредиенты: ${ingredientsList}</p>
-                    ${recipe.image ? `<img src="${recipe.image}" alt="${recipe.title}" style="max-width: 200px;">` : ''}
-                    <button class="delete-btn" data-id="${recipe._id}">Удалить</button>
+                    <ul>
+                        <li>${recipe.servings} порции</li>
+                        <li>${recipe.cookingTime} минут</li>
+                        <li>${recipe.ingredients.length} ингредиентов</li>
+                    </ul>
+                    <p class="status">Статус: На рассмотрении</p>
                 `;
+                
+                // Собираем содержимое
+                recipeContent.appendChild(imageDiv);
+                recipeContent.appendChild(infoDiv);
+                recipeLink.appendChild(recipeContent);
+                recipeDiv.appendChild(recipeLink);
+                
+                // Кнопка удаления
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'delete-btn';
+                deleteButton.textContent = 'Удалить';
+                deleteButton.dataset.id = recipe._id;
+                recipeDiv.appendChild(deleteButton);
+                
                 recipesList.appendChild(recipeDiv);
             });
+            
+            // Добавляем обработчики для кнопок удаления
             document.querySelectorAll('.delete-btn').forEach(button => {
-                button.addEventListener('click', async () => {
-                    const recipeId = button.getAttribute('data-id');
+                button.addEventListener('click', async (e) => {
+                    e.preventDefault(); // Предотвращаем переход по ссылке при клике на кнопку
+                    const recipeId = button.dataset.id;
                     if (confirm('Вы уверены, что хотите удалить этот рецепт?')) {
                         try {
                             const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}`, {
