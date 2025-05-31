@@ -1,5 +1,15 @@
+// Проверка при загрузке страницы
+const lkText = document.getElementById('lk-text');
+document.addEventListener('DOMContentLoaded', async () => {
+    const username = await checkAuthAndGetUsername();
+    if (username && lkText) {
+        lkText.textContent = username;
+    }
+    else {
+        lkText.textContent = "Личный кабинет";
+    }
+});
 
-const lkText = document.querySelector('.text-toggle');
 async function checkAuthAndGetUsername() {
     const token = localStorage.getItem('token') || '';
     const userId = localStorage.getItem('userId') || '';
@@ -27,10 +37,3 @@ async function checkAuthAndGetUsername() {
     }
 }
 
-// Проверка при загрузке страницы
-document.addEventListener('DOMContentLoaded', async () => {
-    const username = await checkAuthAndGetUsername();
-    if (username && lkText) {
-        lkText.textContent = username;
-    }
-});
