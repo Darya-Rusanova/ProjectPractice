@@ -48,10 +48,14 @@
         <div class="exit-bg" onclick="window.exit.showModal()"></div>
       </div>
 
-      <dialog id="exit">
-        <h4>Выйти из личного кабинета?</h4>
-        <button onclick="window.exit.close()">Отмена</button>
-        <button id="logout">Выйти</button>
+      <dialog id="exit" class="exit-dialog">
+        <div class="dialog-content">
+          <h4>Выйти из личного кабинета?</h4>
+          <div class="dialog-buttons">
+            <button class="cancel-btn" onclick="window.exit.close()">Отмена</button>
+            <button class="confirm-btn" id="logout">Выйти</button>
+          </div>
+        </div>
       </dialog>
 
       <div class="navigation">
@@ -64,7 +68,7 @@
                 </div>
         </div>
     </div>
-    <div class="information" hidden>
+    <div class="information">
         <div class="main-text">
             <p id="head">ЛИЧНЫЙ КАБИНЕТ</p>
             <p id="body">Добро пожаловать в личный кабинет!</p>
@@ -156,7 +160,7 @@
           <button type="button" id="add-step-btn">Добавить шаг</button>
           <div class="buttons">
             <button type="button" id="cancel-btn" onclick="window.addDialog.close()">Отменить</button>
-            <button type="submit" id="addRecipe-btn">Добавить рецепт</button>
+            <button type="submit" id="addRecipe-btn" onclick="window.addDialog.close()">Добавить рецепт</button>
           </div>
         </form>
       </div>

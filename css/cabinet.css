@@ -281,10 +281,9 @@ h3{
     display: grid;
     place-items:center;
     grid-template-columns: 60% 40%;
-    grid-template-rows: 350px 50px;
+    grid-template-rows: 350px;
     grid-template-areas:
         "img description"
-        "delete delete"
 }
 
 .recipe-image {
@@ -346,13 +345,14 @@ h3{
     margin-bottom: -5px;
 }
 .add-bg {
-  background-image: var(--add);
-  width: 32px;
-  height: 32px;
-  background-size: cover;       
-  background-position: center; 
-  background-repeat: no-repeat; 
-  transition: background-image 0.3s;
+    background-image: var(--add);
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    background-size: cover;       
+    background-position: center; 
+    background-repeat: no-repeat; 
+    transition: background-image 0.3s;
 }
 #recipes-section h3, #recipes-section .add {
     display: inline-block;
@@ -379,6 +379,21 @@ h3{
   background-color: var(--color-primary-a110);
 }
 
+#exit{
+    max-width: 80%;
+    width: 500px;
+    height: 200px;
+    max-height: 50%;
+    border-radius: 25px;
+    border: 10px solid var(--color-primary-a50);
+    background-color: var(--color-primary-a40);
+}
+#exit h4{
+    text-align: center;
+    font-size: 18px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
 
 /*Секция добавить рецепт*/
 #addDialog{
@@ -406,6 +421,43 @@ h3{
     text-align: center;
     margin: 20px;
 }
+.dialog-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 10px;
+}
+
+.cancel-btn,
+.confirm-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+  max-width: 120px;
+}
+
+.cancel-btn {
+  background-color: var(--color-primary-a40);
+  color: var(--color-primary-a90);
+  border: 1px solid var(--color-primary-a50);
+}
+
+.confirm-btn {
+  background-color: var(--color-primary-a100);
+  color: white;
+  border: 1px solid var(--color-primary-a100);
+}
+
+.cancel-btn:hover {
+  background-color: var(--color-primary-a50);
+}
+
+.confirm-btn:hover {
+  background-color: var(--color-primary-a110);
+}
 #addDialog::-webkit-scrollbar {
     width: 15px;
 }
@@ -419,7 +471,7 @@ h3{
     display: block;
     background: transparent;
 }
-#addDialog{
+#addDialog, #exit{
     transition: display 0.2s allow-discrete, overlay 0.2s allow-discrete;
   
     animation: close 0.3s forwards;
@@ -449,7 +501,7 @@ h3{
 body:has(dialog[open]) {
     overflow: hidden;
 }
-#addDialog::backdrop {
+#addDialog::backdrop  {
     background-color: rgb(0 0 0 / 40%);
 }
 
@@ -506,13 +558,23 @@ body:has(dialog[open]) {
   margin: 10px 20px 20px 20px; /* Отступы сверху и снизу */
 }
 
-/* Контейнеры с изображениями */
 .image-controls {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin: 15px 0; /* Отступы сверху и снизу */
+  gap: 5px;
+  margin-top: 5px;
+  align-items: flex-start;
 }
+
+.image-preview {
+  margin-top: 5px;
+}
+
+.image-preview img {
+  max-width: 100px;
+  border-radius: 4px;
+}
+
 .category-btn {
   font-size: 16px;
   padding: 8px 16px;
@@ -689,6 +751,7 @@ input:focus, textarea:focus, select:focus {
     cursor: pointer;
     margin: 5px 0;
     transition: background-color 0.3s;
+    margin-bottom: 20px;
 }
 
 .remove-btn:hover {
