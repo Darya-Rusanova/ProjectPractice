@@ -7,12 +7,11 @@ function updateUserName() {
         return;
     }
 
-    checkAuthAndGetUsername().then(result => {
-        if (result && result.username) {
-            lkText.textContent = result.username;
+    checkAuthAndGetUsername().then(isAuthenticated => {
+        if (isAuthenticated) {
+            lkText.textContent = 'Личный кабинет'; // Временно убираем зависимость от имени
             lkAnchor.href = 'kabinet.html';
         } else {
-            console.log('Имя пользователя не получено или токен недействителен:', result);
             lkText.textContent = 'Личный кабинет';
             lkAnchor.href = 'signIn.html';
         }
@@ -28,7 +27,7 @@ async function checkAuthAndGetUsername() {
 
     if (!token || !userId) {
         console.log('Токен или userId отсутствует');
-        return null;
+        return false;
     }
 
     console.log('Проверка токена:', token); // Отладка
@@ -38,27 +37,15 @@ async function checkAuthAndGetUsername() {
         });
         
         console.log('Ответ сервера на /recipes:', response.status, await response.text()); // Отладка
-        if (response.ok) {
-            const userResponse = await fetchWithRetry(`${API_BASE_URL}/api/users/${userId}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            console.log('Ответ сервера на /users:', userResponse.status, await userResponse.text()); // Отладка
-            if (userResponse.ok) {
-                const userData = await userResponse.json();
-                console.log('Данные пользователя:', userData); // Отладка
-                return { username: userData.username || 'Пользователь' }; // Устанавливаем значение по умолчанию
-            } else {
-                console.error('Не удалось получить имя пользователя, но токен валиден. Статус:', userResponse.status);
-                return { username: null };
-            }
-        } else {
-            throw new Error(`Ошибка проверки токена: ${response.status}`);
-        }
+        return response.ok; // Возвращаем true, если токен валиден
     } catch (err) {
         console.error('Ошибка при проверке токена:', err.message);
-        localStorage.removeItem('token');
-        localStorage.removeItem('userId');
-        window.dispatchEvent(new Event('authStateChanged'));
-        return null;
+        // Удаляем токен только если ошибка явно указывает на недействительность (например, 401)
+        if (err.message.includes('401')) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            window.dispatchEvent(new Event('authStateChanged'));
+        }
+        return false;
     }
 }
