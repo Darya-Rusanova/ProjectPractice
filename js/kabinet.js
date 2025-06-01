@@ -1,7 +1,7 @@
 let token = localStorage.getItem('token') || '';
 let userId = localStorage.getItem('userId') || '';
 
-const errorDiv = document.getElementById('error');
+// const errorDiv = document.getElementById('error');
 const cabinetSection = document.getElementById('cabinet-section');
 const logoutButton = document.getElementById('logout');
 const recipeForm = document.getElementById('recipe-form');
@@ -92,7 +92,7 @@ function clearImageInput(input, previewElement, removeButton) {
     if (removeButton) removeButton.style.display = 'none';
     input.setAttribute('required', 'required');
     // Очищаем уведомление, если оно активно
-    errorDiv.classList.remove('show');
+    // errorDiv.classList.remove('show');
 }
 
 // Обработчик предварительного просмотра и удаления для изображения рецепта
