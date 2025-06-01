@@ -1,5 +1,6 @@
 let token = localStorage.getItem('token') || '';
 let userId = localStorage.getItem('userId') || '';
+let role = localStorage.getItem('role') || 'user';
 
 const errorDiv = document.createElement('div');
 errorDiv.id = 'error';
@@ -10,9 +11,9 @@ const cabinetSection = document.getElementById('cabinet-section');
 const logoutButton = document.getElementById('logout');
 const recipesList = document.getElementById('recipes');
 
-// Проверка токена
+// Проверка токена и роли
 async function checkToken() {
-    if (!token || !userId) {
+    if (!token || !userId || role !== 'admin') {
         window.location.href = 'index.html';
         return;
     }
@@ -29,6 +30,7 @@ async function checkToken() {
         console.error('Ошибка проверки токена:', err);
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
+        localStorage.removeItem('role');
         window.location.href = 'index.html';
         errorDiv.textContent = 'Ошибка авторизации: ' + err.message;
     }
@@ -40,13 +42,14 @@ checkToken();
 logoutButton.addEventListener('click', () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
+    localStorage.removeItem('role');
     window.location.href = 'index.html';
 });
 
 // Загрузка всех рецептов
 async function fetchAllRecipes() {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/recipes`, { // Получение всех рецептов
+        const response = await fetch(`${API_BASE_URL}/api/recipes`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!response.ok) {

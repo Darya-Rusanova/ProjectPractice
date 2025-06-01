@@ -1,5 +1,6 @@
 let token = localStorage.getItem('token') || '';
 let userId = localStorage.getItem('userId') || '';
+let role = localStorage.getItem('role') || 'user';
 
 const errorDiv = document.getElementById('error');
 const cabinetSection = document.getElementById('cabinet-section');
@@ -420,11 +421,17 @@ async function checkToken() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         cabinetSection.style.display = 'block';
+        // Если пользователь — администратор, перенаправляем в adminCabinet.html
+        if (role === 'admin') {
+            window.location.href = 'adminCabinet.html';
+            return;
+        }
         fetchRecipes();
     } catch (err) {
         console.error('Ошибка проверки токена:', err);
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
+        localStorage.removeItem('role');
         window.location.href = 'index.html';
         errorDiv.textContent = 'Ошибка авторизации: ' + err.message;
     }
@@ -436,6 +443,7 @@ checkToken();
 logoutButton.addEventListener('click', () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
+    localStorage.removeItem('role');
     window.location.href = 'index.html';
 });
 
