@@ -1,0 +1,299 @@
+:root {
+    --color-primary-a0: #ffffff;
+    --color-primary-a10: #ffe6c7;
+    --color-primary-a20: #fcce91;
+    --color-primary-a30: #f4b659;
+    --color-primary-a40: #ffffff;
+    --color-primary-a50: #ea9e0b;
+    --color-primary-a60: lightgrey;
+    --color-primary-a90: #000000;
+    --theme-image: url('../images/functional/light-theme.jpg');
+    --user-image: url('../images/functional/user-light.png');
+    --exit:url('../images/functional/log-out.png')
+
+}
+[data-theme="dark"] {  
+    --color-primary-a0: #000000;
+    --color-primary-a10: #574935;
+    --color-primary-a20: #3d3223;
+    --color-primary-a30: #392811;
+    --color-primary-a40: #a5957f;
+    --color-primary-a50: #291c0a;
+    --color-primary-a60: #291c0a;
+    --color-primary-a90: #ffffff;    
+    --theme-image: url('../images/functional/dark-theme.jpg');      
+    --user-image: url('../images/functional/user-dark.png');   
+    --exit:url('../images/functional/log-out-dark.png')
+}
+body > *{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+body {
+    background-color: var(--color-primary-a40);
+}
+.start{
+    grid-area: start;
+    display:grid;
+    grid-template-columns: 40% 40% 10% 10%;
+    grid-template-rows: 200px 100px;
+    grid-template-areas:
+        "header user exit theme"
+        "header navigation navigation navigation"  
+}
+.start{
+    cursor: pointer;
+}
+.theme-switcher-wrapper{
+    grid-area: theme;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: 30px;
+}
+.header {    
+    grid-area: header;
+    margin: 0 auto;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+.theme-bg {
+  background-image: var(--theme-image);
+  width: 360px;
+  height: 233px;
+  background-size: cover;       
+  background-position: center; 
+  background-repeat: no-repeat; 
+  transition: background-image 0.3s;
+}
+.user{
+    margin-left: auto;
+    margin-right: 30px;
+    margin-top: 20px;
+    grid-area: user;
+    position: relative;
+  display: inline-block;
+}
+.user-bg{
+    background-image: var(--user-image);
+    width: 50px;
+    height: 50px;
+    background-size: cover;       
+    background-position: center; 
+    background-repeat: no-repeat; 
+    transition: background-image 0.3s;
+}
+.user-content {
+    position: absolute;
+    top: 70px;
+    right: -140px;
+    width: 300px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 15px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 100;
+ }
+  
+.user:hover .user-content {
+    opacity: 1;
+    visibility: visible;
+}
+  
+.user-content p {
+    margin: 8px 0;
+    color: #333;
+}
+  
+.user-content span {
+    font-weight: bold;
+}
+
+
+.exit{
+    grid-area: exit;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: 30px;
+}
+.exit-bg{
+    background-image: var(--exit);
+    width: 50px;
+    height: 50px;
+    background-size: cover;       
+    background-position: center; 
+    background-repeat: no-repeat; 
+    transition: background-image 0.3s;
+}
+.navigation{
+    grid-area: navigation;
+    display: grid;
+        grid-template-columns: 50% 50%;
+        grid-template-rows: 100px;
+        grid-template-areas:
+            "btn1 btn2"
+}
+#dropdown1 {
+    grid-area: btn1;
+}
+#dropdown2 {
+    grid-area: btn2;
+}
+.dropbtn{    
+    width: 300px;
+    font-size: 20px;
+    background-color: var(--color-primary-a30);
+    color: var(--color-primary-a90);
+    padding: 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 20px;
+    transition: background-color 0.3s;
+}
+
+
+.information {
+    grid-area: information;    
+    text-align: center;
+    width: 100%;
+}
+.main-text{
+    height: 400px;
+    background-image: url(https://i.postimg.cc/K86P4C2Y/lk.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: 30px;
+    border-radius: 20px;
+    text-align: center;
+    color: white;
+    text-shadow: 1px 1px 1px black;
+    padding: 30px;
+}
+#inf {
+    font-size: 20px;   
+}
+#head {
+    font-size: 46px;
+    text-decoration:solid;
+}
+#body {
+    font-size: 30px;
+    text-decoration:solid;
+}
+
+#recipes-section{
+    overflow: hidden;
+}
+h3{
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    color: var(--color-primary-a50);
+}
+.user-content h3{
+    font-size: 22px;
+}
+.footer{
+    grid-area: footer;
+    color: var(--color-primary-a90);
+    background-color:var(--color-primary-a30);
+    margin-top:10px;
+    border-radius: 30px;
+    display: grid;
+    height: 300px;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: auto;
+    grid-template-areas:
+        "col1 col2"    
+}
+a {
+    text-decoration: none;
+    color: black;
+}
+.col1{
+    margin: 5%;
+    text-align: left;
+    grid-area: col1;
+}
+.col2 {
+    margin: 5%;
+    text-align: right;
+    grid-area: col2;
+}
+
+.myRecipe {
+  border: 1px solid var(--color-primary-a30);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  background-color: var(--color-primary-a40);
+  position: relative;
+}
+
+.recipe-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.recipe-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.recipe-image {
+  flex: 0 0 auto;
+}
+
+.recipe-image img {
+  max-width: 100px;
+  border-radius: 10px;
+}
+
+.recipe-image .no-image {
+  width: 100px;
+  height: 100px;
+  background-color: var(--color-primary-a60);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 14px;
+  color: var(--color-primary-a90);
+  text-align: center;
+}
+
+.recipe-info {
+  flex: 1;
+}
+
+.myRecipe h4 {
+  font-size: 18px;
+  color: var(--color-primary-a90);
+  margin: 0 0 5px 0;
+}
+
+.recipe-info ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0 0 10px 0;
+}
+
+.recipe-info ul li {
+  font-size: 16px;
+  color: var(--color-primary-a90);
+  margin: 2px 0;
+}
+
+.recipe-info ul li::before {
+  content: '• ';
+  color: var(--color-primary-a90);
+}
+
+.status {
+  font-size: 16px;
+  color: var(--color-primary-a90);
+  margin: 10px 0;
+}
