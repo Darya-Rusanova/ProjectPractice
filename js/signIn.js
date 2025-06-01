@@ -1,4 +1,3 @@
-// C:\Users\Kseniia\Desktop\pract\ProjectPractice\js\signIn.js
 console.log('signIn.js starting', 'User-Agent:', navigator.userAgent);
 
 const errorDiv = document.getElementById('error');
@@ -6,7 +5,6 @@ const loginForm = document.getElementById('login-form');
 
 const adminSwitchInput = document.querySelector('.admin-switch-input');
 const adminCodeInput = document.getElementById('admin-code');
-const CODE_FOR_ADMIN = process.env.CODE_FOR_ADMIN;
 
 console.log('loginForm:', loginForm ? 'Найден' : 'Не найден');
 
@@ -51,10 +49,30 @@ loginForm.addEventListener('submit', async (e) => {
     const isAdmin = adminSwitchInput.checked;
     const adminCode = adminCodeInput.value.trim();
 
-    // Если пользователь отметил "Я администратор", проверяем код
+    let isAdminVerified = false;
+
+    // Проверка кода на сервере, если пользователь выбрал "Я администратор"
     if (isAdmin) {
-        if (adminCode !== CODE_FOR_ADMIN) {
-            errorDiv.textContent = 'Неверный код подтверждения';
+        try {
+            const response = await fetchWithRetry(`${API_BASE_URL}/api/auth/verify-admin-code`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ code: adminCode })
+            });
+            const data = await response.json();
+            if (!data.success) {
+                errorDiv.textContent = data.message || 'Ошибка проверки кода';
+                button.disabled = false;
+                button.textContent = originalText;
+                return;
+            }
+            isAdminVerified = true;
+        } catch (err) {
+            console.error('Ошибка проверки кода:', err);
+            errorDiv.textContent = 'Ошибка связи с сервером: ' + err.message;
             button.disabled = false;
             button.textContent = originalText;
             return;
@@ -82,7 +100,7 @@ loginForm.addEventListener('submit', async (e) => {
             localStorage.setItem('userId', data.userId);
             errorDiv.textContent = '';
             
-            if (isAdmin && adminCode === CODE_FOR_ADMIN) {
+            if (isAdmin && isAdminVerified) {
                 window.location.href = 'adminCabinet.html';
             } else {
                 window.location.href = 'kabinet.html';
