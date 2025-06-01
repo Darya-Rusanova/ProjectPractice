@@ -417,6 +417,7 @@ h3{
 }
 
 .recipe-info {
+  width: 80%;
   grid-area: description;
 }
 .recipe-info ul {

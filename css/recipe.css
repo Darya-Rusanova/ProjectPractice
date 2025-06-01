@@ -30,7 +30,8 @@
 }
 .col2 {
     margin: 5%;
-    text-align: right;
+    margin-left: auto;
+    text-align: justify;
     grid-area: c2;
 }
 .footer{

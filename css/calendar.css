@@ -1,11 +1,47 @@
-.main-text{
-    background-image: url(../../images/categories/calendar.jpg);
-    background-repeat: no-repeat;
-    background-size: cover;
-    margin: 30px;
-    border-radius: 20px;
-    text-align: center;
-    color: white;
-    text-shadow: 1px 1px 1px #000;
-    padding: 30px;
+
+.first{
+    grid-area: f;
+}
+.second{
+    grid-area: s;
+}
+@media (min-width:1300px){
+
+    .recipes {
+        grid-area: recipes;
+        display:grid;
+        grid-template-columns: 50% 50%;
+        grid-template-rows: auto;
+        grid-template-areas:
+            "f s"
+    }
+
+}
+
+
+@media (800px <= width < 1300px){
+
+    .recipes {
+        grid-area: recipes;
+        display:grid;
+        grid-template-columns: 50% 50%;
+        grid-template-rows: auto;
+        grid-template-areas:
+            "f s"
+    }
+    
+
+}
+@media (width < 800px){
+    
+    .recipes {
+        grid-area: recipes;
+        display:grid;
+        grid-template-columns: 100%;
+        grid-template-rows: auto;
+        grid-template-areas:
+            "f"
+            "s"
+    }
+
 }
