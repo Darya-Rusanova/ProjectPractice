@@ -439,6 +439,8 @@ logoutButton.addEventListener('click', () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     window.location.href = 'index.html';
+    // Отправляем событие об изменении авторизации
+    window.dispatchEvent(new Event('authStateChanged'));
 });
 
 // Загрузка рецептов
