@@ -438,15 +438,9 @@ a {
 }
 .col2 {
     margin: 5%;
-    text-align: right;
+    margin-left: auto;
+    text-align: justify;
     grid-area: col2;
-}
-.firstCol {
-    grid-area: first;
-}
-.secondCol {
-    grid-area: second;
-    
 }
 
 .dropbtn{
@@ -518,7 +512,8 @@ a {
     grid-area: discription;
     padding: 30px;
     text-align: left;
-    font-size: medium;    
+    font-size: medium;  
+    width: 80%;  
 }
 .recipe:hover{
     outline: 3px solid var(--color-primary-a50);
