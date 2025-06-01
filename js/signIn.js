@@ -2,7 +2,6 @@ console.log('signIn.js starting', 'User-Agent:', navigator.userAgent);
 
 const errorDiv = document.getElementById('error');
 const loginForm = document.getElementById('login-form');
-
 const adminSwitchInput = document.querySelector('.admin-switch-input');
 const adminCodeInput = document.getElementById('admin-code');
 
@@ -12,6 +11,7 @@ async function checkLogin() {
     console.log('Проверка токена');
     const token = localStorage.getItem('token') || '';
     const userId = localStorage.getItem('userId') || '';
+    const role = localStorage.getItem('role') || 'user';
     if (!token || !userId) {
         console.log('Токен отсутствует, остаемся на странице входа');
         return;
@@ -22,7 +22,7 @@ async function checkLogin() {
         });
         console.log('checkLogin status:', response.status, 'CORS:', response.headers.get('Access-Control-Allow-Origin'));
         if (response.ok) {
-            window.location.href = 'kabinet.html';
+            window.location.href = role === 'admin' ? 'adminCabinet.html' : 'kabinet.html';
         } else {
             throw new Error(`HTTP ошибка: ${response.status}`);
         }
@@ -45,39 +45,8 @@ loginForm.addEventListener('submit', async (e) => {
     button.textContent = 'Загрузка...';
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-
     const isAdmin = adminSwitchInput.checked;
     const adminCode = adminCodeInput.value.trim();
-
-    let isAdminVerified = false;
-
-    // Проверка кода на сервере, если пользователь выбрал "Я администратор"
-    if (isAdmin) {
-        try {
-            const response = await fetchWithRetry(`${API_BASE_URL}/api/auth/verify-admin-code`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({ code: adminCode })
-            });
-            const data = await response.json();
-            if (!data.success) {
-                errorDiv.textContent = data.message || 'Ошибка проверки кода';
-                button.disabled = false;
-                button.textContent = originalText;
-                return;
-            }
-            isAdminVerified = true;
-        } catch (err) {
-            console.error('Ошибка проверки кода:', err);
-            errorDiv.textContent = 'Ошибка связи с сервером: ' + err.message;
-            button.disabled = false;
-            button.textContent = originalText;
-            return;
-        }
-    }
 
     console.log('Email:', email);
     try {
@@ -98,14 +67,41 @@ loginForm.addEventListener('submit', async (e) => {
         if (data.token) {
             localStorage.setItem('token', data.token);
             localStorage.setItem('userId', data.userId);
+            localStorage.setItem('role', data.role || 'user');
             errorDiv.textContent = '';
-            
-            if (isAdmin && isAdminVerified) {
-                window.location.href = 'adminCabinet.html';
+
+            // Если пользователь отметил "Я администратор", проверяем код
+            if (isAdmin) {
+                try {
+                    const verifyResponse = await fetchWithRetry(`${API_BASE_URL}/api/auth/verify-admin-code`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ userId: data.userId, code: adminCode })
+                    });
+                    const verifyData = await verifyResponse.json();
+                    if (verifyData.success) {
+                        localStorage.setItem('token', verifyData.token); // Обновляем токен с новой ролью
+                        localStorage.setItem('role', verifyData.role);
+                        window.location.href = 'adminCabinet.html';
+                    } else {
+                        errorDiv.textContent = verifyData.message || 'Неверный код администратора';
+                        button.disabled = false;
+                        button.textContent = originalText;
+                        return;
+                    }
+                } catch (err) {
+                    console.error('Ошибка проверки кода:', err);
+                    errorDiv.textContent = 'Ошибка проверки кода: ' + err.message;
+                    button.disabled = false;
+                    button.textContent = originalText;
+                    return;
+                }
             } else {
                 window.location.href = 'kabinet.html';
             }
-            
         } else {
             errorDiv.textContent = data.message || 'Неверный email или пароль';
         }
