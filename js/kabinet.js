@@ -441,6 +441,7 @@ logoutButton.addEventListener('click', () => {
     window.location.href = 'index.html';
     // Отправляем событие об изменении авторизации
     window.dispatchEvent(new Event('authStateChanged'));
+    window.location.href = 'index.html';
 });
 
 // Загрузка рецептов
