@@ -47,12 +47,7 @@
     grid-template-areas:
         "c1 c2"    
 }
-.column1{
-    grid-area: col1;
-}
-.column2 {
-    grid-area: col2;
-}
+
 p {
     font-size: medium;
 }
@@ -105,10 +100,9 @@ a, a:hover {
     }
     .stages {
         display: grid;
-        grid-template-columns: 50% 50%;
-        grid-template-rows: auto;
-        grid-template-areas:
-            "col1 col2"
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 20px;
+        margin-top: 20px;
     }
      .start{
         grid-area: start;
@@ -166,6 +160,7 @@ a, a:hover {
         height: 300px;
     }
     .step {
+        margin: 20px;
         display: grid;
         place-items: center;
         grid-template-columns: 450px;
@@ -175,15 +170,12 @@ a, a:hover {
                 "img"
                 "text";
     }
-     .column1,.column2{
-        margin: 5%;
-    }
     .stages {
+        margin: 0 auto;
         display: grid;
-        grid-template-columns: 50% 50%;
-        grid-template-rows: auto;
-        grid-template-areas:
-            "col1 col2"
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 20px;
+        margin-top: 20px;
     }
     .start{
         grid-area: start;
@@ -261,11 +253,9 @@ a, a:hover {
     }
     .stages {
         display: grid;
-        grid-template-columns: 100%;
-        grid-template-rows: auto auto;
-        grid-template-areas:
-            "col1"
-            "col2"
+        grid-template-columns: repeat(1, 1fr); 
+        gap: 20px;
+        margin-top: 20px;
     }
     .start{
         grid-area: start;
@@ -345,11 +335,9 @@ a, a:hover {
     }
     .stages {
         display: grid;
-        grid-template-columns: 100%;
-        grid-template-rows: auto auto;
-        grid-template-areas:
-            "col1"
-            "col2"
+        grid-template-columns: repeat(1, 1fr); 
+        gap: 20px;
+        margin-top: 20px;
     }
     .user{
         margin-right: auto;
