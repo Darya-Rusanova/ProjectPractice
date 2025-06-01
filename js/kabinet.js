@@ -17,6 +17,8 @@ const cookingTimeInput = document.getElementById('recipe-cooking-time');
 const recipeImageInput = document.getElementById('recipe-image');
 const recipeImagePreview = document.getElementById('recipe-image-preview');
 const removeRecipeImageButton = document.getElementById('remove-recipe-image-btn');
+const deleteDialog = document.getElementById('delete');
+const confirmDeleteButton = document.getElementById('confirm-delete');
 
 // Функция для преобразования первой буквы первого слова в заглавную
 function capitalizeFirstWord(text) {
@@ -514,24 +516,29 @@ async function fetchRecipes() {
             
             // Добавляем обработчики для кнопок удаления
             document.querySelectorAll('.delete-btn').forEach(button => {
-                button.addEventListener('click', async (e) => {
+                button.addEventListener('click', (e) => {
                     e.preventDefault(); // Предотвращаем переход по ссылке при клике на кнопку
                     const recipeId = button.dataset.id;
-                    if (confirm('Вы уверены, что хотите удалить этот рецепт?')) {
-                        try {
-                            const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}`, {
-                                method: 'DELETE',
-                                headers: { 'Authorization': `Bearer ${token}` }
-                            });
-                            if (!response.ok) {
-                                throw new Error(`HTTP ${response.status}`);
+                    deleteDialog.showModal(); // Открываем модальное окно
+                    confirmDeleteButton.onclick = async () => {
+                        if (confirmDeleteButton) {
+                            try {
+                                const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}`, {
+                                    method: 'DELETE',
+                                    headers: { 'Authorization': `Bearer ${token}` }
+                                });
+                                if (!response.ok) {
+                                    throw new Error(`HTTP ${response.status}`);
+                                }
+                                errorDiv.textContent = 'Рецепт удалён!';
+                                deleteDialog.close(); // Закрываем модальное окно после успешного удаления
+                                fetchRecipes();
+                            } catch (err) {
+                                errorDiv.textContent = 'Ошибка удаления: ' + err.message;
+                                deleteDialog.close(); // Закрываем модальное окно при ошибке
                             }
-                            errorDiv.textContent = 'Рецепт удалён!';
-                            fetchRecipes();
-                        } catch (err) {
-                            errorDiv.textContent = 'Ошибка удаления: ' + err.message;
                         }
-                    }
+                    };
                 });
             });
         }
