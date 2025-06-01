@@ -938,10 +938,78 @@ input[type=file]::file-selector-button:hover {
   background-color: var(--color-primary-a50);
 }
 
-#error.error {
-  color: #ff4d4d;
-  text-align: center;
-  margin-bottom: 10px;
-  font-size: 16px;
+
+.error-notification {
+  position: fixed;
+  top: 20px;
+  right: -400px; /* Начальное положение за пределами экрана */
+  width: 350px;
+  padding: 20px;
+  background-color: #ff4444;
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10000; /* Очень высокий z-index */
+  opacity: 0;
+  transform: translateX(0);
+  transition: 
+    right 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1),
+    opacity 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
+.error-notification.show {
+  right: 20px;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.error-notification.hide {
+  right: -400px;
+  opacity: 0;
+  transform: translateX(20px);
+}
+.error-notification.error {
+  background-color: #ff4444;
+  color: white;
+  --notif:#ff4444;
+}
+
+.error-notification.success {
+  background-color: #00C851;
+  color: white;
+  --notif:#00C851;
+}
+
+.error-notification.warning {
+  background-color: #ffbb33;
+  color: #333;
+  --notif:#ffbb33;
+}
+/* Иконка (опционально) */
+.error-notification::before {
+  content: "!";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: white;
+  color: var(--notif);
+  border-radius: 50%;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+/* Анимация "дыхания" при появлении */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.error-notification.show {
+  animation: pulse 0.5s ease;
+}
