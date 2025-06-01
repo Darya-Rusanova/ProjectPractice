@@ -1,4 +1,5 @@
 // Проверка при загрузке страницы
+const lkAnchor = document.getElementById('lk');
 const lkText = document.getElementById('lk-text');
 
 function updateUserName() {
