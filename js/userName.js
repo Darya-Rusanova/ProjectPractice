@@ -2,9 +2,14 @@ const lkAnchor = document.getElementById('lk');
 const lkText = document.getElementById('lk-text');
 
 function updateUserName() {
-    checkAuthAndGetUsername().then(username => {
-        if (username) {
-            lkText.textContent = username;
+    if (!lkAnchor || !lkText) {
+        console.log('Элементы lk или lk-text не найдены на странице, пропускаем обновление имени пользователя');
+        return;
+    }
+
+    checkAuthAndGetUsername().then(result => {
+        if (result) {
+            lkText.textContent = result.username || 'Личный кабинет';
             lkAnchor.href = 'kabinet.html';
         } else {
             lkText.textContent = 'Личный кабинет';
@@ -25,22 +30,25 @@ async function checkAuthAndGetUsername() {
         return null;
     }
 
+    console.log('Проверка токена:', token); // Отладка
     try {
-        // Используем тот же запрос, что в signIn.js и kabinet.js
         const response = await fetchWithRetry(`${API_BASE_URL}/api/users/${userId}/recipes`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         
+        console.log('Ответ сервера на /recipes:', response.status, await response.text()); // Отладка
         if (response.ok) {
-            // Если запрос успешен, делаем дополнительный запрос, чтобы получить имя пользователя
+            // Если токен валиден, пытаемся получить имя пользователя
             const userResponse = await fetchWithRetry(`${API_BASE_URL}/api/users/${userId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
+            console.log('Ответ сервера на /users:', userResponse.status, await userResponse.text()); // Отладка
             if (userResponse.ok) {
                 const userData = await userResponse.json();
-                return userData.username;
+                return { username: userData.username };
             } else {
-                throw new Error(`Ошибка получения данных пользователя: ${userResponse.status}`);
+                console.error('Не удалось получить имя пользователя, но токен валиден');
+                return { username: null }; // Токен валиден, но имя не удалось получить
             }
         } else {
             throw new Error(`Ошибка проверки токена: ${response.status}`);
@@ -49,7 +57,7 @@ async function checkAuthAndGetUsername() {
         console.error('Ошибка при проверке токена:', err.message);
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
-        window.dispatchEvent(new Event('authStateChanged')); // Уведомляем о смене состояния
+        window.dispatchEvent(new Event('authStateChanged'));
         return null;
     }
 }
