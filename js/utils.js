@@ -1,4 +1,3 @@
-// C:\Users\Kseniia\Desktop\pract\ProjectPractice\js\utils.js
 const API_BASE_URL = 'https://chudobludo-backend.onrender.com';
 
 async function fetchWithRetry(url, options, retries = 5, delay = 1000) {
