@@ -69,7 +69,12 @@ loginForm.addEventListener('submit', async (e) => {
             localStorage.setItem('userId', data.userId);
             // errorDiv.textContent = '';
             showNotification('Успешный вход!', 'success');
-            window.location.href = 'kabinet.html';
+            // window.location.href = 'kabinet.html';
+
+            // Немного подождём, чтобы пользователь увидел «Успешный вход!»
+            setTimeout(() => {
+                window.location.href = 'kabinet.html';
+            }, 300);
         } else {
             // errorDiv.textContent = data.message || 'Неверный email или пароль';
             showNotification(data.message || 'Неверный email или пароль', 'error');

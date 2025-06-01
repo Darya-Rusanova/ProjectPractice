@@ -63,7 +63,12 @@ registerForm.addEventListener('submit', async (e) => {
             localStorage.setItem('userId', data.userId);
             // errorDiv.textContent = '';
             showNotification('Регистрация успешна!', 'success');
-            window.location.href = 'kabinet.html';
+            // window.location.href = 'kabinet.html';
+
+            // Немного подождём, чтобы пользователь увидел «Регистрация успешна!»
+            setTimeout(() => {
+                window.location.href = 'kabinet.html';
+            }, 300);
         } else {
             // errorDiv.textContent = data.message || 'Ошибка регистрации';
             showNotification(data.message || 'Ошибка регистрации', 'error');
