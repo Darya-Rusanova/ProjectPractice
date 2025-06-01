@@ -11,7 +11,7 @@
     --color-primary-a110: #cc0000;
     --theme-image: url('../images/functional/light-theme.jpg');
     --user-image: url('../images/functional/user-light.png');
-    --exit:url('../images/functional/log-out.png');
+    --exit:url('../images/functional/logout.png');
     --add:url('../images/functional/plusLight.png');
 
 }
@@ -28,7 +28,7 @@
     --color-primary-a110: #710000; 
     --theme-image: url('../images/functional/dark-theme.jpg');      
     --user-image: url('../images/functional/user-dark.png');   
-    --exit:url('../images/functional/log-out-dark.png');
+    --exit:url('../images/functional/logout-dark.png');
     --add:url('../images/functional/plusDark.png');
 }
 @media (min-width:1300px){
