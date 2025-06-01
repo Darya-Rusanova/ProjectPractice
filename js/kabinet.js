@@ -3,7 +3,7 @@ let userId = localStorage.getItem('userId') || '';
 let role = localStorage.getItem('role') || 'user';
 
 // Определяем API_BASE_URL (должен быть настроен в соответствии с вашим сервером)
-const API_BASE_URL = 'http://your-api-url'; // Замените на реальный URL вашего API
+const API_BASE_URL = 'http://localhost:5000'; // Убедитесь, что это соответствует вашему бэкенду
 
 const errorDiv = document.getElementById('error');
 const cabinetSection = document.getElementById('cabinet-section');
@@ -413,6 +413,7 @@ addStepButton.addEventListener('click', () => {
 
 // Проверка токена
 async function checkToken() {
+    console.log('Checking token:', token, 'userId:', userId);
     if (!token || !userId) {
         console.log('Токен отсутствует, перенаправляем на вход');
         window.location.href = 'index.html';
@@ -422,6 +423,7 @@ async function checkToken() {
         const response = await fetch(`${API_BASE_URL}/api/users/${userId}/recipes`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
+        console.log('Token check response:', response.status);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -455,13 +457,17 @@ logoutButton.addEventListener('click', () => {
 // Загрузка рецептов
 async function fetchRecipes() {
     try {
+        console.log('Fetching recipes for userId:', userId);
         const response = await fetch(`${API_BASE_URL}/api/users/${userId}/recipes`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
+        console.log('Fetch recipes response:', response.status);
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorText = await response.text();
+            throw new Error(`HTTP error! status: ${response.status}, details: ${errorText}`);
         }
         const recipes = await response.json();
+        console.log('Received recipes:', recipes);
         recipesList.innerHTML = '';
         if (recipes.length === 0) {
             recipesList.innerHTML = '<p>У вас пока нет рецептов</p>';
@@ -522,29 +528,34 @@ async function fetchRecipes() {
                 button.addEventListener('click', (e) => {
                     e.preventDefault();
                     const recipeId = button.dataset.id;
-                    if (confirm('Вы уверены, что хотите удалить этот рецепт?')) {
-                        fetch(`${API_BASE_URL}/api/recipes/${recipeId}`, {
-                            method: 'DELETE',
-                            headers: { 'Authorization': `Bearer ${token}` }
-                        })
-                        .then(response => {
+                    console.log('Opening delete dialog for recipe:', recipeId);
+                    deleteDialog.showModal(); // Открываем модальное окно
+
+                    // Очищаем предыдущий обработчик, чтобы избежать конфликтов
+                    confirmDeleteButton.onclick = null;
+
+                    confirmDeleteButton.onclick = async () => {
+                        try {
+                            const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}`, {
+                                method: 'DELETE',
+                                headers: { 'Authorization': `Bearer ${token}` }
+                            });
                             if (!response.ok) {
                                 throw new Error(`HTTP ${response.status}`);
                             }
-                            return response.json();
-                        })
-                        .then(() => {
                             errorDiv.textContent = 'Рецепт удалён!';
+                            deleteDialog.close();
                             fetchRecipes();
-                        })
-                        .catch(err => {
+                        } catch (err) {
                             errorDiv.textContent = 'Ошибка удаления: ' + err.message;
-                        });
-                    }
+                            deleteDialog.close();
+                        }
+                    };
                 });
             });
         }
     } catch (err) {
+        console.error('Ошибка загрузки рецептов:', err);
         errorDiv.textContent = 'Ошибка загрузки рецептов: ' + err.message;
     }
 }
