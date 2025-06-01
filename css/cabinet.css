@@ -36,6 +36,7 @@ body > *{
 }
 body {
     background-color: var(--color-primary-a40);
+    transition: background-color 0.3s;
 }
 /*Хедер*/
 .start{
@@ -100,9 +101,9 @@ body {
     top: 70px;
     right: -140px;
     width: 300px;
-    background-color: white;
+    background-color: var(--color-primary-a40);
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px var(--color-primary-a50);
     padding: 15px;
     opacity: 0;
     visibility: hidden;
@@ -236,6 +237,8 @@ a {
     color: var(--color-primary-a90);
 }
 
+
+
 /*Секция мои рецепты*/
 #recipes-section{
     overflow: hidden;
@@ -278,7 +281,7 @@ h3{
     display: grid;
     place-items:center;
     grid-template-columns: 60% 40%;
-    grid-template-rows: 300px 50px;
+    grid-template-rows: 350px 50px;
     grid-template-areas:
         "img description"
         "delete delete"
@@ -375,3 +378,359 @@ h3{
 .delete-btn:hover {
   background-color: var(--color-primary-a110);
 }
+
+
+/*Секция добавить рецепт*/
+#addDialog{
+    width: 60%;
+    height: 70%;
+    border-radius: 25px;
+    border: 10px solid var(--color-primary-a50);
+    background-color: var(--color-primary-a40);
+}
+#addRecipe-btn, #cancel-btn {
+    font-size: 20px;
+    padding: 12px 24px;
+    background-color: var(--color-primary-a50);
+    color: var(--color-primary-a90);
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 40%;
+    height: 50px;
+    display: inline-block;
+    margin: 20px;
+}
+.buttons{
+    text-align: center;
+    margin: 20px;
+}
+#addDialog::-webkit-scrollbar {
+    width: 15px;
+}
+  
+#addDialog::-webkit-scrollbar-thumb {
+    border-radius: 50px;
+    background-color: var(--color-primary-a40);
+}
+#addDialog::-webkit-scrollbar-button:increment:increment {
+    height: 10%;
+    display: block;
+    background: transparent;
+}
+#addDialog{
+    transition: display 0.2s allow-discrete, overlay 0.2s allow-discrete;
+  
+    animation: close 0.3s forwards;
+    &[open] {
+      animation: open 0.3s forwards;
+    }
+}
+  
+  @keyframes open {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes close {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+}
+
+body:has(dialog[open]) {
+    overflow: hidden;
+}
+#addDialog::backdrop {
+    background-color: rgb(0 0 0 / 40%);
+}
+
+
+#recipe-form {
+  max-width: 700px; /* Ограничиваем ширину формы */
+  width: 90%; /* Ширина относительно родителя */
+  margin: 0 auto; /* Центрирование по горизонтали */
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Отступ между элементами формы */
+}
+
+/* Стили для label и связанных элементов */
+#recipe-form label {
+  font-size: 18px;
+  color: var(#000000);
+  margin-bottom: 5px;
+  display: block; /* Каждый label с новой строки */
+  width: 100%;
+}
+
+/* Группы элементов (категории, ингредиенты, шаги) */
+.form-group {
+  margin-bottom: 20px; /* Отступ между группами */
+}
+
+/* Поля ввода */
+#recipe-form input,
+#recipe-form textarea,
+#recipe-form select {
+  font-size: 16px;
+  padding: 12px;
+  margin: 5px 0 15px 0; /* Увеличенный отступ снизу */
+  border: 1px solid var(--color-primary-a30);
+  border-radius: 10px;
+  background-color: var(--color-primary-a40);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Особые стили для textarea */
+#recipe-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Кнопки категорий */
+.category-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 10px 20px 20px 20px; /* Отступы сверху и снизу */
+}
+
+/* Контейнеры с изображениями */
+.image-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 15px 0; /* Отступы сверху и снизу */
+}
+.category-btn {
+  font-size: 16px;
+  padding: 8px 16px;
+  border: 1px solid var(--color-primary-a30);
+  color: var(--color-primary-a90);
+  background-color: var(--color-primary-a20);
+  cursor: pointer;
+  border-radius: 10px;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+.category-btn.active, .category-btn:hover {
+  background-color: var(--color-primary-a50);
+  color: var(--color-primary-a90);
+  border-color: var(--color-primary-a50);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.quantity-label {
+  display: block;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.quantity-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+    margin-bottom: 25px;
+}
+
+/* Стили для поля ввода количества */
+.quantity-input {
+    flex: 3; /* Занимает 3 части доступного пространства */
+    min-width: 150px; /* Минимальная ширина */
+    max-width: 300px; /* Максимальная ширина */
+    padding: 12px;
+    border: 1px solid var(--color-primary-a30);
+    border-radius: 10px;
+    background-color: var(--color-primary-a40);
+    font-size: 16px;
+    min-width: 80px;
+}
+.quantity-wrapper {
+  position: relative; /* Для позиционирования псевдоэлементов */
+}
+
+/* Стили для выпадающего списка */
+.type-unit {
+    flex: 1; /* Занимает 1 часть доступного пространства */
+    min-width: 90px; /* Уменьшенная минимальная ширина */
+    max-width: 120px; /* Уменьшенная максимальная ширина */
+    padding: 12px 35px 12px 15px;
+    border: 1px solid var(--color-primary-a30);
+    border-radius: 10px;
+    background-color: var(--color-primary-a40);
+    text-align: center;
+    font-size: 16px;
+    appearance: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 100px;
+}
+/* Кастомная стрелка для select */
+.type-unit {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23222' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  padding-right: 30px; /* Увеличиваем отступ справа для стрелки */
+  transition: all 0.3s ease;
+}
+
+/* Темная тема для стрелки */
+[data-theme="dark"] .type-unit {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+/* Стили при фокусе */
+.type-unit:focus {
+  outline: none;
+  border-color: var(--color-primary-a50);
+}
+
+/* Анимация для опций (работает в современных браузерах) */
+.type-unit option {
+  padding: 8px 12px;
+  background: var(--color-primary-a40);
+  color: var(--color-primary-a90);
+  transition: background-color 0.2s ease;
+}
+
+/* Подсветка выбранной/наведенной опции */
+.type-unit option:checked {
+  background-color: var(--color-primary-a50);
+  color: var(--color-primary-a90);
+}
+
+.type-unit option:hover {
+  background-color: var(--color-primary-a30);
+}
+
+/* Стили для поля ввода при фокусе */
+.quantity-input:focus {
+  outline: none;
+  border-color: var(--color-primary-a50);
+}
+
+/* Анимация при наведении */
+.quantity-input:hover,
+.type-unit:hover {
+  border-color: var(--color-primary-a50);
+}
+
+
+/* Стили для фокуса и ховера */
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--color-primary-a50);
+  box-shadow: 0 0 0 2px var(--color-primary-a50);
+}
+
+.type-unit:hover {
+  border-color: var(--color-primary-a50);
+}
+.form-row {
+  display: flex;
+  gap: 15px; /* Отступ между полями */
+  margin-bottom: 20px; /* Отступ снизу */
+  align-items: flex-end; /* Выравнивание по нижнему краю */
+}
+
+.half-width {
+  flex: 1; /* Равное распределение пространства */
+  min-width: 0; /* Важно для корректного сжатия */
+}
+
+.half-width input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--color-primary-a30);
+  border-radius: 10px;
+  background-color: var(--color-primary-a40);
+  font-size: 16px;
+  box-sizing: border-box;
+  margin-top: 5px;
+}
+
+/* Скрытие стрелок в числовых полях */
+.half-width input[type="number"]::-webkit-inner-spin-button,
+.half-width input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.half-width input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+#recipe-form input[type="file"] {
+  padding: 8px;
+  border: none;
+  background: none;
+}
+.remove-btn {
+    width: 200px;
+    font-size: 14px;
+    padding: 8px 16px;
+    background-color: var(--color-primary-a100);
+    color: var(--color-primary-a90);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 5px 0;
+    transition: background-color 0.3s;
+}
+
+.remove-btn:hover {
+  background-color: var(--color-primary-a110);
+}
+#add-ingredient-btn,
+#add-step-btn{
+    width: 300px;
+    font-size: 16px;
+    padding: 12px 24px;
+    background-color: var(--color-primary-a30);
+    color: var(--color-primary-a90);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+#add-ingredient-btn:hover,
+#add-step-btn:hover{
+  background-color: var(--color-primary-a50);
+  transform: translateY(-2px);
+}
+
+#recipe-form #add-ingredient-btn,
+#recipe-form #add-step-btn {
+    margin: 0 auto;
+    text-align: center;
+    margin-bottom: 25px;
+}
+input[type=file]::file-selector-button {
+  margin-right: 20px;
+  border: none;
+  background: var(--color-primary-a30);
+  color: var(--color-primary-a90);
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color .2s ease-in-out;
+}
+
+input[type=file]::file-selector-button:hover {
+  background-color: var(--color-primary-a50);
+}
+
