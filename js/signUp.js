@@ -1,5 +1,3 @@
-// JavaScript для страницы регистрации (signUp.html)
-
 const errorDiv = document.getElementById('error');
 const registerForm = document.getElementById('register-form');
 
@@ -27,9 +25,15 @@ async function checkToken() {
         console.error('Проверка токена не удалась:', err.message, err.stack);
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
-        errorDiv.textContent = err.message.includes('Failed to fetch') || err.name === 'AbortError'
-            ? 'Не удалось проверить сессию. Сервер недоступен, попробуйте позже.'
-            : 'Сессия истекла: ' + err.message;
+        // errorDiv.textContent = err.message.includes('Failed to fetch') || err.name === 'AbortError'
+        //     ? 'Не удалось проверить сессию. Сервер недоступен, попробуйте позже.'
+        //     : 'Сессия истекла: ' + err.message;
+        showNotification(
+            err.message.includes('Failed to fetch') || err.name === 'AbortError'
+                ? 'Не удалось проверить сессию. Сервер недоступен, попробуйте позже.'
+                : 'Сессия истекла: ' + err.message,
+            'error'
+        );
     }
 }
 
@@ -57,19 +61,26 @@ registerForm.addEventListener('submit', async (e) => {
         if (data.token) {
             localStorage.setItem('token', data.token);
             localStorage.setItem('userId', data.userId);
-            errorDiv.textContent = '';
+            // errorDiv.textContent = '';
+            showNotification('Регистрация успешна!', 'success');
             window.location.href = 'kabinet.html';
         } else {
-            errorDiv.textContent = data.message || 'Ошибка регистрации';
+            // errorDiv.textContent = data.message || 'Ошибка регистрации';
+            showNotification(data.message || 'Ошибка регистрации', 'error');
         }
     } catch (err) {
         console.error('Ошибка регистрации:', err.message, err.stack);
-        errorDiv.textContent = err.message.includes('Failed to fetch') || err.name === 'AbortError'
+        // errorDiv.textContent = err.message.includes('Failed to fetch') || err.name === 'AbortError'
+        //     ? 'Не удалось подключиться к серверу. Проверьте соединение или попробуйте позже.'
+        //     : 'Ошибка регистрации: ' + err.message;
+        let errorMessage = err.message.includes('Failed to fetch') || err.name === 'AbortError'
             ? 'Не удалось подключиться к серверу. Проверьте соединение или попробуйте позже.'
             : 'Ошибка регистрации: ' + err.message;
         if (err.message.includes('CORS')) {
-            errorDiv.textContent += ' Возможна проблема с CORS. Проверьте настройки сервера.';
+            // errorDiv.textContent += ' Возможна проблема с CORS. Проверьте настройки сервера.';
+            errorMessage += ' Возможна проблема с CORS. Проверьте настройки сервера.';
         }
+        showNotification(errorMessage, 'error');
     } finally {
         button.disabled = false;
         button.textContent = originalText;
