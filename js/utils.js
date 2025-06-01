@@ -11,7 +11,7 @@ async function fetchWithRetry(url, options, retries = 5, delay = 1000) {
             console.log(`Статус ответа для ${url}: ${response.status}`);
             return response;
         } catch (err) {
-            console.error(`Попытка ${i + 1} для ${url} не удалась:`, err.message, err.stack, 'Type:', err.name);
+            console.error(`Попытка ${i + 1} для ${url} не удалась:`, err.message);
             if (err.name === 'AbortError') {
                 err.message = `Таймаут: сервер не ответил за 20 секунд`;
             }

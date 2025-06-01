@@ -17,6 +17,7 @@ const recipeImageInput = document.getElementById('recipe-image');
 const recipeImagePreview = document.getElementById('recipe-image-preview');
 const removeRecipeImageButton = document.getElementById('remove-recipe-image-btn');
 const deleteDialog = document.getElementById('delete');
+const confirmDeleteButton   = document.querySelector('#delete .confirm-btn');
 
 
 // Функция для преобразования первой буквы первого слова в заглавную
@@ -438,8 +439,6 @@ checkToken();
 logoutButton.addEventListener('click', () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
-    window.location.href = 'index.html';
-    // Отправляем событие об изменении авторизации
     window.dispatchEvent(new Event('authStateChanged'));
     window.location.href = 'index.html';
 });
@@ -515,7 +514,6 @@ async function fetchRecipes() {
                     e.preventDefault(); // Предотвращаем переход по ссылке при клике на кнопку
                     const recipeId = button.dataset.id;
                     deleteDialog.showModal(); // Открываем модальное окно
-                    const confirmDeleteButton = deleteDialog.querySelector('.confirm-btn');
                     confirmDeleteButton.onclick = async () => {
                         try {
                             const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}`, {
