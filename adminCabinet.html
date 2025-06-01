@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Личный кабинет администратора | ЧудоБлюдо</title>
+  <link href="css/theme.css" type="text/css" rel="stylesheet" media="screen">
+  <link href="css/cabinet.css" type="text/css" rel="stylesheet" media="screen">
+  <link rel="icon" href="images/functional/logo.png" type="image/png">
+</head>
+<body>
+  <div class="container">
+    <div class="start">
+      <div class="header">
+        <a href="index.html">
+          <div class="theme-bg"></div>
+        </a>
+      </div>
+      <div class="theme-switcher-wrapper">
+        <button id="theme-toggle" class="theme-toggle">
+          <span class="sun">
+            <img src="images/functional/sun.png" alt="Светлая тема"/>
+          </span>
+          <span class="moon">
+            <img src="images/functional/moon.png" width="40px" height="40px" alt="Тёмная тема"/>
+          </span>
+        </button>
+      </div>
+      <div class="user">
+        <div class="user-bg"></div>
+        <div class="user-content">
+          <h3>Мой профиль</h3>
+          <p>Пользовательское имя:</p> 
+          <span id="username">Администратор</span>
+          <p>Почта:</p>
+          <span id="email">admin@example.com</span>
+        </div>
+      </div>
+      <div class="exit">
+        <div class="exit-bg" onclick="window.exit.showModal()"></div>
+      </div>
+      <dialog id="exit">
+        <h4>Выйти из личного кабинета?</h4>
+        <button onclick="window.exit.close()">Отмена</button>
+        <button id="logout">Выйти</button>
+      </dialog>
+    </div>
+    <div id="cabinet-section" class="cabinet-section section">
+      <div id="recipes-section" class="section">
+        <h3>Все рецепты</h3>
+        <div id="recipes"></div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="col1">
+        <a href="navigation/calendars.html">
+          <p class="footer-contact">Посмотреть календарь праздников</p>
+        </a>
+        <br>
+      </div>
+      <div class="col2">
+        <p class="footer-contact">Контакты для связи</p>
+        <p>Email: dr1305@bk.ru</p>
+        <p>+79-04-121-04-00</p>
+      </div>
+    </div>
+  </div>
+  <script src="js/utils.js" defer></script>
+  <script src="js/theme.js" type="text/javascript" defer></script>
+  <script src="js/adminCabinet.js" defer></script>
+</body>
+</html>

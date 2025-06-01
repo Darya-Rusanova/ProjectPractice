@@ -4,6 +4,10 @@ console.log('signIn.js starting', 'User-Agent:', navigator.userAgent);
 const errorDiv = document.getElementById('error');
 const loginForm = document.getElementById('login-form');
 
+const adminSwitchInput = document.querySelector('.admin-switch-input');
+const adminCodeInput = document.getElementById('admin-code');
+const CODE_FOR_ADMIN = process.env.CODE_FOR_ADMIN;
+
 console.log('loginForm:', loginForm ? 'Найден' : 'Не найден');
 
 async function checkLogin() {
@@ -43,6 +47,20 @@ loginForm.addEventListener('submit', async (e) => {
     button.textContent = 'Загрузка...';
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
+
+    const isAdmin = adminSwitchInput.checked;
+    const adminCode = adminCodeInput.value.trim();
+
+    // Если пользователь отметил "Я администратор", проверяем код
+    if (isAdmin) {
+        if (adminCode !== CODE_FOR_ADMIN) {
+            errorDiv.textContent = 'Неверный код подтверждения';
+            button.disabled = false;
+            button.textContent = originalText;
+            return;
+        }
+    }
+
     console.log('Email:', email);
     try {
         const response = await fetchWithRetry(`${API_BASE_URL}/api/auth/login`, {
@@ -63,7 +81,13 @@ loginForm.addEventListener('submit', async (e) => {
             localStorage.setItem('token', data.token);
             localStorage.setItem('userId', data.userId);
             errorDiv.textContent = '';
-            window.location.href = 'kabinet.html';
+            
+            if (isAdmin && adminCode === CODE_FOR_ADMIN) {
+                window.location.href = 'adminCabinet.html';
+            } else {
+                window.location.href = 'kabinet.html';
+            }
+            
         } else {
             errorDiv.textContent = data.message || 'Неверный email или пароль';
         }
