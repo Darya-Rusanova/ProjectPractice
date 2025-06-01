@@ -72,10 +72,25 @@
         max-width: 400px;
         max-height: 300px;
     }
+    #add-ingredient-btn,
+    #add-step-btn{
+        width: 300px;
+    }
+    #addRecipe-btn, #cancel-btn {
+        font-size: 20px;
+        width: 40%;
+        height: 50px;
+        margin: 20px;
+    }
+    #addDialog{
+        max-width: 60%;
+        max-height: 70%;
+    }
 }
 
 
 @media (800px <= width < 1300px){
+
     .start{
         grid-area: start;
         display:grid;
@@ -117,6 +132,20 @@
     .recipe-image img{
         max-width: 400px;
         max-height: 300px;
+    }
+    #add-ingredient-btn,
+    #add-step-btn{
+        width: 300px;
+    }
+    #addRecipe-btn, #cancel-btn {
+        font-size: 20px;
+        width: 40%;
+        height: 50px;
+        margin: 20px;
+    }
+    #addDialog{
+        max-width: 60%;
+        max-height: 70%;
     }
 }
 @media (width < 800px){
@@ -166,6 +195,20 @@
         margin: 20px;
         max-width: 300px;
         max-height: 200px;
+    }
+    #add-ingredient-btn,
+    #add-step-btn{
+        width: 200px;
+    }
+    #addRecipe-btn, #cancel-btn {
+        font-size: 18px;
+        width: 100%;
+        height: 60px;
+        margin-bottom: 20px;
+    }
+    #addDialog{
+        max-width: 90%;
+        max-height: 60%;
     }
 }
 body > *{
@@ -346,7 +389,8 @@ a {
 }
 .col2 {
     margin: 5%;
-    text-align: right;
+    margin-left: auto;
+    text-align: justify;
     grid-area: col2;
 }
 .footer-contact {
@@ -500,14 +544,11 @@ h3{
 
 /*Секция добавить рецепт*/
 #addDialog{
-    width: 60%;
-    height: 70%;
     border-radius: 25px;
     border: 10px solid var(--color-primary-a50);
     background-color: var(--color-primary-a40);
 }
 #addRecipe-btn, #cancel-btn {
-    font-size: 20px;
     padding: 12px 24px;
     background-color: var(--color-primary-a50);
     color: var(--color-primary-a90);
@@ -515,10 +556,7 @@ h3{
     border-radius: 15px;
     cursor: pointer;
     transition: background-color 0.3s;
-    width: 40%;
-    height: 50px;
     display: inline-block;
-    margin: 20px;
 }
 .buttons{
     text-align: center;
@@ -855,14 +893,14 @@ input:focus, textarea:focus, select:focus {
     margin: 5px 0;
     transition: background-color 0.3s;
     margin-bottom: 20px;
+    margin: 10px auto;
+    display: block;
 }
-
 .remove-btn:hover {
   background-color: var(--color-primary-a110);
 }
 #add-ingredient-btn,
 #add-step-btn{
-    width: 300px;
     font-size: 16px;
     padding: 12px 24px;
     background-color: var(--color-primary-a30);
