@@ -25,9 +25,15 @@ async function checkLogin() {
         }
     } catch (err) {
         console.error('Ошибка проверки токена:', err.message, err.stack, 'Type:', err.name);
-        errorDiv.textContent = err.message.includes('Failed to fetch')
-            ? `Ошибка сети (токен): ${err.message} (${err.name})`
-            : `Сессия истекла: ${err.message}`;
+        // // errorDiv.textContent = err.message.includes('Failed to fetch')
+        //     ? `Ошибка сети (токен): ${err.message} (${err.name})`
+        //     : `Сессия истекла: ${err.message}`;
+        showNotification(
+            err.message.includes('Failed to fetch')
+                ? `Ошибка сети (токен): ${err.message} (${err.name})`
+                : `Сессия истекла: ${err.message}`,
+            'error'
+        );
     }
 }
 
@@ -61,16 +67,24 @@ loginForm.addEventListener('submit', async (e) => {
         if (data.token) {
             localStorage.setItem('token', data.token);
             localStorage.setItem('userId', data.userId);
-            errorDiv.textContent = '';
+            // errorDiv.textContent = '';
+            showNotification('Успешный вход!', 'success');
             window.location.href = 'kabinet.html';
         } else {
-            errorDiv.textContent = data.message || 'Неверный email или пароль';
+            // errorDiv.textContent = data.message || 'Неверный email или пароль';
+            showNotification(data.message || 'Неверный email или пароль', 'error');
         }
     } catch (err) {
         console.error('Ошибка входа:', err.message, err.stack, 'Type:', err.name);
-        errorDiv.textContent = err.message.includes('Failed to fetch')
-            ? `Ошибка сети (вход): ${err.message} (${err.name}). Проверьте настройки браузера.`
-            : `Ошибка входа: ${err.message}`;
+        // errorDiv.textContent = err.message.includes('Failed to fetch')
+        //     ? `Ошибка сети (вход): ${err.message} (${err.name}). Проверьте настройки браузера.`
+        //     : `Ошибка входа: ${err.message}`;
+        showNotification(
+            err.message.includes('Failed to fetch')
+                ? `Ошибка сети (вход): ${err.message} (${err.name}). Проверьте настройки браузера.`
+                : `Ошибка входа: ${err.message}`,
+            'error'
+        );
     } finally {
         button.disabled = false;
         button.textContent = originalText;
