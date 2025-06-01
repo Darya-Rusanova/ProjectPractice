@@ -229,22 +229,21 @@
             </div>
         </div>
     </div>
+
     <script>
         function toggleFavorite(event) {
             // Останавливаем всплытие события, чтобы не сработал переход по ссылке
             event.stopPropagation();
             event.preventDefault();
-            
             // Переключаем класс checked у элемента favorite
             event.currentTarget.classList.toggle('checked');
-            
             // Здесь можно добавить логику сохранения в избранное
             // Например, через localStorage или отправку на сервер
         }
     </script>
+
     <script src="js/utils.js" defer></script>
     <script src="js/theme.js" type="text/javascript" defer></script>
-    <!-- <script src="js/common.js" defer></script> -->
     <script src="js/userName.js" defer></script>
 </body>
 
