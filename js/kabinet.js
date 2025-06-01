@@ -51,14 +51,16 @@ function showImagePreview(input, previewElement, removeButton) {
         const file = input.files[0];
         const maxSize = 5 * 1024 * 1024; // 5 МБ
         if (!['image/jpeg', 'image/png'].includes(file.type)) {
-            errorDiv.textContent = 'Пожалуйста, загрузите изображение в формате JPEG или PNG';
+            // errorDiv.textContent = 'Пожалуйста, загрузите изображение в формате JPEG или PNG';
+            showNotification('Пожалуйста, загрузите изображение в формате JPEG или PNG', 'error');
             input.value = '';
             previewElement.innerHTML = '';
             if (removeButton) removeButton.style.display = 'none';
             return;
         }
         if (file.size > maxSize) {
-            errorDiv.textContent = 'Размер изображения не должен превышать 5 МБ';
+            // errorDiv.textContent = 'Размер изображения не должен превышать 5 МБ';
+            showNotification('Размер изображения не должен превышать 5 МБ', 'error');
             input.value = '';
             previewElement.innerHTML = '';
             if (removeButton) removeButton.style.display = 'none';
@@ -70,7 +72,8 @@ function showImagePreview(input, previewElement, removeButton) {
             if (removeButton) removeButton.style.display = 'block';
         };
         reader.onerror = () => {
-            errorDiv.textContent = 'Ошибка при загрузке изображения';
+            // errorDiv.textContent = 'Ошибка при загрузке изображения';
+            showNotification('Ошибка при загрузке изображения', 'error');
             input.value = '';
             previewElement.innerHTML = '';
             if (removeButton) removeButton.style.display = 'none';
@@ -88,8 +91,8 @@ function clearImageInput(input, previewElement, removeButton) {
     previewElement.innerHTML = '';
     if (removeButton) removeButton.style.display = 'none';
     input.setAttribute('required', 'required');
-    errorDiv.textContent = '';
-}
+    // Очищаем уведомление, если оно активно
+    errorDiv.classList.remove('show');}
 
 // Обработчик предварительного просмотра и удаления для изображения рецепта
 recipeImageInput.addEventListener('change', () => {
@@ -238,11 +241,12 @@ function initializeIngredient(ingredientDiv) {
     removeButton.addEventListener('click', () => {
         const currentCount = ingredientsContainer.getElementsByClassName('ingredient').length;
         if (currentCount <= 1) {
-            errorDiv.textContent = 'Должен быть хотя бы один ингредиент';
+            // errorDiv.textContent = 'Должен быть хотя бы один ингредиент';
+            showNotification('Должен быть хотя бы один ингредиент', 'error');
             return;
         }
         ingredientDiv.remove();
-        errorDiv.textContent = '';
+        // errorDiv.textContent = '';
     });
     
     // Добавляем обработчик для заглавной буквы в поле "Ингредиент"
@@ -323,12 +327,13 @@ function initializeStep(stepDiv) {
     removeStepButton.addEventListener('click', () => {
         const currentCount = stepsContainer.getElementsByClassName('step').length;
         if (currentCount <= 1) {
-            errorDiv.textContent = 'Должен быть хотя бы один шаг';
+            // errorDiv.textContent = 'Должен быть хотя бы один шаг';
+            showNotification('Должен быть хотя бы один шаг', 'error');
             return;
         }
         stepDiv.remove();
         updateStepLabels();
-        errorDiv.textContent = '';
+        // errorDiv.textContent = '';
     });
     
     // Добавляем обработчики для заглавной буквы и точки в поле "Шаг N (описание)"
@@ -390,7 +395,8 @@ if (initialStep) {
 addStepButton.addEventListener('click', () => {
     const stepCount = stepsContainer.getElementsByClassName('step').length;
     if (stepCount >= 50) {
-        errorDiv.textContent = 'Максимум 50 шагов';
+        // errorDiv.textContent = 'Максимум 50 шагов';
+        showNotification('Слишком много шагов', 'error');
         return;
     }
 
@@ -429,7 +435,8 @@ async function checkToken() {
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
         window.location.href = 'index.html';
-        errorDiv.textContent = 'Ошибка авторизации: ' + err.message;
+        // errorDiv.textContent = 'Ошибка авторизации: ' + err.message;
+        showNotification('Ошибка авторизации: ' + err.message, 'error');
     }
 }
 
@@ -523,18 +530,21 @@ async function fetchRecipes() {
                             if (!response.ok) {
                                 throw new Error(`HTTP ${response.status}`);
                             }
-                            errorDiv.textContent = 'Рецепт удалён!';
+                            // errorDiv.textContent = 'Рецепт удалён!';
+                            showNotification('Рецепт удалён!', 'success');
                             deleteDialog.close(); // Закрываем модальное окно
                             fetchRecipes(); // Обновляем список рецептов
                         } catch (err) {
-                            errorDiv.textContent = 'Ошибка удаления: ' + err.message;
+                            // errorDiv.textContent = 'Ошибка удаления: ' + err.message;
+                            showNotification('Ошибка удаления: ' + err.message, 'error');
                         }
                     };
                 });
             });
         }
     } catch (err) {
-        errorDiv.textContent = 'Ошибка загрузки рецептов: ' + err.message;
+        // errorDiv.textContent = 'Ошибка загрузки рецептов: ' + err.message;
+        showNotification('Ошибка загрузки рецептов: ' + err.message, 'error');
     }
 }
 
@@ -549,7 +559,8 @@ categoryButtons.forEach(button => {
 addIngredientButton.addEventListener('click', () => {
     const ingredientCount = ingredientsContainer.getElementsByClassName('ingredient').length;
     if (ingredientCount >= 100) {
-        errorDiv.textContent = 'Максимум 100 ингредиентов';
+        // errorDiv.textContent = 'Максимум 100 ингредиентов';
+        showNotification('Слишком много ингредиентов', 'error');
         return;
     }
     const ingredientDiv = document.createElement('div');
@@ -593,49 +604,58 @@ recipeForm.addEventListener('submit', async (e) => {
 
         // Валидация
         if (title.length > 50) {
-            errorDiv.textContent = 'Название не должно превышать 50 символов';
+            // errorDiv.textContent = 'Название не должно превышать 50 символов';
+            showNotification('Название слишком длинное', 'error');
             return;
         }
         if (description.length > 1000) {
-            errorDiv.textContent = 'Описание не должно превышать 1000 символов';
+            // errorDiv.textContent = 'Описание не должно превышать 1000 символов';
+            showNotification('Описание слишком длинное', 'error');
             return;
         }
         if (selectedCategories.length === 0) {
-            errorDiv.textContent = 'Выберите хотя бы одну категорию';
+            // errorDiv.textContent = 'Выберите хотя бы одну категорию';
+            showNotification('Выберите хотя бы одну категорию', 'error');
             return;
         }
         if (!recipeImageInput.files[0]) {
-            errorDiv.textContent = 'Добавьте изображение рецепта (обязательно)';
+            // errorDiv.textContent = 'Добавьте изображение рецепта (обязательно)';
+            showNotification('Добавьте изображение рецепта (обязательно)', 'error');
             return;
         }
 
         const ingredientDivs = ingredientsContainer ? Array.from(ingredientsContainer.getElementsByClassName('ingredient')) : [];
         if (ingredientDivs.length === 0) {
-            errorDiv.textContent = 'Добавьте хотя бы один ингредиент';
+            // errorDiv.textContent = 'Добавьте хотя бы один ингредиент';
+            showNotification('Добавьте хотя бы один ингредиент', 'error');
             return;
         }
         for (let div of ingredientDivs) {
             const name = div.querySelector('.ingredient-name')?.value;
             const quantity = div.querySelector('.quantity-input')?.value;
             if (!name || name.length > 50) {
-                errorDiv.textContent = `Ингредиент "${name || ''}" не должен превышать 50 символов`;
+                // errorDiv.textContent = `Ингредиент "${name || ''}" не должен превышать 50 символов`;
+                showNotification(`Ингредиент "${name || ''}" не должен превышать 50 символов`, 'error');
                 return;
             }
             if (!quantity || (!/^[0-9]+(,[0-9]{0,2})?$/.test(quantity) && quantity !== '0')) {
-                errorDiv.textContent = `Количество для "${name}" должно быть числом (например, 100 или 12,5)`;
+                // errorDiv.textContent = `Количество для "${name}" должно быть числом (например, 100 или 12,5)`;
+                showNotification(`Количество для "${name}" должно быть числом (например, 100 или 12,5)`, 'error');
                 return;
             }
         }
 
         const stepDivs = stepsContainer ? Array.from(stepsContainer.getElementsByClassName('step')) : [];
         if (stepDivs.length === 0) {
-            errorDiv.textContent = 'Добавьте хотя бы один шаг';
+            // errorDiv.textContent = 'Добавьте хотя бы один шаг';
+            showNotification('Добавьте хотя бы один шаг', 'error');
             return;
         }
         for (let div of stepDivs) {
             const description = div.querySelector('.step-description')?.value;
             if (!description || description.length > 1000) {
-                errorDiv.textContent = `Описание шага не должно превышать 1000 символов`;
+                // errorDiv.textContent = `Описание шага не должно превышать 1000 символов`;
+                showNotification(`Описание шага не должно превышать 1000 символов`, 'error');
                 return;
             }
         }
@@ -671,7 +691,8 @@ recipeForm.addEventListener('submit', async (e) => {
         }
 
         if (recipe.ingredients.length !== recipe.ingredientQuantities.length || recipe.ingredients.length !== recipe.ingredientUnits.length) {
-            errorDiv.textContent = 'Ошибка: количество ингредиентов, их объёмов и единиц измерения не совпадает';
+            // errorDiv.textContent = 'Ошибка: количество ингредиентов, их объёмов и единиц измерения не совпадает';
+            showNotification('Ошибка: количество ингредиентов, их объёмов и единиц измерения не совпадает', 'error');
             return;
         }
 
@@ -737,14 +758,17 @@ recipeForm.addEventListener('submit', async (e) => {
             removeRecipeImageButton.style.display = 'none';
             stepsContainer.querySelectorAll('.step-image-preview').forEach(preview => preview.innerHTML = '');
             stepsContainer.querySelectorAll('.remove-step-image-btn').forEach(btn => btn.style.display = 'none');
-            errorDiv.textContent = 'Рецепт добавлен!';
+            // errorDiv.textContent = 'Рецепт добавлен!';
+            showNotification('Рецепт добавлен!', 'success');
             fetchRecipes();
         } else {
-            errorDiv.textContent = data.message || 'Ошибка добавления рецепта';
+            // errorDiv.textContent = data.message || 'Ошибка добавления рецепта';
+            showNotification(data.message || 'Ошибка добавления рецепта', 'error');
         }
     } catch (err) {
         console.error('Ошибка при отправке формы:', err);
-        errorDiv.textContent = 'Ошибка добавления: ' + err.message;
+        // errorDiv.textContent = 'Ошибка добавления: ' + err.message;
+        showNotification('Ошибка добавления: ' + err.message, 'error');
     } finally {
         button.disabled = false;
         button.textContent = originalText;
