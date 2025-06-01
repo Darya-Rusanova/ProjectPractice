@@ -1,9 +1,5 @@
 let token = localStorage.getItem('token') || '';
 let userId = localStorage.getItem('userId') || '';
-let role = localStorage.getItem('role') || 'user';
-
-// Определяем API_BASE_URL (должен быть настроен в соответствии с вашим сервером)
-const API_BASE_URL = 'http://localhost:5000'; // Убедитесь, что это соответствует вашему бэкенду
 
 const errorDiv = document.getElementById('error');
 const cabinetSection = document.getElementById('cabinet-section');
@@ -20,8 +16,6 @@ const cookingTimeInput = document.getElementById('recipe-cooking-time');
 const recipeImageInput = document.getElementById('recipe-image');
 const recipeImagePreview = document.getElementById('recipe-image-preview');
 const removeRecipeImageButton = document.getElementById('remove-recipe-image-btn');
-const deleteDialog = document.getElementById('delete');
-const confirmDeleteButton = document.getElementById('confirm-delete');
 
 // Функция для преобразования первой буквы первого слова в заглавную
 function capitalizeFirstWord(text) {
@@ -413,7 +407,6 @@ addStepButton.addEventListener('click', () => {
 
 // Проверка токена
 async function checkToken() {
-    console.log('Checking token:', token, 'userId:', userId);
     if (!token || !userId) {
         console.log('Токен отсутствует, перенаправляем на вход');
         window.location.href = 'index.html';
@@ -423,22 +416,15 @@ async function checkToken() {
         const response = await fetch(`${API_BASE_URL}/api/users/${userId}/recipes`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
-        console.log('Token check response:', response.status);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         cabinetSection.style.display = 'block';
-        // Если пользователь — администратор, перенаправляем в adminCabinet.html
-        if (role === 'admin') {
-            window.location.href = 'adminCabinet.html';
-            return;
-        }
         fetchRecipes();
     } catch (err) {
         console.error('Ошибка проверки токена:', err);
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
-        localStorage.removeItem('role');
         window.location.href = 'index.html';
         errorDiv.textContent = 'Ошибка авторизации: ' + err.message;
     }
@@ -450,24 +436,19 @@ checkToken();
 logoutButton.addEventListener('click', () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
-    localStorage.removeItem('role');
     window.location.href = 'index.html';
 });
 
 // Загрузка рецептов
 async function fetchRecipes() {
     try {
-        console.log('Fetching recipes for userId:', userId);
         const response = await fetch(`${API_BASE_URL}/api/users/${userId}/recipes`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
-        console.log('Fetch recipes response:', response.status);
         if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`HTTP error! status: ${response.status}, details: ${errorText}`);
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
         const recipes = await response.json();
-        console.log('Received recipes:', recipes);
         recipesList.innerHTML = '';
         if (recipes.length === 0) {
             recipesList.innerHTML = '<p>У вас пока нет рецептов</p>';
@@ -525,16 +506,10 @@ async function fetchRecipes() {
             
             // Добавляем обработчики для кнопок удаления
             document.querySelectorAll('.delete-btn').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    e.preventDefault();
+                button.addEventListener('click', async (e) => {
+                    e.preventDefault(); // Предотвращаем переход по ссылке при клике на кнопку
                     const recipeId = button.dataset.id;
-                    console.log('Opening delete dialog for recipe:', recipeId);
-                    deleteDialog.showModal(); // Открываем модальное окно
-
-                    // Очищаем предыдущий обработчик, чтобы избежать конфликтов
-                    confirmDeleteButton.onclick = null;
-
-                    confirmDeleteButton.onclick = async () => {
+                    if (confirm('Вы уверены, что хотите удалить этот рецепт?')) {
                         try {
                             const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}`, {
                                 method: 'DELETE',
@@ -544,18 +519,15 @@ async function fetchRecipes() {
                                 throw new Error(`HTTP ${response.status}`);
                             }
                             errorDiv.textContent = 'Рецепт удалён!';
-                            deleteDialog.close();
                             fetchRecipes();
                         } catch (err) {
                             errorDiv.textContent = 'Ошибка удаления: ' + err.message;
-                            deleteDialog.close();
                         }
-                    };
+                    }
                 });
             });
         }
     } catch (err) {
-        console.error('Ошибка загрузки рецептов:', err);
         errorDiv.textContent = 'Ошибка загрузки рецептов: ' + err.message;
     }
 }
