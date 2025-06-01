@@ -7,13 +7,13 @@ function updateUserName() {
     return;
   }
 
-  checkAuthAndGetUsername().then(result => {
-    if (result && result.username) {
-      lkText.textContent = result.username;
+  checkAuthAndGetUsername().then(username => {
+    if (username) {
+      lkText.textContent = username;
       lkAnchor.href = 'kabinet.html';
     } else {
       lkText.textContent = 'Личный кабинет';
-      lkAnchor.href = result ? 'kabinet.html' : 'signIn.html';
+      lkAnchor.href = 'signIn.html';
     }
   });
 }
@@ -31,32 +31,31 @@ async function checkAuthAndGetUsername() {
   }
 
   try {
-    // 1) Опционально: сделать быструю проверку валидности токена
-    const recipesResp = await fetchWithRetry(
-      `${API_BASE_URL}/api/users/${userId}/recipes`,
-      { headers: { 'Authorization': `Bearer ${token}` } }
-    );
-    if (!recipesResp.ok) {
-      throw new Error(`Ошибка проверки сессии: ${recipesResp.status}`);
-    }
-
-    // 2) Сразу запрашиваем объект юзера (тот самый новый маршрут)
+    // Сразу запрашиваем данные пользователя
     const userResp = await fetchWithRetry(
       `${API_BASE_URL}/api/users/${userId}`, 
       { headers: { 'Authorization': `Bearer ${token}` } }
     );
+
+    if (userResp.status === 401) {
+      // Токен невалиден или просрочен
+      localStorage.removeItem('token');
+      localStorage.removeItem('userId');
+      window.dispatchEvent(new Event('authStateChanged'));
+      return null;
+    }
+
     if (!userResp.ok) {
       console.error('Не удалось получить данные пользователя, статус', userResp.status);
-      return { username: null };
+      return null;
     }
 
     const userData = await userResp.json();
-    console.log('Получили с сервера:', userData);
-    return { username: userData.username || null };
+    return userData.username || null;
+
   } catch (err) {
     console.error('Ошибка при checkAuthAndGetUsername:', err.message);
     if (err.message.includes('401')) {
-      // Если токен просрочен или вообще не валиден — чистим localStorage
       localStorage.removeItem('token');
       localStorage.removeItem('userId');
       window.dispatchEvent(new Event('authStateChanged'));
