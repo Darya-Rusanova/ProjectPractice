@@ -2,6 +2,9 @@ let token = localStorage.getItem('token') || '';
 let userId = localStorage.getItem('userId') || '';
 let role = localStorage.getItem('role') || 'user';
 
+// Определяем API_BASE_URL (должен быть настроен в соответствии с вашим сервером)
+const API_BASE_URL = 'http://your-api-url'; // Замените на реальный URL вашего API
+
 const errorDiv = document.getElementById('error');
 const cabinetSection = document.getElementById('cabinet-section');
 const logoutButton = document.getElementById('logout');
@@ -517,26 +520,28 @@ async function fetchRecipes() {
             // Добавляем обработчики для кнопок удаления
             document.querySelectorAll('.delete-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
-                    e.preventDefault(); // Предотвращаем переход по ссылке при клике на кнопку
+                    e.preventDefault();
                     const recipeId = button.dataset.id;
                     deleteDialog.showModal(); // Открываем модальное окно
+
+                    // Очищаем предыдущий обработчик, чтобы избежать конфликтов
+                    confirmDeleteButton.onclick = null;
+
                     confirmDeleteButton.onclick = async () => {
-                        if (confirmDeleteButton) {
-                            try {
-                                const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}`, {
-                                    method: 'DELETE',
-                                    headers: { 'Authorization': `Bearer ${token}` }
-                                });
-                                if (!response.ok) {
-                                    throw new Error(`HTTP ${response.status}`);
-                                }
-                                errorDiv.textContent = 'Рецепт удалён!';
-                                deleteDialog.close(); // Закрываем модальное окно после успешного удаления
-                                fetchRecipes();
-                            } catch (err) {
-                                errorDiv.textContent = 'Ошибка удаления: ' + err.message;
-                                deleteDialog.close(); // Закрываем модальное окно при ошибке
+                        try {
+                            const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}`, {
+                                method: 'DELETE',
+                                headers: { 'Authorization': `Bearer ${token}` }
+                            });
+                            if (!response.ok) {
+                                throw new Error(`HTTP ${response.status}`);
                             }
+                            errorDiv.textContent = 'Рецепт удалён!';
+                            deleteDialog.close();
+                            fetchRecipes();
+                        } catch (err) {
+                            errorDiv.textContent = 'Ошибка удаления: ' + err.message;
+                            deleteDialog.close();
                         }
                     };
                 });
