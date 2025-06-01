@@ -7,13 +7,13 @@ function updateUserName() {
         return;
     }
 
-    checkAuthAndGetUsername().then(isAuthenticated => {
-        if (isAuthenticated) {
-            lkText.textContent = 'Личный кабинет'; // Временно убираем зависимость от имени
+    checkAuthAndGetUsername().then(result => {
+        if (result && result.username) {
+            lkText.textContent = result.username;
             lkAnchor.href = 'kabinet.html';
         } else {
             lkText.textContent = 'Личный кабинет';
-            lkAnchor.href = 'signIn.html';
+            lkAnchor.href = result ? 'kabinet.html' : 'signIn.html';
         }
     });
 }
@@ -27,7 +27,7 @@ async function checkAuthAndGetUsername() {
 
     if (!token || !userId) {
         console.log('Токен или userId отсутствует');
-        return false;
+        return null;
     }
 
     console.log('Проверка токена:', token); // Отладка
@@ -37,15 +37,29 @@ async function checkAuthAndGetUsername() {
         });
         
         console.log('Ответ сервера на /recipes:', response.status, await response.text()); // Отладка
-        return response.ok; // Возвращаем true, если токен валиден
+        if (response.ok) {
+            const userResponse = await fetchWithRetry(`${API_BASE_URL}/api/users/${userId}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            console.log('Ответ сервера на /users/${userId}:', userResponse.status, await userResponse.text()); // Отладка
+            if (userResponse.ok) {
+                const userData = await userResponse.json();
+                console.log('Данные пользователя:', userData); // Отладка
+                return { username: userData.username || 'Пользователь' };
+            } else {
+                console.error('Не удалось получить имя пользователя. Статус:', userResponse.status);
+                return { username: null }; // Токен валиден, но имя не удалось получить
+            }
+        } else {
+            throw new Error(`Ошибка проверки токена: ${response.status}`);
+        }
     } catch (err) {
         console.error('Ошибка при проверке токена:', err.message);
-        // Удаляем токен только если ошибка явно указывает на недействительность (например, 401)
         if (err.message.includes('401')) {
             localStorage.removeItem('token');
             localStorage.removeItem('userId');
             window.dispatchEvent(new Event('authStateChanged'));
         }
-        return false;
+        return null;
     }
 }
