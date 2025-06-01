@@ -16,6 +16,8 @@ const cookingTimeInput = document.getElementById('recipe-cooking-time');
 const recipeImageInput = document.getElementById('recipe-image');
 const recipeImagePreview = document.getElementById('recipe-image-preview');
 const removeRecipeImageButton = document.getElementById('remove-recipe-image-btn');
+const deleteDialog = document.getElementById('delete');
+
 
 // Функция для преобразования первой буквы первого слова в заглавную
 function capitalizeFirstWord(text) {
@@ -509,7 +511,9 @@ async function fetchRecipes() {
                 button.addEventListener('click', async (e) => {
                     e.preventDefault(); // Предотвращаем переход по ссылке при клике на кнопку
                     const recipeId = button.dataset.id;
-                    if (confirm('Вы уверены, что хотите удалить этот рецепт?')) {
+                    deleteDialog.showModal(); // Открываем модальное окно
+                    const confirmDeleteButton = deleteDialog.querySelector('.confirm-btn');
+                    confirmDeleteButton.onclick = async () => {
                         try {
                             const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}`, {
                                 method: 'DELETE',
@@ -519,11 +523,12 @@ async function fetchRecipes() {
                                 throw new Error(`HTTP ${response.status}`);
                             }
                             errorDiv.textContent = 'Рецепт удалён!';
-                            fetchRecipes();
+                            deleteDialog.close(); // Закрываем модальное окно
+                            fetchRecipes(); // Обновляем список рецептов
                         } catch (err) {
                             errorDiv.textContent = 'Ошибка удаления: ' + err.message;
                         }
-                    }
+                    };
                 });
             });
         }
