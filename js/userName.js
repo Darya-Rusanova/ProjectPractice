@@ -26,7 +26,8 @@ async function checkAuthAndGetUsername() {
         if (response.ok) {
             const userData = await response.json();
             console.log(userData.username);
-            alert(userData.username); 
+            return userData.username;
+            // alert(userData.username); 
         } else {
             throw new Error(`Ошибка HTTP! Статус: ${response.status}`);
         }
