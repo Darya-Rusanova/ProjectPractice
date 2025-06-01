@@ -92,7 +92,8 @@ function clearImageInput(input, previewElement, removeButton) {
     if (removeButton) removeButton.style.display = 'none';
     input.setAttribute('required', 'required');
     // Очищаем уведомление, если оно активно
-    errorDiv.classList.remove('show');}
+    errorDiv.classList.remove('show');
+}
 
 // Обработчик предварительного просмотра и удаления для изображения рецепта
 recipeImageInput.addEventListener('change', () => {
