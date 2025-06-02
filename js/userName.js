@@ -10,10 +10,10 @@ function updateUserName() {
   checkAuthAndGetUsername().then(username => {
     if (username) {
       lkText.textContent = username;
-      lkAnchor.href = 'kabinet.html';
+      lkAnchor.href = '/kabinet.html';
     } else {
       lkText.textContent = 'Личный кабинет';
-      lkAnchor.href = 'signIn.html';
+      lkAnchor.href = '/signIn.html';
     }
   });
 }
