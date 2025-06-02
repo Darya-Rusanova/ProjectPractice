@@ -79,6 +79,9 @@ loginForm.addEventListener('submit', async (e) => {
                     if (userData.username) {
                         localStorage.setItem('username', userData.username);
                     }
+                    if (userData.email) {
+                        localStorage.setItem('email', userData.email);
+                    }
                 } else {
                     console.warn('Не удалось получить username после логина, статус', userResp.status);
                 }
