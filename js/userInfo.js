@@ -117,6 +117,7 @@ function redirectToSignIn() {
   localStorage.removeItem('userId');
   localStorage.removeItem('username');
   localStorage.removeItem('email');
+  localStorage.removeItem('isAdmin');
   localStorage.removeItem('recipeCount'); // Очищаем recipeCount
   window.dispatchEvent(new Event('authStateChanged'));
   window.location.href = 'signIn.html';
