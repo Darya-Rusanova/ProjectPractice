@@ -10,7 +10,7 @@ async function fetchPendingRecipes() {
     }
 
     try {
-        const response = await fetch(`${API_BASE_URL}/recipes/user/all?status=pending`, {
+        const response = await fetch(`${API_BASE_URL}/api/recipes/user/all?status=pending`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!response.ok) throw new Error('Не удалось загрузить рецепты на рассмотрении');

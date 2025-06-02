@@ -10,7 +10,7 @@ async function fetchPublishedRecipes() {
     }
 
     try {
-        const response = await fetch(`${API_BASE_URL}/recipes/user/all?status=published`, {
+        const response = await fetch(`${API_BASE_URL}/api/recipes/user/all?status=published`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!response.ok) throw new Error('Не удалось загрузить опубликованные рецепты');
