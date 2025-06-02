@@ -19,7 +19,7 @@ async function checkLogin() {
         });
         console.log('checkLogin status:', response.status, 'CORS:', response.headers.get('Access-Control-Allow-Origin'));
         if (response.ok) {
-            window.location.href = 'kabinet.html';
+            window.location.href = localStorage.getItem('isAdmin') === 'true' ? '/adminCabinet.html' : '/kabinet.html';
         } else {
             throw new Error(`HTTP ошибка: ${response.status}`);
         }
@@ -48,7 +48,8 @@ loginForm.addEventListener('submit', async (e) => {
     button.textContent = 'Загрузка...';
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    console.log('Email:', email);
+    const adminCode = document.getElementById('adminCode')?.value || ''; // Чтение кода админа
+    console.log('Email:', email, 'AdminCode:', adminCode);
     try {
         const response = await fetchWithRetry(`${API_BASE_URL}/api/auth/login`, {
             method: 'POST',
@@ -57,7 +58,7 @@ loginForm.addEventListener('submit', async (e) => {
                 'Accept': 'application/json',
                 'User-Agent': 'Mozilla/5.0 (compatible; ChudoBludo/1.0)'
             },
-            body: JSON.stringify({ email, password }),
+            body: JSON.stringify({ email, password, code: adminCode }),
             mode: 'cors',
             credentials: 'include'
         });
@@ -67,6 +68,7 @@ loginForm.addEventListener('submit', async (e) => {
         if (data.token) {
             localStorage.setItem('token', data.token);
             localStorage.setItem('userId', data.userId);
+            localStorage.setItem('isAdmin', data.isAdmin.toString()); // Сохранение статуса админа
 
 
             try {
@@ -101,7 +103,7 @@ loginForm.addEventListener('submit', async (e) => {
 
             // Немного подождём, чтобы пользователь увидел «Успешный вход!»
             setTimeout(() => {
-                window.location.href = 'kabinet.html';
+                window.location.href = data.isAdmin ? '/adminCabinet.html' : '/kabinet.html';
             }, 300);
         } else {
             // errorDiv.textContent = data.message || 'Неверный email или пароль';

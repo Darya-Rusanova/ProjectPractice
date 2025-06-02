@@ -6,9 +6,11 @@ function immediatelyShowStoredName() {
   if (!lkAnchor || !lkText) return;
 
   const stored = localStorage.getItem('username');
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+
   if (stored) {
     lkText.textContent = stored;
-    lkAnchor.href = '/kabinet.html';
+    lkAnchor.href = isAdmin ? '/adminCabinet.html' : '/kabinet.html';
   } else {
     lkText.textContent = 'Личный кабинет';
     lkAnchor.href = '/signIn.html';
@@ -40,6 +42,7 @@ async function fetchAndUpdateName() {
       localStorage.removeItem('token');
       localStorage.removeItem('userId');
       localStorage.removeItem('username');
+      localStorage.removeItem('isAdmin');
       window.dispatchEvent(new Event('authStateChanged'));
 
       // Обновляем ссылку/текст
@@ -57,7 +60,7 @@ async function fetchAndUpdateName() {
     if (userData.username) {
       // Обновляем на кнопке
       lkText.textContent = userData.username;
-      lkAnchor.href = '/kabinet.html';
+      lkAnchor.href = localStorage.getItem('isAdmin') === 'true' ? '/adminCabinet.html' : '/kabinet.html';
 
       // И «свежим» именем перезаписываем localStorage
       localStorage.setItem('username', userData.username);
@@ -68,6 +71,7 @@ async function fetchAndUpdateName() {
       localStorage.removeItem('token');
       localStorage.removeItem('userId');
       localStorage.removeItem('username');
+      localStorage.removeItem('isAdmin');
       window.dispatchEvent(new Event('authStateChanged'));
       lkText.textContent = 'Личный кабинет';
       lkAnchor.href = '/signIn.html';

@@ -497,7 +497,7 @@ async function fetchRecipes() {
                         <li>${recipe.cookingTime} минут</li>
                         <li>${recipe.ingredients.length} ингредиентов</li>
                     </ul>
-                    <p class="status">Статус: На рассмотрении</p>
+                    <p class="status">Статус: ${recipe.status || 'На рассмотрении'}</p>
                 `;
                 
                 // Собираем содержимое

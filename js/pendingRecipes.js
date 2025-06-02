@@ -1,4 +1,4 @@
-const pendingRecipesDiv = document.getElementById('pendingRecipes');
+const pendingRecipesList = document.getElementById('pendingRecipesList');
 const logoutButton = document.getElementById('adminLogout');
 const errorDiv = document.getElementById('error');
 
@@ -22,9 +22,9 @@ async function fetchPendingRecipes() {
 }
 
 function displayPendingRecipes(recipes) {
-    pendingRecipesDiv.innerHTML = '';
+    pendingRecipesList.innerHTML = '';
     if (recipes.length === 0) {
-        pendingRecipesDiv.innerHTML = '<p>Нет рецептов на рассмотрении.</p>';
+        pendingRecipesList.innerHTML = '<p>Нет рецептов на рассмотрении.</p>';
         return;
     }
     recipes.forEach(recipe => {
@@ -35,7 +35,7 @@ function displayPendingRecipes(recipes) {
             <p>Автор: ${recipe.author}</p>
             <button onclick="approveRecipe('${recipe._id}')">Одобрить</button>
         `;
-        pendingRecipesDiv.appendChild(recipeDiv);
+        pendingRecipesList.appendChild(recipeDiv);
     });
 }
 

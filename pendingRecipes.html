@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Личный кабинет | ЧудоБлюдо (Админ)</title>
+  <title>Рецепты на рассмотрении | ЧудоБлюдо</title>
   <link href="css/theme.css" type="text/css" rel="stylesheet" media="screen">
   <link href="css/cabinet.css" type="text/css" rel="stylesheet" media="screen">
   <link rel="icon" href="images/functional/logo.png" type="image/png">
@@ -27,14 +27,10 @@
         </button>
       </div>
       <div class="user">
-        <div class="user-bg"></div>
-        <div class="user-content">
-          <h3>Личный кабинет (Админ)</h3>
-          <p>Пользовательское имя:</p> 
-          <span id="adminUsername"></span>
-          <p>Почта: </p>
-          <span id="adminEmail"></span>
-        </div>
+        <a href="adminCabinet.html">
+          <div class="user-bg"></div>
+          <span class="text-toggle" id="adminUsername"></span>
+        </a>
       </div>
       <div class="exit">
         <div class="exit-bg" onclick="window.exit.showModal()"></div>
@@ -65,17 +61,12 @@
     </div>
     <div class="information">
       <div class="main-text">
-        <p id="head">ЛИЧНЫЙ КАБИНЕТ</p>
-        <p id="body">Добро пожаловать в личный кабинет администратора!</p>
-        <p id="inf">Здесь вы можете модерировать рецепты пользователей</p>
+        <p id="head">РЕЦЕПТЫ НА РАССМОТРЕНИИ</p>
+        <p id="body">Рецепты, ожидающие вашего одобрения</p>
       </div>
     </div>
-    <div id="error" class="error-notification" aria-live="polite"></div>
-    <div id="admin-cabinet-section" class="cabinet-section section">
-      <div id="pending-section" class="section">
-        <h3>Рецепты на рассмотрении</h3>
-        <div id="pendingRecipes"></div>
-      </div>
+    <div id="pending-recipes-section" class="section">
+      <div id="pendingRecipesList"></div>
     </div>
     <div class="footer">
       <div class="col1">
@@ -96,7 +87,7 @@
   <script src="js/utils.js" defer></script>
   <script src="js/theme.js" type="text/javascript" defer></script>
   <script src="js/showNotif.js" defer></script>
+  <script src="js/pendingRecipes.js" defer></script>
   <script src="js/userInfoAdmin.js" defer></script>
-  <script src="js/adminCabinet.js" defer></script>
 </body>
 </html>
