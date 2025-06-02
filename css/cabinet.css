@@ -31,6 +31,14 @@
     --exit:url('../images/functional/logout-dark.png');
     --add:url('../images/functional/plusDark.png');
 }
+ .footer-contact ~ p {
+    font-size: medium;
+}
+.footer-contact {
+  font-size: large;
+  font-weight: bold;
+  color:var(--color-primary-a90)
+}
 @media (min-width:1300px){
     .start{
         grid-area: start;
@@ -86,6 +94,7 @@
         max-width: 60%;
         max-height: 70%;
     }
+    
 }
 
 
@@ -209,6 +218,14 @@
     #addDialog{
         max-width: 90%;
         max-height: 60%;
+    }
+     .footer-contact ~ p {
+        font-size: 10px;
+    }
+    .footer-contact {
+        font-size: 15px;
+        font-weight: bold;
+        color:var(--color-primary-a90)
     }
 }
 body > *{
@@ -392,11 +409,6 @@ a {
     margin-left: auto;
     text-align: justify;
     grid-area: col2;
-}
-.footer-contact {
-    font-size: large;
-    font-weight: bold;
-    color: var(--color-primary-a90);
 }
 
 

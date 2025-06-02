@@ -76,6 +76,14 @@ a, a:hover {
     background-repeat: no-repeat; 
     margin: 0 auto;
 }
+.footer-contact ~ p {
+    font-size: medium;
+}
+.footer-contact {
+    font-size: large;
+    font-weight: bold;
+    color:var(--color-primary-a90)
+}
 @media (min-width:1300px){
     .text {
         font-size: 15px;
@@ -303,6 +311,7 @@ a, a:hover {
     .text-toggle{
         font-size: 20px;
     }
+   
 }
 @media (width < 850px){
     .gramm{
@@ -387,6 +396,20 @@ a, a:hover {
     .text-toggle{
         font-size: 14px;
     }
+     .footer-contact ~ p {
+        font-size: 10px;
+    }
+    .footer-contact {
+        font-size: 15px;
+        font-weight: bold;
+        color:var(--color-primary-a90)
+    }
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 }
 .description > p{
     text-align: justify;
