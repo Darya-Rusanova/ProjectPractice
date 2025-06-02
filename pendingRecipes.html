@@ -40,29 +40,22 @@
           <h4>Выйти из личного кабинета?</h4>
           <div class="dialog-buttons">
             <button class="cancel-btn" onclick="window.exit.close()">Отмена</button>
-            <button class="confirm-btn" id="adminLogout">Выйти</button>
+            <button class="confirm-btn" id="logout">Выйти</button>
           </div>
         </div>
       </dialog>
       <div class="navigation">
         <div class="dropdown" id="dropdown1">
-          <button class="dropbtn">На рассмотрении</button>
-          <div class="dropdown-content">
-            <a href="pendingRecipes.html">На рассмотрении</a>
-          </div>
+          <a href="pendingRecipes.html" class="dropbtn">На рассмотрении</a>
         </div>
         <div class="dropdown" id="dropdown2">
-          <button class="dropbtn">Опубликованные рецепты</button>
-          <div class="dropdown-content">
-            <a href="publishedRecipes.html">Опубликованные рецепты</a>
-          </div>
+          <a href="publishedRecipes.html" class="dropbtn">Опубликованные рецепты</a>
         </div>
       </div>
     </div>
     <div class="information">
       <div class="main-text">
         <p id="head">РЕЦЕПТЫ НА РАССМОТРЕНИИ</p>
-        <p id="body">Рецепты, ожидающие вашего одобрения</p>
       </div>
     </div>
     <div id="pending-recipes-section" class="section">
@@ -87,7 +80,8 @@
   <script src="js/utils.js" defer></script>
   <script src="js/theme.js" type="text/javascript" defer></script>
   <script src="js/showNotif.js" defer></script>
-  <script src="js/pendingRecipes.js" defer></script>
+  <script src="js/kabinet.js" defer></script>
   <script src="js/userInfoAdmin.js" defer></script>
+  <script src="js/pendingRecipes.js" defer></script>
 </body>
 </html>
