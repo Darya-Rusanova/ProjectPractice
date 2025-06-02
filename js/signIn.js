@@ -25,9 +25,6 @@ async function checkLogin() {
         }
     } catch (err) {
         console.error('Ошибка проверки токена:', err.message, err.stack, 'Type:', err.name);
-        // // errorDiv.textContent = err.message.includes('Failed to fetch')
-        //     ? `Ошибка сети (токен): ${err.message} (${err.name})`
-        //     : `Сессия истекла: ${err.message}`;
         showNotification(
             err.message.includes('Failed to fetch')
                 ? `Ошибка сети (токен): ${err.message} (${err.name})`
@@ -50,6 +47,7 @@ loginForm.addEventListener('submit', async (e) => {
     const password = document.getElementById('password').value;
     const adminCode = document.getElementById('adminCode')?.value || ''; // Чтение кода админа
     console.log('Email:', email, 'AdminCode:', adminCode);
+
     try {
         const response = await fetchWithRetry(`${API_BASE_URL}/api/auth/login`, {
             method: 'POST',
@@ -64,20 +62,19 @@ loginForm.addEventListener('submit', async (e) => {
         });
         console.log('Login status:', response.status, 'CORS:', response.headers.get('Access-Control-Allow-Origin'));
         const data = await response.json();
-        console.log('Login data:', data);
+        console.log('Login data from server:', data);
+
         if (data.token) {
             localStorage.setItem('token', data.token);
             localStorage.setItem('userId', data.userId);
-            
-            // Логика определения isAdmin:
-            // - Если код не введён (adminCode пустой), устанавливаем isAdmin = false
-            // - Если код введён, используем значение из data.isAdmin
-            const isAdmin = adminCode ? data.isAdmin : false;
-            localStorage.setItem('isAdmin', isAdmin.toString());
+
+            // Логика определения isAdmin: используем значение из data.isAdmin
+            console.log('Setting isAdmin:', data.isAdmin, 'Code provided:', !!adminCode);
+            localStorage.setItem('isAdmin', data.isAdmin.toString());
 
             try {
                 const userResp = await fetchWithRetry(
-                    `${API_BASE_URL}/api/users/${data.userId}`, 
+                    `${API_BASE_URL}/api/users/${data.userId}`,
                     { headers: { 'Authorization': `Bearer ${data.token}` } }
                 );
                 if (userResp.ok) {
@@ -98,26 +95,15 @@ loginForm.addEventListener('submit', async (e) => {
                 console.warn('Ошибка при запросе имени пользователя после логина:', e);
             }
 
-
-
-
-            // errorDiv.textContent = '';
             showNotification('Успешный вход!', 'success');
-            // window.location.href = 'kabinet.html';
-
-            // Немного подождём, чтобы пользователь увидел «Успешный вход!»
             setTimeout(() => {
                 window.location.href = data.isAdmin ? '/adminCabinet.html' : '/kabinet.html';
             }, 300);
         } else {
-            // errorDiv.textContent = data.message || 'Неверный email или пароль';
             showNotification(data.message || 'Неверный email или пароль', 'error');
         }
     } catch (err) {
         console.error('Ошибка входа:', err.message, err.stack, 'Type:', err.name);
-        // errorDiv.textContent = err.message.includes('Failed to fetch')
-        //     ? `Ошибка сети (вход): ${err.message} (${err.name}). Проверьте настройки браузера.`
-        //     : `Ошибка входа: ${err.message}`;
         showNotification(
             err.message.includes('Failed to fetch')
                 ? `Ошибка сети (вход): ${err.message} (${err.name}). Проверьте настройки браузера.`
