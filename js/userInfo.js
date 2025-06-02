@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', updateUserInfo);
 
 async function updateUserInfo() {
-    const usernameElement = document.getElementById('username');
-    const emailElement = document.getElementById('email');
+    const usernameElement    = document.getElementById('username');
+    const emailElement       = document.getElementById('email');
     const recipeCountElement = document.getElementById('recipeCount');
-    const saveCountElement = document.getElementById('saveCount');
+    const saveCountElement   = document.getElementById('saveCount');
 
     // Проверяем наличие элементов
     if (!usernameElement || !emailElement || !recipeCountElement || !saveCountElement) {
@@ -12,48 +12,45 @@ async function updateUserInfo() {
         return;
     }
 
-    const token = localStorage.getItem('token') || '';
+    const token  = localStorage.getItem('token')  || '';
     const userId = localStorage.getItem('userId') || '';
 
-    // Проверяем наличие токена и userId
+    // Если нет токена или userId — отправляем на вход
     if (!token || !userId) {
         console.error('Токен или userId отсутствует в localStorage');
-        redirectToSignIn();
-        return;
+        return redirectToSignIn();
     }
 
     try {
-        // Запрашиваем данные пользователя через API
-        const response = await fetchWithRetry(`${API_BASE_URL}/api/users/${userId}`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
+        // Запрашиваем данные конкретного пользователя
+        const response = await fetchWithRetry(
+            `${API_BASE_URL}/api/users/${userId}`,
+            { headers: { 'Authorization': `Bearer ${token}` } }
+        );
 
-        console.log('Ответ сервера на /users/:id:', response.status, await response.text());
+        // Если токен просрочен или невалиден
+        if (response.status === 401) {
+            return redirectToSignIn();
+        }
 
-        if (response.ok) {
-            const userData = await response.json();
-            console.log('Данные пользователя:', userData);
-
-            // Обновляем элементы на странице
-            usernameElement.textContent = userData.username || 'Не указано';
-            emailElement.textContent = userData.email || 'Не указано';
-            recipeCountElement.textContent = userData.recipeCount || 0;
-            saveCountElement.textContent = 0; // Временно, так как поле отсутствует в модели
-        } else {
+        if (!response.ok) {
             throw new Error(`Ошибка получения данных пользователя: ${response.status}`);
         }
+
+        // Теперь тело ответа точно JSON: { username, email, recipeCount }
+        const userData = await response.json();
+        console.log('Данные пользователя:', userData);
+
+        // Заполняем поля на странице
+        usernameElement.textContent    = userData.username    || 'Не указано';
+        emailElement.textContent       = userData.email       || 'Не указано';
+        recipeCountElement.textContent = userData.recipeCount || 0;
+        saveCountElement.textContent   = 0; // Пока «избранных» нет в модели, ставим 0
+
     } catch (err) {
         console.error('Ошибка при получении данных пользователя:', err.message);
-        if (err.message.includes('401')) {
-            // Если токен недействителен, перенаправляем на страницу входа
-            redirectToSignIn();
-        } else {
-            // Отображаем заглушки в случае ошибки
-            usernameElement.textContent = 'Ошибка';
-            emailElement.textContent = 'Ошибка';
-            recipeCountElement.textContent = '0';
-            saveCountElement.textContent = '0';
-        }
+        // Если нас послали «404» (нет такого пользователя) или другая ошибка — тоже отправим на вход
+        redirectToSignIn();
     }
 }
 
