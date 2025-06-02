@@ -82,6 +82,9 @@ loginForm.addEventListener('submit', async (e) => {
                     if (userData.email) {
                         localStorage.setItem('email', userData.email);
                     }
+                    if (typeof userData.recipeCount === 'number') {
+                        localStorage.setItem('recipeCount', userData.recipeCount.toString());
+                    }
                 } else {
                     console.warn('Не удалось получить username после логина, статус', userResp.status);
                 }

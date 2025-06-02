@@ -19,6 +19,7 @@ function immediatelyShowStoredInfo() {
   // Если при входе мы сохранили имя и email в localStorage, сразу их покажем:
   const storedName  = localStorage.getItem('username');
   const storedEmail = localStorage.getItem('email');
+  const storedRecipeCount = localStorage.getItem('recipeCount');
 
   if (storedName) {
     usernameElement.textContent = storedName;
@@ -27,8 +28,13 @@ function immediatelyShowStoredInfo() {
     emailElement.textContent = storedEmail;
   }
 
-  // Рецептов и «избранных» пока может не быть — оставим 0, пока не придут данные с сервера
-  recipeCountElement.textContent = '0';
+  if (storedRecipeCount !== null) {
+    recipeCountElement.textContent = storedRecipeCount;
+  } else {
+    recipeCountElement.textContent = '0';
+  }
+
+  // «избранных» пока нет — оставим 0
   saveCountElement.textContent   = '0';
 }
 
@@ -82,6 +88,9 @@ async function fetchAndUpdateUserInfo() {
     }
     if (userData.email) {
       localStorage.setItem('email', userData.email);
+    }
+    if (typeof userData.recipeCount === 'number') {
+      localStorage.setItem('recipeCount', userData.recipeCount.toString());
     }
   } catch (err) {
     console.error('Ошибка при получении данных пользователя:', err.message);
