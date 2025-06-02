@@ -65,7 +65,7 @@ loginForm.addEventListener('submit', async (e) => {
         console.log('Login data from server:', data);
 
         if (data.token) {
-            localStorage.setItem('token', data.token);
+            localStorage.setItem('token', data.token.trim());
             localStorage.setItem('userId', data.userId);
 
             // Логика определения isAdmin: используем значение из data.isAdmin

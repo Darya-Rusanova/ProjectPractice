@@ -4,6 +4,7 @@ const errorDiv = document.getElementById('error');
 
 async function fetchPendingRecipes() {
     const token = localStorage.getItem('token');
+    console.log('Token:', token);
     if (!token) {
         showNotification('Ошибка: Нет токена авторизации', 'error');
         return;
