@@ -68,8 +68,12 @@ loginForm.addEventListener('submit', async (e) => {
         if (data.token) {
             localStorage.setItem('token', data.token);
             localStorage.setItem('userId', data.userId);
-            localStorage.setItem('isAdmin', data.isAdmin.toString()); // Сохранение статуса админа
-
+            
+            // Логика определения isAdmin:
+            // - Если код не введён (adminCode пустой), устанавливаем isAdmin = false
+            // - Если код введён, используем значение из data.isAdmin
+            const isAdmin = adminCode ? data.isAdmin : false;
+            localStorage.setItem('isAdmin', isAdmin.toString());
 
             try {
                 const userResp = await fetchWithRetry(
