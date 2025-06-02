@@ -4,18 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Личный кабинет | ЧудоБлюдо (Админ)</title>
+
   <link href="css/theme.css" type="text/css" rel="stylesheet" media="screen">
   <link href="css/cabinet.css" type="text/css" rel="stylesheet" media="screen">
   <link rel="icon" href="images/functional/logo.png" type="image/png">
 </head>
 <body>
   <div class="container">
+
     <div class="start">
+
       <div class="header">
         <a href="index.html">
           <div class="theme-bg"></div>
         </a>
       </div>
+
       <div class="theme-switcher-wrapper">
         <button id="theme-toggle" class="theme-toggle">
           <span class="sun">
@@ -26,19 +30,22 @@
           </span>
         </button>
       </div>
+
       <div class="user">
         <div class="user-bg"></div>
         <div class="user-content">
-          <h3>Личный кабинет (Админ)</h3>
+          <h3>Мой профиль (Админ)</h3>
           <p>Пользовательское имя:</p> 
           <span id="username"></span>
           <p>Почта: </p>
           <span id="email"></span>
         </div>
       </div>
+
       <div class="exit">
         <div class="exit-bg" onclick="window.exit.showModal()"></div>
       </div>
+
       <dialog id="exit" class="exit-dialog">
         <div class="dialog-content">
           <h4>Выйти из личного кабинета?</h4>
@@ -48,10 +55,12 @@
           </div>
         </div>
       </dialog>
+
       <div class="navigation">
         <div class="dropdown" id="dropdown1">
           <a href="pendingRecipes.html" class="dropbtn">На рассмотрении</a>
         </div>
+
         <div class="dropdown" id="dropdown2">
           <a href="publishedRecipes.html" class="dropbtn">Опубликованные рецепты</a>
         </div>
@@ -59,10 +68,14 @@
     </div>
     <div class="information">
       <div class="main-text">
-        <p id="head">ЛИЧНЫЙ КАБИНЕТ АДМИНИСТРАТОРА</p>
+        <p id="head">ЛИЧНЫЙ КАБИНЕТ</p>
+        <p id="body">Добро пожаловать в личный кабинет администратора!</p>
+        <p id="inf">Здесь вы можете управлять рецептами</p>
       </div>
     </div>
+
     <div id="error" class="error-notification" aria-live="polite"></div>
+    
     <div class="footer">
       <div class="col1">
         <a href="navigation/calendars.html">
