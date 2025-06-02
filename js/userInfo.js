@@ -46,6 +46,7 @@ async function fetchAndUpdateUserInfo() {
 
   if (!usernameElement || !emailElement || !recipeCountElement || !saveCountElement) {
     // Если этих элементов нет, ничего не делаем
+    console.error('Элементы для отображения информации о пользователе не найдены');
     return;
   }
 
@@ -54,7 +55,10 @@ async function fetchAndUpdateUserInfo() {
 
   if (!token || !userId) {
     // Если нет сессии, перенаправляем на страницу входа
-    return redirectToSignIn();
+    if (redirectOnError) {
+      redirectToSignIn();
+    }
+    return false;
   }
 
   try {
@@ -97,6 +101,7 @@ async function fetchAndUpdateUserInfo() {
       localStorage.setItem('recipeCount', userData.recipeCount.toString());
       console.log(`Обновлено recipeCount в localStorage: ${userData.recipeCount}`);
     }
+    return true; // Явно возвращаем true при успехе
   } catch (err) {
     console.error('Ошибка при получении данных пользователя:', err.message);
     // Любая другая ошибка — стереть сессию и увести на вход
