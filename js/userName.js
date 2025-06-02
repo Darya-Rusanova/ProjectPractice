@@ -1,65 +1,88 @@
 const lkAnchor = document.getElementById('lk');
 const lkText   = document.getElementById('lk-text');
 
-function updateUserName() {
-  if (!lkAnchor || !lkText) {
-    console.log('Элементы lk или lk-text не найдены, пропускаем');
+// Функция, которая «сразу» пробует взять имя из localStorage
+function immediatelyShowStoredName() {
+  if (!lkAnchor || !lkText) return;
+
+  const stored = localStorage.getItem('username');
+  if (stored) {
+    lkText.textContent = stored;
+    lkAnchor.href = '/kabinet.html';
+  } else {
+    lkText.textContent = 'Личный кабинет';
+    lkAnchor.href = '/signIn.html';
+  }
+}
+
+// Основная функция, которая проверяет с сервером и обновляет при необходимости
+async function fetchAndUpdateName() {
+  if (!lkAnchor || !lkText) return;
+
+  const token  = localStorage.getItem('token')  || '';
+  const userId = localStorage.getItem('userId') || '';
+  if (!token || !userId) {
+    // Если (после проверки сессии) токена или userId нет — сбрасываем уже показанное имя
+    lkText.textContent = 'Личный кабинет';
+    lkAnchor.href = '/signIn.html';
     return;
   }
 
-  checkAuthAndGetUsername().then(username => {
-    if (username) {
-      lkText.textContent = username;
-      lkAnchor.href = '/kabinet.html';
-    } else {
-      lkText.textContent = 'Личный кабинет';
-      lkAnchor.href = '/signIn.html';
-    }
-  });
-}
-
-document.addEventListener('DOMContentLoaded', updateUserName);
-window.addEventListener('authStateChanged', updateUserName);
-
-async function checkAuthAndGetUsername() {
-  const token  = localStorage.getItem('token')  || '';
-  const userId = localStorage.getItem('userId') || '';
-
-  if (!token || !userId) {
-    console.log('Токен или userId отсутствует');
-    return null;
-  }
-
   try {
-    // Сразу запрашиваем данные пользователя
+    // Запрашиваем данные пользователя
     const userResp = await fetchWithRetry(
       `${API_BASE_URL}/api/users/${userId}`, 
       { headers: { 'Authorization': `Bearer ${token}` } }
     );
 
     if (userResp.status === 401) {
-      // Токен невалиден или просрочен
+      // Токен невалиден или просрочен → вылетаем из сессии
       localStorage.removeItem('token');
       localStorage.removeItem('userId');
+      localStorage.removeItem('username');
       window.dispatchEvent(new Event('authStateChanged'));
-      return null;
+
+      // Обновляем ссылку/текст
+      lkText.textContent = 'Личный кабинет';
+      lkAnchor.href = '/signIn.html';
+      return;
     }
 
     if (!userResp.ok) {
       console.error('Не удалось получить данные пользователя, статус', userResp.status);
-      return null;
+      return;
     }
 
     const userData = await userResp.json();
-    return userData.username || null;
+    if (userData.username) {
+      // Обновляем на кнопке
+      lkText.textContent = userData.username;
+      lkAnchor.href = '/kabinet.html';
 
+      // И «свежим» именем перезаписываем localStorage
+      localStorage.setItem('username', userData.username);
+    }
   } catch (err) {
-    console.error('Ошибка при checkAuthAndGetUsername:', err.message);
+    console.error('Ошибка при fetchAndUpdateName:', err.message);
     if (err.message.includes('401')) {
       localStorage.removeItem('token');
       localStorage.removeItem('userId');
+      localStorage.removeItem('username');
       window.dispatchEvent(new Event('authStateChanged'));
+      lkText.textContent = 'Личный кабинет';
+      lkAnchor.href = '/signIn.html';
     }
-    return null;
   }
 }
+
+// При загрузке сразу показываем то, что в localStorage, и потом проверяем на сервере
+document.addEventListener('DOMContentLoaded', () => {
+  immediatelyShowStoredName();
+  fetchAndUpdateName();
+});
+
+// Если где-то вызвали событие «authStateChanged», тоже обновляем
+window.addEventListener('authStateChanged', () => {
+  immediatelyShowStoredName();
+  fetchAndUpdateName();
+});

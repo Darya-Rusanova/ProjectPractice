@@ -67,6 +67,28 @@ loginForm.addEventListener('submit', async (e) => {
         if (data.token) {
             localStorage.setItem('token', data.token);
             localStorage.setItem('userId', data.userId);
+
+
+            try {
+                const userResp = await fetchWithRetry(
+                    `${API_BASE_URL}/api/users/${data.userId}`, 
+                    { headers: { 'Authorization': `Bearer ${data.token}` } }
+                );
+                if (userResp.ok) {
+                    const userData = await userResp.json();
+                    if (userData.username) {
+                        localStorage.setItem('username', userData.username);
+                    }
+                } else {
+                    console.warn('Не удалось получить username после логина, статус', userResp.status);
+                }
+            } catch (e) {
+                console.warn('Ошибка при запросе имени пользователя после логина:', e);
+            }
+
+
+
+
             // errorDiv.textContent = '';
             showNotification('Успешный вход!', 'success');
             // window.location.href = 'kabinet.html';
