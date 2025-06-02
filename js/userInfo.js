@@ -58,6 +58,7 @@ async function fetchAndUpdateUserInfo() {
   }
 
   try {
+    console.log('Запрос данных пользователя...');
     // Запрашиваем базовую информацию о пользователе (username, email, recipeCount)
     const userResp = await fetchWithRetry(
       `${API_BASE_URL}/api/users/${userId}`,
@@ -65,8 +66,10 @@ async function fetchAndUpdateUserInfo() {
     );
 
     if (userResp.status === 401) {
-      // Токен просрочен/некорректен
-      return redirectToSignIn();
+      if (redirectOnError) {
+        redirectToSignIn();
+      }
+      return false;
     }
 
     if (!userResp.ok) {
@@ -75,6 +78,7 @@ async function fetchAndUpdateUserInfo() {
 
     // В ответе ожидаем { username, email, recipeCount }
     const userData = await userResp.json();
+    console.log('Данные пользователя получены:', userData);
 
     // Обновляем на странице
     usernameElement.textContent    = userData.username    || 'Не указано';
@@ -91,11 +95,15 @@ async function fetchAndUpdateUserInfo() {
     }
     if (typeof userData.recipeCount === 'number') {
       localStorage.setItem('recipeCount', userData.recipeCount.toString());
+      console.log(`Обновлено recipeCount в localStorage: ${userData.recipeCount}`);
     }
   } catch (err) {
     console.error('Ошибка при получении данных пользователя:', err.message);
     // Любая другая ошибка — стереть сессию и увести на вход
-    redirectToSignIn();
+    if (redirectOnError) {
+      redirectToSignIn();
+    }
+    return false;
   }
 }
 
@@ -104,6 +112,7 @@ function redirectToSignIn() {
   localStorage.removeItem('userId');
   localStorage.removeItem('username');
   localStorage.removeItem('email');
+  localStorage.removeItem('recipeCount'); // Очищаем recipeCount
   window.dispatchEvent(new Event('authStateChanged'));
   window.location.href = 'signIn.html';
 }

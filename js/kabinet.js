@@ -535,8 +535,12 @@ async function fetchRecipes() {
                             showNotification('Рецепт удалён!', 'success');
                             deleteDialog.close(); // Закрываем модальное окно
                             fetchRecipes(); // Обновляем список рецептов
-                            await fetchAndUpdateUserInfo(); // Обновляем информацию о пользователе
-                        } catch (err) {
+
+                            // Очищаем recipeCount перед обновлением
+                            localStorage.removeItem('recipeCount');
+                            console.log('recipeCount очищен перед обновлением');
+                            const updated = await fetchAndUpdateUserInfo({ redirectOnError: false });
+                            console.log('Обновление userInfo после удаления:', updated ? 'Успешно' : 'Не удалось');                        } catch (err) {
                             // errorDiv.textContent = 'Ошибка удаления: ' + err.message;
                             showNotification('Ошибка удаления: ' + err.message, 'error');
                         }
@@ -763,7 +767,12 @@ recipeForm.addEventListener('submit', async (e) => {
             // errorDiv.textContent = 'Рецепт добавлен!';
             showNotification('Рецепт добавлен!', 'success');
             fetchRecipes();
-            await fetchAndUpdateUserInfo(); // Обновляем информацию о пользователе
+            
+            // Очищаем recipeCount перед обновлением
+            localStorage.removeItem('recipeCount');
+            console.log('recipeCount очищен перед обновлением');
+            const updated = await fetchAndUpdateUserInfo({ redirectOnError: false });
+            console.log('Обновление userInfo после добавления:', updated ? 'Успешно' : 'Не удалось');
         } else {
             // errorDiv.textContent = data.message || 'Ошибка добавления рецепта';
             showNotification(data.message || 'Ошибка добавления рецепта', 'error');
