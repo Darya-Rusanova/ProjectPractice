@@ -487,6 +487,17 @@ async function fetchRecipes() {
                     imageDiv.innerHTML = '<div class="no-image">Нет изображения</div>';
                 }
                 
+                const st = recipe.status;
+                const stat = '';
+                if(st === 'pending') {
+                    stat = 'на рассмотрении...';
+                }
+                if(st === 'published') {
+                    stat = 'опубликован.';
+                } else {
+                    stat = 'на рассмотрении...';
+                }
+
                 // Информация справа
                 const infoDiv = document.createElement('div');
                 infoDiv.className = 'recipe-info';
@@ -497,7 +508,7 @@ async function fetchRecipes() {
                         <li>${recipe.cookingTime} минут</li>
                         <li>${recipe.ingredients.length} ингредиентов</li>
                     </ul>
-                    <p class="status">Статус: ${recipe.status || 'На рассмотрении'}</p>
+                    <p class="status">Статус: ${stat}</p>
                 `;
                 
                 // Собираем содержимое
