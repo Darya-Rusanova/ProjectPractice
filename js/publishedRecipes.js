@@ -90,7 +90,7 @@ async function displayPublishedRecipes(recipes) {
                 </div>
             </div>
             <div class="recipe-buttons">
-                <button onclick="editRecipe('${recipe._id}')" disabled>Редактировать</button>
+                <button class="edit" onclick="editRecipe('${recipe._id}')">Редактировать</button>
                 <button class="delete-btn" data-id="${recipe._id}">Удалить</button>
             </div>
         `;
