@@ -75,7 +75,7 @@
             <p id="inf">Здесь вы можете управлять своими рецептами и сохранять любимые блюда</p>
         </div>
     </div>
-
+      <div id="error" class="error-notification" aria-live="polite"></div>
     <div id="cabinet-section" class="cabinet-section section">
 
       <dialog id="delete">
@@ -176,7 +176,7 @@
 
         </div>
       </div>
-      <div id="error" class="error-notification" aria-live="polite"></div>
+
       <dialog id="addDialog">
       <div id="add-recipe-section" class="section">
         <h3>Добавить новый рецепт</h3>
@@ -201,6 +201,27 @@
           <label class="half-width">Время приготовления (мин): <input type="number" id="recipe-cooking-time" min="1" max="100000" required></label>
           </div>
           <div id="ingredients-container">
+            <div class="ingredient">
+              <label>Ингредиент: <input type="text" class="ingredient-name" maxlength="50" required></label>
+              <label class="quantity-label">Количество:
+                <div class="quantity-wrapper">
+                  <input type="text" class="quantity-input" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required>
+                  <select class="type-unit" required>
+                    <option value="г">г</option>
+                    <option value="кг">кг</option>
+                    <option value="мл">мл</option>
+                    <option value="л">л</option>
+                    <option value="шт">шт.</option>
+                    <option value="ст">ст.</option>
+                    <option value="стл">ст.л.</option>
+                    <option value="чл">ч.л.</option>
+                    <option value="пв">по вкусу</option>
+                  </select>
+                </div>
+              </label>
+              <button type="button" class="remove-btn remove-ingredient-btn">Удалить ингредиент</button>
+            </div>
+
             <div class="ingredient">
               <label>Ингредиент: <input type="text" class="ingredient-name" maxlength="50" required></label>
               <label class="quantity-label">Количество:
@@ -270,7 +291,32 @@
         </div>
   </div>
 </div>
-
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+  // Получаем элементы
+  const recipesBtn = document.querySelector('#dropdown1 .dropbtn');
+  const recipesSection = document.getElementById('recipes-section');
+  const favoritesBtn = document.querySelector('#dropdown2 .dropbtn');
+  
+  // Обработчик для кнопки "Ваши рецепты"
+  recipesBtn.addEventListener('click', function() {
+    // Активируем секцию рецептов
+    recipesSection.classList.add('active');
+    
+    // Здесь можно добавить загрузку рецептов, если нужно
+    // loadUserRecipes();
+  });
+  
+  // Обработчик для кнопки "Избранные рецепты"
+  favoritesBtn.addEventListener('click', function() {
+    // Скрываем секцию рецептов
+    recipesSection.classList.remove('active');
+    
+    // Здесь можно добавить загрузку избранных рецептов
+    // loadFavoriteRecipes();
+  });
+});
+</script>
   <script src="js/theme.js" type="text/javascript" defer></script>
 </body>
 </html>
