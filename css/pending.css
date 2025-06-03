@@ -1,3 +1,24 @@
+:root {
+    --color-primary-a120: #79c27c;
+    --color-primary-a130: #569b58;
+
+}
+[data-theme="dark"] {  
+    --color-primary-a120: #1b5e20;
+    --color-primary-a130: #144718;
+}
+
+.recipe-info {
+  width: 90%;
+  grid-area: description;
+  font-size: 14px;
+  text-align: justify;
+}
+
+.recipe-info h4{
+    font-size: 16px;
+    text-align: center;
+}
 .recipe-buttons > *{
     width: 140px;
     height: 45px;
@@ -29,14 +50,23 @@
     width: 200px;
 
 }
+.edit:hover{
+    background-color: var(--color-primary-a50);
+}
 .accept{
     grid-area: btn2;
-    background-color: #2e7d32;
-    color: white;
+    background-color: var(--color-primary-a120);
+    color: var(--color-primary-a90);
+}
+.accept:hover{
+    background-color: var(--color-primary-a130);
 }
 .cancel{
     grid-area: btn1;
     background-color: var(--color-primary-a100);
+}
+.cancel:hover{
+    background-color: var(--color-primary-a110);
 }
 @media (min-width:1300px){
     #pendingRecipesList {
@@ -49,7 +79,7 @@
         cursor: pointer;
         display: grid;
         place-items:center;
-        grid-template-columns: 60% 40%;
+        grid-template-columns: 50% 50%;
         grid-template-rows: 250px;
         grid-template-areas:
             "img description"
