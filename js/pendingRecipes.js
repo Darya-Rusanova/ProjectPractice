@@ -92,12 +92,17 @@ async function displayPendingRecipes(recipes) {
                     </div>
                     <div class="recipe-buttons">
                         <button class="accept" onclick="approveRecipe('${recipe._id}')">Одобрить</button>
-                        <button class="edit" onclick="editRecipe('${recipe._id}')" >Редактировать</button>
+                        <button class="edit return">Редактировать</button>
                         <button class="cancel" onclick="rejectRecipe('${recipe._id}')">Отклонить</button>
                     </div>
                  </a>
         `;
         pendingRecipesList.appendChild(recipeDiv);
+
+        const editButton = recipeDiv.querySelector('.edit');
+        editButton.addEventListener('click', () => {
+            editRecipe(recipe._id, fetchPendingRecipes);
+        });
     }
 }
 

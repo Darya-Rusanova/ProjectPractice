@@ -83,8 +83,83 @@
 
     <div id="pending-recipes-section" class="section">
       <div id="pendingRecipesList">
-       
       </div>
+
+      <dialog id="editDialog"> 
+      <div id="edit-recipe-section" class="section">
+        <h3>Редактировать рецепт</h3>
+        <form id="edit-recipe-form">
+          <label>Название: <input type="text" id="edit-recipe-title" maxlength="50" required></label>
+          <label>Категории (выберите хотя бы одну):</label>
+          <div id="edit-recipe-categories" class="category-buttons">
+            <button type="button" class="category-btn" data-category="Завтрак">Завтрак</button>
+            <button type="button" class="category-btn" data-category="Обед">Обед</button>
+            <button type="button" class="category-btn" data-category="Ужин">Ужин</button>
+            <button type="button" class="category-btn" data-category="Китайская кухня">Китайская кухня</button>
+            <button type="button" class="category-btn" data-category="Итальянская кухня">Итальянская кухня</button>
+            <button type="button" class="category-btn" data-category="Русская кухня">Русская кухня</button>
+            <button type="button" class="category-btn" data-category="Горячее блюдо">Горячее блюдо</button>
+            <button type="button" class="category-btn" data-category="Закуски">Закуски</button>
+            <button type="button" class="category-btn" data-category="Десерт">Десерт</button>
+            <button type="button" class="category-btn" data-category="Напитки">Напитки</button>
+          </div>
+          <label>Описание: <textarea id="edit-recipe-description" maxlength="1000" required></textarea></label>
+          <div class="form-row">
+            <label class="half-width">Количество порций: <input type="number" id="edit-recipe-servings" min="1" max="100" required></label>
+            <label class="half-width">Время приготовления (мин): <input type="number" id="edit-recipe-cooking-time" min="1" max="100000" required></label>
+          </div>
+          <div id="edit-ingredients-container">
+            <div class="ingredient">
+              <label>Ингредиент: <input type="text" class="ingredient-name" maxlength="50" required></label>
+              <label class="quantity-label">Количество:
+                <div class="quantity-wrapper">
+                  <input type="text" class="quantity-input" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required>
+                  <select class="type-unit" required>
+                    <option value="г">г</option>
+                    <option value="кг">кг</option>
+                    <option value="мл">мл</option>
+                    <option value="л">л</option>
+                    <option value="шт">шт.</option>
+                    <option value="ст">ст.</option>
+                    <option value="стл">ст.л.</option>
+                    <option value="чл">ч.л.</option>
+                    <option value="пв">по вкусу</option>
+                  </select>
+                </div>
+              </label>
+              <button type="button" class="remove-btn remove-ingredient-btn">Удалить ингредиент</button>
+            </div>
+          </div>
+          <button type="button" id="edit-add-ingredient-btn">Добавить ингредиент</button>
+          <label>Изображение: 
+            <input type="file" id="edit-recipe-image" name="recipeImage" accept="image/jpeg,image/png">
+          </label>
+          <div class="image-controls">
+            <div id="edit-recipe-image-preview" class="image-preview"></div>
+            <button type="button" id="edit-remove-recipe-image-btn" class="remove-btn" style="display: none;">Удалить изображение</button>
+          </div>
+          <div id="edit-steps-container">
+            <div class="step">
+              <label for="edit-step-description-1">Шаг 1 (описание): <textarea id="edit-step-description-1" class="step-description" rows="4" maxlength="1000" required></textarea></label>
+              <label>Изображение шага: 
+                <input type="file" class="step-image" name="step-image" accept="image/jpeg,image/png">
+              </label>
+              <div class="image-controls">
+                <div class="step-image-preview"></div>
+                <button type="button" class="remove-btn remove-step-image-btn" style="display: none;">Удалить изображение</button>
+              </div>
+              <button type="button" class="remove-btn remove-step-btn">Удалить шаг</button>
+            </div>
+          </div>
+          <button type="button" id="edit-add-step-btn">Добавить шаг</button>
+          <div class="buttons">
+            <button type="button" id="edit-cancel-btn" onclick="window.editDialog.close()">Отменить</button>
+            <button type="submit" id="edit-save-btn">Сохранить</button>
+          </div>
+        </form>
+      </div>
+    </dialog>
+
     </div>
     
     <div class="footer">

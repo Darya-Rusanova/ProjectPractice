@@ -95,12 +95,17 @@ async function displayPublishedRecipes(recipes) {
                     </div>
                 </div>
                 <div class="recipe-buttons2">
-                    <button class="return" onclick="editRecipe('${recipe._id}')">Редактировать</button>
+                    <button class="return">Редактировать</button>
                     <button class="delete-btn cancel" data-id="${recipe._id}">Удалить</button>
                 </div>
             </a>
         `;
         publishedRecipesList.appendChild(recipeDiv);
+
+        const editButton = recipeDiv.querySelector('.edit');
+        editButton.addEventListener('click', () => {
+            editRecipe(recipe._id, fetchPublishedRecipes);
+        });
 
         // Добавляем слушатель события для кнопки "Удалить"
         const deleteButton = recipeDiv.querySelector('.delete-btn');
