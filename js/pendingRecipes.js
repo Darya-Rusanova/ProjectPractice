@@ -2,12 +2,6 @@ const pendingRecipesList = document.getElementById('pendingRecipesList');
 const logoutButton = document.getElementById('adminLogout');
 const errorDiv = document.getElementById('error');
 
-const statusMap = {
-    pending: 'на рассмотрении',
-    published: 'опубликовано',
-    rejected: 'отклонено'
-};
-
 async function fetchPendingRecipes() {
     const token = localStorage.getItem('token');
     console.log('Token from localStorage:', token);
@@ -83,9 +77,9 @@ async function displayPendingRecipes(recipes) {
         recipeDiv.className = 'recipe-card';
         recipeDiv.innerHTML = `
             <h4>${recipe.title}</h4>
-            <p>Статус: ${statusMap[recipe.status] || recipe.status}</p>
             <p>Автор: ${authorName}</p>
             <button onclick="approveRecipe('${recipe._id}')">Одобрить</button>
+            <button onclick="editRecipe('${recipe._id}')" disabled>Редактировать</button>
             <button onclick="rejectRecipe('${recipe._id}')">Отклонить</button>
         `;
         pendingRecipesList.appendChild(recipeDiv);

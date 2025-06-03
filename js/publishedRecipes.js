@@ -2,12 +2,6 @@ const publishedRecipesList = document.getElementById('publishedRecipesList');
 const logoutButton = document.getElementById('adminLogout');
 const errorDiv = document.getElementById('error');
 
-const statusMap = {
-    pending: 'на рассмотрении',
-    published: 'опубликовано',
-    rejected: 'отклонено'
-};
-
 async function fetchPublishedRecipes() {
     const token = localStorage.getItem('token');
     console.log('Token from localStorage:', token);
@@ -87,8 +81,9 @@ async function displayPublishedRecipes(recipes) {
         recipeDiv.className = 'recipe-card';
         recipeDiv.innerHTML = `
             <h4>${recipe.title}</h4>
-            <p>Статус: ${statusMap[recipe.status] || recipe.status}</p>
             <p>Автор: ${authorName}</p>
+            <button onclick="editRecipe('${recipe._id}')" disabled>Редактировать</button>
+            <button onclick="deleteRecipe('${recipe._id}')" disabled>Удалить</button>
         `;
         publishedRecipesList.appendChild(recipeDiv);
     });
