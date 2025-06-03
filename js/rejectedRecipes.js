@@ -41,7 +41,7 @@ async function fetchRejectedRecipes() {
         }
         if (!response.ok) throw new Error('Не удалось загрузить отклонённые рецепты');
         const recipes = await response.json();
-        console.log('Recipes received:', recipes);
+        console.log('Recipes received structure:', recipes.map(r => ({ _id: r._id, author: r.author, title: r.title })));
         displayRejectedRecipes(recipes);
     } catch (err) {
         console.error('Fetch error:', err.message);
@@ -51,11 +51,16 @@ async function fetchRejectedRecipes() {
 
 async function getAuthorName(authorId, token) {
     try {
+        console.log(`Fetching author data for ID: ${authorId}`);
         const response = await fetch(`${API_BASE_URL}/api/users/${authorId}`, {
             headers: { 'Authorization': `Bearer ${token.trim()}` }
         });
-        if (!response.ok) throw new Error('Не удалось получить данные автора');
+        if (!response.ok) {
+            console.log(`Author request failed for ID ${authorId}, status: ${response.status}`);
+            throw new Error('Не удалось получить данные автора');
+        }
         const userData = await response.json();
+        console.log(`Author data for ID ${authorId}:`, userData);
         return userData.username || 'Неизвестный автор';
     } catch (err) {
         console.error(`Error fetching author ${authorId}:`, err.message);
@@ -70,14 +75,11 @@ async function displayRejectedRecipes(recipes) {
         rejectedRecipesList.innerHTML = '<p>Нет отклонённых рецептов.</p>';
         return;
     }
+    const token = localStorage.getItem('token');
 
-    // Собираем все запросы для авторов
-    const authorPromises = recipes.map(recipe => getAuthorName(recipe.author, token));
-    const authorNames = await Promise.all(authorPromises);
-
-
-    recipes.forEach(recipe => {
-        const authorName = authorNames[index] || 'Неизвестный автор';
+    // Обрабатываем каждый рецепт асинхронно
+    for (const recipe of recipes) {
+        const authorName = await getAuthorName(recipe.author, token);
         const recipeDiv = document.createElement('div');
         recipeDiv.className = 'recipe-card';
         recipeDiv.innerHTML = `
@@ -87,7 +89,7 @@ async function displayRejectedRecipes(recipes) {
             <button onclick="reconsiderRecipe('${recipe._id}')">Вернуть на рассмотрение</button>
         `;
         rejectedRecipesList.appendChild(recipeDiv);
-    });
+    }
 }
 
 async function reconsiderRecipe(recipeId) {

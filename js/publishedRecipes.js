@@ -51,11 +51,16 @@ async function fetchPublishedRecipes() {
 
 async function getAuthorName(authorId, token) {
     try {
+        console.log(`Fetching author data for ID: ${authorId}`);
         const response = await fetch(`${API_BASE_URL}/api/users/${authorId}`, {
             headers: { 'Authorization': `Bearer ${token.trim()}` }
         });
-        if (!response.ok) throw new Error('Не удалось получить данные автора');
+        if (!response.ok) {
+            console.log(`Author request failed for ID ${authorId}, status: ${response.status}`);
+            throw new Error('Не удалось получить данные автора');
+        }
         const userData = await response.json();
+        console.log(`Author data for ID ${authorId}:`, userData);
         return userData.username || 'Неизвестный автор';
     } catch (err) {
         console.error(`Error fetching author ${authorId}:`, err.message);
