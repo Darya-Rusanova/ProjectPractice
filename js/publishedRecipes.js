@@ -94,9 +94,9 @@ async function displayPublishedRecipes(recipes) {
                         <p>Автор: ${authorName}</p>
                     </div>
                 </div>
-                <div class="recipe-buttons two">
-                    <button class="edit return" onclick="editRecipe('${recipe._id}')">Редактировать</button>
-                    <button class="delete-btn cancel delete" data-id="${recipe._id}">Удалить</button>
+                <div class="recipe-buttons2">
+                    <button class="return" onclick="editRecipe('${recipe._id}')">Редактировать</button>
+                    <button class="delete-btn cancel" data-id="${recipe._id}">Удалить</button>
                 </div>
             </a>
         `;

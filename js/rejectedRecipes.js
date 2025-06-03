@@ -92,8 +92,8 @@ async function displayRejectedRecipes(recipes) {
                     </div>
                 </div>
                 <div class="recipe-buttons two">
-                    <button class="edit return" onclick="reconsiderRecipe('${recipe._id}')">Вернуть на рассмотрение</button>
-                    <button class="delete-btn cancel delete" data-id="${recipe._id}">Удалить</button>
+                    <button class="return" onclick="reconsiderRecipe('${recipe._id}')">Вернуть на рассмотрение</button>
+                    <button class="delete-btn cancel" data-id="${recipe._id}">Удалить</button>
                 </div>
             </a>
         `;

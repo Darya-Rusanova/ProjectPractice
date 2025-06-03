@@ -19,7 +19,7 @@
     font-size: 16px;
     text-align: center;
 }
-.recipe-buttons > *{
+.recipe-buttons > *, .recipe-buttons2 > *{
     width: 140px;
     height: 45px;
     font-size: 16px;
@@ -44,7 +44,7 @@
         "btn3 btn3"
 }
 /*published rejected*/
-.two{
+.recipe-buttons2{
     margin: 0 auto;
     display: grid;
     gap: 10px;
@@ -53,13 +53,10 @@
     grid-template-areas:
         "btn1 btn2"
 }
-.two > *{
-    width: 160px;
+.recipe-buttons2 > *{
+    width: 170px;
 }
 .return{
-    grid-area: btn1;
-}
-.delete{
     grid-area: btn2;
 }
 
@@ -70,7 +67,7 @@
     width: 200px;
 
 }
-.edit:hover{
+.edit:hover, .return:hover{
     background-color: var(--color-primary-a50);
 }
 .accept{

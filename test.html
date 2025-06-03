@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Рецепты на рассмотрении | ЧудоБлюдо</title>
+  <title>Опубликованные рецепты | ЧудоБлюдо</title>
 
   <link href="css/theme.css" type="text/css" rel="stylesheet" media="screen">
   <link href="css/cabinet.css" type="text/css" rel="stylesheet" media="screen">
@@ -59,13 +59,13 @@
 
       <div class="navigation2">
         <div class="dropdown" id="dropdown1">
-          <a href="javascript:void(0)" class="dropbtn2">Рецепты на рассмотрении</a>
+          <a href="pendingRecipes.html" class="dropbtn2">Рецепты на рассмотрении</a>
         </div>
 
         <div class="dropdown" id="dropdown2">
-          <a href="publishedRecipes.html" class="dropbtn2">Опубликованные рецепты</a>
+          <a href="javascript:void(0)" class="dropbtn2">Опубликованные рецепты</a>
         </div>
-
+        
         <div class="dropdown" id="dropdown3">
           <a href="rejectedRecipes.html" class="dropbtn2">Отклоненные рецепты</a>
         </div>
@@ -73,20 +73,33 @@
     </div>
     <div class="information">
       <div class="main-text">
-        <p id="head">РЕЦЕПТЫ НА РАССМОТРЕНИИ</p>
+        <p id="head">ОПУБЛИКОВАННЫЕ РЕЦЕПТЫ</p>
         <p id="body">Добро пожаловать!</p>
-        <p id="inf">Здесь вы можете одобрять или отклонять рецепты</p>
+        <p id="inf">Здесь вы можете управлять опубликованными рецептами</p>
       </div>
     </div>
 
     <div id="error" class="error-notification" aria-live="polite"></div>
 
-    <div id="pending-recipes-section" class="section">
-      <div id="pendingRecipesList">
-        <p></p>
-        <p>Нет рецептов на рассмотрение</p>
-        <p></p>
-       
+    <div id="published-recipes-section" class="section">
+      <div id="publishedRecipesList">
+        <div class="recipe-card">
+           <a href="#" class="recipe-link">
+                <div class="recipe-content">
+                    <div class="recipe-image">
+                        <img src="images/bg-dark.jpg" alt="${recipe.title}" /> 
+                    </div>
+                    <div class="recipe-info">
+                        <h4>${recipe.title}</h4>
+                        <p>Автор: ${authorName}</p>
+                    </div>
+                </div>
+                <div class="recipe-buttons2">
+                    <button class="return" onclick="editRecipe('${recipe._id}')">Редактировать</button>
+                    <button class="delete-btn cancel" data-id="${recipe._id}">Удалить</button>
+                </div>
+            </a>
+        </div>
       </div>
     </div>
     
