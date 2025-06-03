@@ -65,6 +65,11 @@
             grid-template-areas:
                 "btn1 btn2 btn3"
     }
+    .dropdown {
+      width: 270px;
+      font-size: 16px;
+      text-align: center;
+    }
     .user-content{
         right: -140px;
         width: 300px;
@@ -111,7 +116,7 @@
     .start{
         grid-area: start;
         display:grid;
-        grid-template-columns: 40% 40% 10% 10%;
+        grid-template-columns: 35% 45% 10% 10%;
         grid-template-rows: 100px 200px;
         grid-template-areas:
             "header user exit theme"
@@ -131,12 +136,21 @@
         margin: 0 auto;
         grid-area: navigation;
         display: grid;
-        grid-template-columns: 100%;
-        grid-template-rows: 100px 100px 100px;
+        gap: 20px;
+        grid-template-columns: 50% 50%;
+        grid-template-rows: 100px 100px;
         grid-template-areas:
-            "btn1"
-            "btn2"
-            "btn3"
+            "btn1 btn2"
+            "btn3 btn3"
+    }
+    #dropdown3{
+      margin: 0 auto;
+      margin-top: -10px;
+    }
+    .dropdown {
+      width: 260px;
+      font-size: 16px;
+      text-align: center;
     }
     .user-content{
         right: -140px;
@@ -208,6 +222,11 @@
                 "btn1"
                 "btn2"
                 "btn3"
+    }
+    .dropdown {
+      width: 300px;
+      font-size: 16px;
+      text-align: center;
     }
     .user-content{
         right: -140px;
@@ -385,8 +404,6 @@ body {
 }
 .dropbtn2{
     display: block;    
-    width: 200px;
-    font-size: 20px;
     background-color: var(--color-primary-a30);
     color: var(--color-primary-a90);
     padding: 20px;

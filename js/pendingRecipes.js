@@ -79,7 +79,7 @@ async function displayPendingRecipes(recipes) {
             <h4>${recipe.title}</h4>
             <p>Автор: ${authorName}</p>
             <button onclick="approveRecipe('${recipe._id}')">Одобрить</button>
-            <button onclick="editRecipe('${recipe._id}')" disabled>Редактировать</button>
+            <button onclick="editRecipe('${recipe._id}')">Редактировать</button>
             <button onclick="rejectRecipe('${recipe._id}')">Отклонить</button>
         `;
         pendingRecipesList.appendChild(recipeDiv);
