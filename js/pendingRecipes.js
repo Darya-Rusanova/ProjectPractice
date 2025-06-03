@@ -75,22 +75,24 @@ async function displayPendingRecipes(recipes) {
         const authorName = await getAuthorName(recipe.author, token);
         const recipeDiv = document.createElement('div');
         recipeDiv.className = 'recipe-card';
-        recipeDiv.innerHTML = `
+        recipeDiv.innerHTML = `  
             <a href="#" class="recipe-link">
-            <div class="recipe-content">
-                <div class="recipe-image">
-                    ${recipe.image ? `<img src="${recipe.image}" alt="${recipe.title}" />` : '<div class="no-image">Нет изображения</div>'}
-                </div>
-                <div class="recipe-info">
-                    <h4>${recipe.title}</h4>
-                    <p>Автор: ${authorName}</p>
-                </div>
-            </div>
-            <div class="recipe-buttons">
-                <button onclick="approveRecipe('${recipe._id}')">Одобрить</button>
-                <button onclick="editRecipe('${recipe._id}')" disabled>Редактировать</button>
-                <button onclick="rejectRecipe('${recipe._id}')">Отклонить</button>
-            </div>
+                <div class="recipe">
+                    <div class="recipe-content">
+                        <div class="recipe-image">
+                            ${recipe.image ? `<img src="${recipe.image}" alt="${recipe.title}" />` : '<div class="no-image">Нет изображения</div>'}
+                        </div>
+                        <div class="recipe-info">
+                            <h4>${recipe.title}</h4>
+                            <p>Автор: ${authorName}</p>
+                        </div>
+                    </div>
+                    <div class="recipe-buttons">
+                        <button class="accept" onclick="approveRecipe('${recipe._id}')">Одобрить</button>
+                        <button class="edit" onclick="editRecipe('${recipe._id}')" >Редактировать</button>
+                        <button class="cancel" onclick="rejectRecipe('${recipe._id}')">Отклонить</button>
+                    </div>
+                <div class="recipe">
             </a>
         `;
         pendingRecipesList.appendChild(recipeDiv);

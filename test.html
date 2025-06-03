@@ -3,15 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Личный кабинет | ЧудоБлюдо</title>
+  <title>Рецепты на рассмотрении | ЧудоБлюдо</title>
 
   <link href="css/theme.css" type="text/css" rel="stylesheet" media="screen">
   <link href="css/cabinet.css" type="text/css" rel="stylesheet" media="screen">
+  <link href="css/pending.css" type="text/css" rel="stylesheet" media="screen">
   <link rel="icon" href="images/functional/logo.png" type="image/png">
 </head>
 <body>
   <div class="container">
-    
+
     <div class="start">
 
       <div class="header">
@@ -34,13 +35,11 @@
       <div class="user">
         <div class="user-bg"></div>
         <div class="user-content">
-            <h3>Мой профиль</h3>
-            <p>Пользовательское имя:</p> 
-            <span id="username">Иван Иванов</span>
-            <p>Почта: </p>
-            <span id="email">ivan@example.com</span>
-            <p>Количество собственных рецептов: </p><span id="recipeCount">5</span>
-            <p>Количество избранных рецептов: </p><span id="saveCount">12</span>
+          <h3>Мой профиль (Админ)</h3>
+          <p>Пользовательское имя:</p> 
+          <span id="username"></span>
+          <p>Почта: </p>
+          <span id="email"></span>
         </div>
       </div>
 
@@ -53,270 +52,177 @@
           <h4>Выйти из личного кабинета?</h4>
           <div class="dialog-buttons">
             <button class="cancel-btn" onclick="window.exit.close()">Отмена</button>
-            <button class="confirm-btn" id="logout">Выйти</button>
+            <button class="confirm-btn" id="adminLogout">Выйти</button>
           </div>
         </div>
       </dialog>
 
-      <div class="navigation">
-                <div class="dropdown" id="dropdown1">
-                    <button class="dropbtn">Ваши рецепты</button>
-                </div>
-        
-                <div class="dropdown" id="dropdown2">
-                    <button class="dropbtn">Избранные рецепты</button>
-                </div>
+      <div class="navigation2">
+        <div class="dropdown" id="dropdown1">
+          <a href="javascript:void(0)" class="dropbtn2">Рецепты на рассмотрении</a>
         </div>
+
+        <div class="dropdown" id="dropdown2">
+          <a href="publishedRecipes.html" class="dropbtn2">Опубликованные рецепты</a>
+        </div>
+
+        <div class="dropdown" id="dropdown3">
+          <a href="rejectedRecipes.html" class="dropbtn2">Отклоненные рецепты</a>
+        </div>
+      </div>
     </div>
     <div class="information">
-        <div class="main-text">
-            <p id="head">ЛИЧНЫЙ КАБИНЕТ</p>
-            <p id="body">Добро пожаловать в личный кабинет!</p>
-            <p id="inf">Здесь вы можете управлять своими рецептами и сохранять любимые блюда</p>
-        </div>
-    </div>
-      <div id="error" class="error-notification" aria-live="polite"></div>
-    <div id="cabinet-section" class="cabinet-section section">
-
-      <dialog id="delete">
-        <div class="dialog-content">
-          <h4>Удалить выбранный рецепт?</h4>
-          <div class="dialog-buttons">
-            <button class="cancel-btn" onclick="window.delete.close()">Отмена</button>
-            <button class="confirm-btn" >Удалить</button>
-          </div>
-        </div>
-      </dialog>
-
-      <div id="recipes-section" class="section">
-        <h3>Мои рецепты</h3>
-        <div class="add" onclick="window.addDialog.showModal()">
-          <div class="add-bg"></div>
-        </div>
-        <div id="recipes">
-
-          <div class="myRecipe">
-            <a href="#" class="recipe-link">
-              <div class="recipe-content">
-                <div class="recipe-image">
-                  <img src="https://i.postimg.cc/tCmVQPJb/chiken.jpg" alt="Название рецепта">
-                </div>
-                <div class="recipe-info">
-                  <h4>Название рецепта</h4>
-                  <ul>
-                    <li>4 порции</li>
-                    <li>30 минут</li>
-                    <li>11 ингредиентов</li>
-                  </ul>
-                  <div class="status">Опубликовано</div>
-                </div>
-              </div>
-            </a>
-          </div>
-
-           <div class="myRecipe">
-            <a href="#" class="recipe-link">
-              <div class="recipe-content">
-                <div class="recipe-image">
-                  <img src="https://i.postimg.cc/tCmVQPJb/chiken.jpg" alt="Название рецепта">
-                </div>
-                <div class="recipe-info">
-                  <h4>Название рецепта</h4>
-                  <ul>
-                    <li>4 порции</li>
-                    <li>30 минут</li>
-                    <li>11 ингредиентов</li>
-                  </ul>
-                  <div class="status">Опубликовано</div>
-                </div>
-              </div>
-            </a>
-            <button class="delete-btn" onclick="window.delete.showModal()">Удалить</button>
-          </div>
-
-
-           <div class="myRecipe">
-            <a href="#" class="recipe-link">
-              <div class="recipe-content">
-                <div class="recipe-image">
-                  <img src="https://i.postimg.cc/tCmVQPJb/chiken.jpg" alt="Название рецепта">
-                </div>
-                <div class="recipe-info">
-                  <h4>Название рецепта</h4>
-                  <ul>
-                    <li>4 порции</li>
-                    <li>30 минут</li>
-                    <li>11 ингредиентов</li>
-                  </ul>
-                  <div class="status">Опубликовано</div>
-                </div>
-              </div>
-            </a>
-          </div>
-
-
-           <div class="myRecipe">
-            <a href="#" class="recipe-link">
-              <div class="recipe-content">
-                <div class="recipe-image">
-                  <img src="https://i.postimg.cc/tCmVQPJb/chiken.jpg" alt="Название рецепта">
-                </div>
-                <div class="recipe-info">
-                  <h4>Название рецепта</h4>
-                  <ul>
-                    <li>4 порции</li>
-                    <li>30 минут</li>
-                    <li>11 ингредиентов</li>
-                  </ul>
-                  <div class="status">Опубликовано</div>
-                </div>
-              </div>
-            </a>
-          </div>
-
-        </div>
+      <div class="main-text">
+        <p id="head">РЕЦЕПТЫ НА РАССМОТРЕНИИ</p>
+        <p id="body">Добро пожаловать!</p>
+        <p id="inf">Здесь вы можете одобрять или отклонять рецепты</p>
       </div>
-
-      <dialog id="addDialog">
-      <div id="add-recipe-section" class="section">
-        <h3>Добавить новый рецепт</h3>
-        <form id="recipe-form">
-          <label>Название: <input type="text" id="recipe-title" maxlength="50" required></label>
-          <label>Категории (выберите хотя бы одну):</label>
-          <div id="recipe-categories" class="category-buttons">
-            <button type="button" class="category-btn" data-category="Завтрак">Завтрак</button>
-            <button type="button" class="category-btn" data-category="Обед">Обед</button>
-            <button type="button" class="category-btn" data-category="Ужин">Ужин</button>
-            <button type="button" class="category-btn" data-category="Китайская кухня">Китайская кухня</button>
-            <button type="button" class="category-btn" data-category="Итальянская кухня">Итальянская кухня</button>
-            <button type="button" class="category-btn" data-category="Русская кухня">Русская кухня</button>
-            <button type="button" class="category-btn" data-category="Горячее блюдо">Горячее блюдо</button>
-            <button type="button" class="category-btn" data-category="Закуски">Закуски</button>
-            <button type="button" class="category-btn" data-category="Десерт">Десерт</button>
-            <button type="button" class="category-btn" data-category="Напитки">Напитки</button>
-          </div>
-          <label>Описание: <textarea id="recipe-description" maxlength="1000" required></textarea></label>
-          <div class="form-row">
-          <label class="half-width">Количество порций: <input type="number" id="recipe-servings" min="1" max="100" required></label>
-          <label class="half-width">Время приготовления (мин): <input type="number" id="recipe-cooking-time" min="1" max="100000" required></label>
-          </div>
-          <div id="ingredients-container">
-            <div class="ingredient">
-              <label>Ингредиент: <input type="text" class="ingredient-name" maxlength="50" required></label>
-              <label class="quantity-label">Количество:
-                <div class="quantity-wrapper">
-                  <input type="text" class="quantity-input" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required>
-                  <select class="type-unit" required>
-                    <option value="г">г</option>
-                    <option value="кг">кг</option>
-                    <option value="мл">мл</option>
-                    <option value="л">л</option>
-                    <option value="шт">шт.</option>
-                    <option value="ст">ст.</option>
-                    <option value="стл">ст.л.</option>
-                    <option value="чл">ч.л.</option>
-                    <option value="пв">по вкусу</option>
-                  </select>
-                </div>
-              </label>
-              <button type="button" class="remove-btn remove-ingredient-btn">Удалить ингредиент</button>
-            </div>
-
-            <div class="ingredient">
-              <label>Ингредиент: <input type="text" class="ingredient-name" maxlength="50" required></label>
-              <label class="quantity-label">Количество:
-                <div class="quantity-wrapper">
-                  <input type="text" class="quantity-input" min="0" max="1000" pattern="[0-9]+(,[0-9]*)?" inputmode="decimal" required>
-                  <select class="type-unit" required>
-                    <option value="г">г</option>
-                    <option value="кг">кг</option>
-                    <option value="мл">мл</option>
-                    <option value="л">л</option>
-                    <option value="шт">шт.</option>
-                    <option value="ст">ст.</option>
-                    <option value="стл">ст.л.</option>
-                    <option value="чл">ч.л.</option>
-                    <option value="пв">по вкусу</option>
-                  </select>
-                </div>
-              </label>
-              <button type="button" class="remove-btn remove-ingredient-btn">Удалить ингредиент</button>
-            </div>
-          </div>
-          <button type="button" id="add-ingredient-btn">Добавить ингредиент</button>
-          <label>Изображение (обязательно): 
-            <input type="file" id="recipe-image" name="recipeImage" accept="image/jpeg,image/png" required>
-          </label>
-          <div class="image-controls">
-            <div id="recipe-image-preview" class="image-preview"></div>
-            <button type="button" id="remove-recipe-image-btn" class="remove-btn" style="display: none;">Удалить изображение</button>
-          </div>
-          <div id="steps-container">
-            <div class="step">
-              <label for="step-description-1">Шаг 1 (описание): <textarea id="step-description-1" class="step-description" rows="4" maxlength="1000" required></textarea></label>
-              <label>Изображение шага: 
-                <input type="file" class="step-image" name="step-image" accept="image/jpeg,image/png">
-              </label>
-              <div class="image-controls">
-                <div class="step-image-preview"></div>
-                <button type="button" class="remove-btn remove-step-image-btn" style="display: none;">Удалить изображение</button>
-              </div>
-              <button type="button" class="remove-btn remove-step-btn">Удалить шаг</button>
-            </div>
-          </div>
-          <button type="button" id="add-step-btn">Добавить шаг</button>
-          <div class="buttons">
-            <button type="button" id="cancel-btn" onclick="window.addDialog.close()">Отменить</button>
-            <button type="submit" id="addRecipe-btn" onclick="window.addDialog.close()">Добавить рецепт</button>
-          </div>
-        </form>
-      </div>
-      </dialog>
-
     </div>
 
+    <div id="error" class="error-notification" aria-live="polite"></div>
+
+    <div id="pending-recipes-section" class="section">
+      <div id="pendingRecipesList">
+        <a href="#" class="recipe-link">
+          <div class="recipe">
+            <div class="recipe-content">
+                <div class="recipe-image">
+                    <img src="images/bg1.jpg" alt="${recipe.title}" />
+                </div>
+                <div class="recipe-info">
+                    <h4>${recipe.title}</h4>
+                    <p>Автор: ${authorName}</p>
+                </div>
+            </div>
+            
+            <div class="recipe-buttons">
+                <button class="accept">Одобрить</button>
+                <button class="edit" >Редактировать</button>
+                <button class="cancel">Отклонить</button>
+            </div>
+          </div>
+        </a>
+        <a href="#" class="recipe-link">
+          <div class="recipe">
+            <div class="recipe-content">
+                <div class="recipe-image">
+                    <img src="images/bg1.jpg" alt="${recipe.title}" />
+                </div>
+                <div class="recipe-info">
+                    <h4>${recipe.title}</h4>
+                    <p>Автор: ${authorName}</p>
+                </div>
+            </div>
+            
+            <div class="recipe-buttons">
+                <button class="accept">Одобрить</button>
+                <button class="edit" >Редактировать</button>
+                <button class="cancel">Отклонить</button>
+            </div>
+          </div>
+        </a>
+        <a href="#" class="recipe-link">
+          <div class="recipe">
+            <div class="recipe-content">
+                <div class="recipe-image">
+                    <img src="images/bg1.jpg" alt="${recipe.title}" />
+                </div>
+                <div class="recipe-info">
+                    <h4>${recipe.title}</h4>
+                    <p>Автор: ${authorName}</p>
+                </div>
+            </div>
+            
+            <div class="recipe-buttons">
+                <button class="accept">Одобрить</button>
+                <button class="edit" >Редактировать</button>
+                <button class="cancel">Отклонить</button>
+            </div>
+          </div>
+        </a>
+        <a href="#" class="recipe-link">
+          <div class="recipe">
+            <div class="recipe-content">
+                <div class="recipe-image">
+                    <img src="images/bg1.jpg" alt="${recipe.title}" />
+                </div>
+                <div class="recipe-info">
+                    <h4>${recipe.title}</h4>
+                    <p>Автор: ${authorName}</p>
+                </div>
+            </div>
+            
+            <div class="recipe-buttons">
+                <button class="accept">Одобрить</button>
+                <button class="edit" >Редактировать</button>
+                <button class="cancel">Отклонить</button>
+            </div>
+          </div>
+        </a>
+        <a href="#" class="recipe-link">
+          <div class="recipe">
+            <div class="recipe-content">
+                <div class="recipe-image">
+                    <img src="images/bg1.jpg" alt="${recipe.title}" />
+                </div>
+                <div class="recipe-info">
+                    <h4>${recipe.title}</h4>
+                    <p>Автор: ${authorName}</p>
+                </div>
+            </div>
+            
+            <div class="recipe-buttons">
+                <button class="accept">Одобрить</button>
+                <button class="edit" >Редактировать</button>
+                <button class="cancel">Отклонить</button>
+            </div>
+          </div>
+        </a>
+        <a href="#" class="recipe-link">
+          <div class="recipe">
+            <div class="recipe-content">
+                <div class="recipe-image">
+                    <img src="images/bg1.jpg" alt="${recipe.title}" />
+                </div>
+                <div class="recipe-info">
+                    <h4>${recipe.title}</h4>
+                    <p>Автор: ${authorName}</p>
+                </div>
+            </div>
+            
+            <div class="recipe-buttons">
+                <button class="accept">Одобрить</button>
+                <button class="edit" >Редактировать</button>
+                <button class="cancel">Отклонить</button>
+            </div>
+          </div>
+        </a>
+
+
+
+        
+       
+      </div>
+    </div>
+    
     <div class="footer">
-            <div class="col1">
-                <a href="navigation/calendars.html">
-                    <p class="footer-contact">Посмотреть календарь праздников</p>
-                </a>
-                <br>
-            </div>
-
-            <div class="col2">
-                <p class="footer-contact">Контакты для связи</p>
-                <p>Email: dr1305@bk.ru</p>
-                <p>+79-04-121-04-00</p>
-            </div>
-        </div>
+      <div class="col1">
+        <a href="navigation/calendars.html">
+          <p class="footer-contact">Посмотреть календарь праздников</p>
+        </a>
+        <br>
+      </div>
+      <div class="col2">
+        <p class="footer-contact">Контакты для связи</p>
+        <p>dr1305@bk.ru</p>
+        <p>kcyxa.boychenko@gmail.com</p>
+        <p>+79-04-121-04-00</p>
+        <p>+79-02-765-81-29</p>
+      </div>
+    </div>
   </div>
-</div>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-  // Получаем элементы
-  const recipesBtn = document.querySelector('#dropdown1 .dropbtn');
-  const recipesSection = document.getElementById('recipes-section');
-  const favoritesBtn = document.querySelector('#dropdown2 .dropbtn');
-  
-  // Обработчик для кнопки "Ваши рецепты"
-  recipesBtn.addEventListener('click', function() {
-    // Активируем секцию рецептов
-    recipesSection.classList.add('active');
-    
-    // Здесь можно добавить загрузку рецептов, если нужно
-    // loadUserRecipes();
-  });
-  
-  // Обработчик для кнопки "Избранные рецепты"
-  favoritesBtn.addEventListener('click', function() {
-    // Скрываем секцию рецептов
-    recipesSection.classList.remove('active');
-    
-    // Здесь можно добавить загрузку избранных рецептов
-    // loadFavoriteRecipes();
-  });
-});
-</script>
   <script src="js/theme.js" type="text/javascript" defer></script>
+  <script src="js/showNotif.js" defer></script>
+
 </body>
 </html>

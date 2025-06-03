@@ -488,7 +488,7 @@ h3{
 }
 
 
-.myRecipe {
+.myRecipe, .recipe {
     border-radius: 10px;
     border: 3px solid var(--color-primary-a40);
     background-color: var(--color-primary-a40);
@@ -496,7 +496,7 @@ h3{
     min-width: 0;
 }
 
-.myRecipe:hover{
+.myRecipe:hover, .recipe:hover{
     border: 3px solid var(--color-primary-a30);
 }
 
