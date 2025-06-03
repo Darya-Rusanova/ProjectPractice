@@ -58,9 +58,9 @@
                 "btn1 btn2"
     }
     .navigation2{
-        grid-area: navigation2;
+        grid-area: navigation;
         display: grid;
-            grid-template-columns: 30% 30% 30%;
+            grid-template-columns: 32% 34% 34%;
             grid-template-rows: 100px;
             grid-template-areas:
                 "btn1 btn2 btn3"
@@ -129,7 +129,7 @@
     }
     .navigation2{
         margin: 0 auto;
-        grid-area: navigation2;
+        grid-area: navigation;
         display: grid;
         grid-template-columns: 100%;
         grid-template-rows: 100px 100px 100px;
@@ -200,7 +200,7 @@
     }
     .navigation2{
         margin: 0 auto;
-        grid-area: navigation2;
+        grid-area: navigation;
         display: grid;
             grid-template-columns: 100%;
             grid-template-rows: 100px 100px 100px;
