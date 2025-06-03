@@ -1,0 +1,19 @@
+/*published rejected*/
+.recipe-buttons2{
+    margin: 0 auto;
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 60px;
+    grid-template-areas:
+        "btn4 btn5"
+}
+.recipe-buttons2 > *{
+    width: 170px;
+}
+.return{
+    grid-area: btn5;
+}
+.cancel{
+    grid-area: btn4;
+}

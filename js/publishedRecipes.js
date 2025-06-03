@@ -94,11 +94,12 @@ async function displayPublishedRecipes(recipes) {
                         <p>Автор: ${authorName}</p>
                     </div>
                 </div>
+            </a>
                 <div class="recipe-buttons2">
                     <button class="return">Редактировать</button>
                     <button class="delete-btn cancel" data-id="${recipe._id}">Удалить</button>
                 </div>
-            </a>
+            
         `;
         publishedRecipesList.appendChild(recipeDiv);
 

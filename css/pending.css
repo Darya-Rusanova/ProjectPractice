@@ -43,29 +43,12 @@
         "btn1 btn2"
         "btn3 btn3"
 }
-/*published rejected*/
-.recipe-buttons2{
-    margin: 0 auto;
-    display: grid;
-    gap: 10px;
-    grid-template-columns: 50% 50%;
-    grid-template-rows: 60px;
-    grid-template-areas:
-        "btn1 btn4"
-}
-.recipe-buttons2 > *{
-    width: 170px;
-}
-.return{
-    grid-area: btn4;
-}
 
 .edit{
     grid-area: btn3;
     margin: 0 auto;
     margin-top: -5px;
     width: 200px;
-
 }
 .edit:hover, .return:hover{
     background-color: var(--color-primary-a50);

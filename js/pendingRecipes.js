@@ -90,12 +90,13 @@ async function displayPendingRecipes(recipes) {
                             <p>Автор: ${authorName}</p>
                         </div>
                     </div>
+                </a>
                     <div class="recipe-buttons">
                         <button class="accept" onclick="approveRecipe('${recipe._id}')">Одобрить</button>
                         <button class="return">Редактировать</button>
                         <button class="cancel" onclick="rejectRecipe('${recipe._id}')">Отклонить</button>
                     </div>
-                 </a>
+                 
         `;
         pendingRecipesList.appendChild(recipeDiv);
 
