@@ -40,7 +40,7 @@ async function fetchPendingRecipes() {
         }
         if (!response.ok) throw new Error('Не удалось загрузить рецепты на рассмотрении');
         const recipes = await response.json();
-        console.log('Recipes received:', recipes);
+        console.log('Recipes received structure:', recipes.map(r => ({ _id: r._id, author: r.author, title: r.title })));
         displayPendingRecipes(recipes);
     } catch (err) {
         console.error('Fetch error:', err.message);
@@ -50,11 +50,16 @@ async function fetchPendingRecipes() {
 
 async function getAuthorName(authorId, token) {
     try {
+        console.log(`Fetching author data for ID: ${authorId}`);
         const response = await fetch(`${API_BASE_URL}/api/users/${authorId}`, {
             headers: { 'Authorization': `Bearer ${token.trim()}` }
         });
-        if (!response.ok) throw new Error('Не удалось получить данные автора');
+        if (!response.ok) {
+            console.log(`Author request failed for ID ${authorId}, status: ${response.status}`);
+            throw new Error('Не удалось получить данные автора');
+        }
         const userData = await response.json();
+        console.log(`Author data for ID ${authorId}:`, userData);
         return userData.username || 'Неизвестный автор';
     } catch (err) {
         console.error(`Error fetching author ${authorId}:`, err.message);
