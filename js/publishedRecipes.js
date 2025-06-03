@@ -80,19 +80,21 @@ async function displayPublishedRecipes(recipes) {
         const recipeDiv = document.createElement('div');
         recipeDiv.className = 'recipe-card';
         recipeDiv.innerHTML = `
-            <div class="recipe-content">
-                <div class="recipe-image">
-                    ${recipe.image ? `<img src="${recipe.image}" alt="${recipe.title}" />` : '<div class="no-image">Нет изображения</div>'}
+            <a href="#" class="recipe-link">
+                <div class="recipe-content">
+                    <div class="recipe-image">
+                        ${recipe.image ? `<img src="${recipe.image}" alt="${recipe.title}" />` : '<div class="no-image">Нет изображения</div>'}
+                    </div>
+                    <div class="recipe-info">
+                        <h4>${recipe.title}</h4>
+                        <p>Автор: ${authorName}</p>
+                    </div>
                 </div>
-                <div class="recipe-info">
-                    <h4>${recipe.title}</h4>
-                    <p>Автор: ${authorName}</p>
+                <div class="recipe-buttons">
+                    <button class="edit" onclick="editRecipe('${recipe._id}')">Редактировать</button>
+                    <button class="delete-btn cancel" data-id="${recipe._id}">Удалить</button>
                 </div>
-            </div>
-            <div class="recipe-buttons">
-                <button class="edit" onclick="editRecipe('${recipe._id}')">Редактировать</button>
-                <button class="delete-btn" data-id="${recipe._id}">Удалить</button>
-            </div>
+            </a>
         `;
         publishedRecipesList.appendChild(recipeDiv);
 

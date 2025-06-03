@@ -88,7 +88,7 @@ async function displayRejectedRecipes(recipes) {
             </div>
             <div class="recipe-buttons">
                 <button class="edit" onclick="reconsiderRecipe('${recipe._id}')">Вернуть на рассмотрение</button>
-                <button class="delete-btn" data-id="${recipe._id}">Удалить</button>
+                <button class="delete-btn cancel" data-id="${recipe._id}">Удалить</button>
             </div>
         `;
         rejectedRecipesList.appendChild(recipeDiv);
