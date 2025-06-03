@@ -91,7 +91,7 @@ async function displayPublishedRecipes(recipes) {
             </div>
             <div class="recipe-buttons">
                 <button onclick="editRecipe('${recipe._id}')" disabled>Редактировать</button>
-                <button onclick="deleteRecipe('${recipe._id}')" disabled>Удалить</button>
+                <button onclick="deleteRecipe('${recipe._id}', fetchPublishedRecipes)">Удалить</button>
             </div>
         `;
         publishedRecipesList.appendChild(recipeDiv);
