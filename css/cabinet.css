@@ -1025,3 +1025,12 @@ input[type=file]::file-selector-button:hover {
 .error-notification.show {
   animation: pulse 0.5s ease;
 }
+
+
+#recipes-section {
+  display: none; /* Скрываем секцию по умолчанию */
+}
+
+#recipes-section.active {
+  display: block; /* Показываем при активации */
+}
