@@ -125,12 +125,11 @@ a, a:hover {
     .container{
             display:grid;
             grid-template-columns: 50% 50%;
-            grid-template-rows: auto auto auto auto 200px;
+            grid-template-rows: auto auto auto 200px;
             grid-template-areas:
                 "start start"
                 "description gramm" 
                 "stages stages"
-                "comment comment"
                 "footer footer"         
     }
     #main {
@@ -199,12 +198,11 @@ a, a:hover {
     .container{
         display:grid;
         grid-template-columns: 50% 50%;
-        grid-template-rows: auto auto auto auto 200px;
+        grid-template-rows: auto auto auto 200px;
         grid-template-areas:
             "start start"
             "description gramm" 
             "stages stages"
-            "comment comment"
             "footer footer"         
     }
     
@@ -286,13 +284,12 @@ a, a:hover {
     .container{
         display:grid;
         grid-template-columns: 50% 50%;
-        grid-template-rows: auto auto auto auto auto 200px;
+        grid-template-rows: auto auto auto auto 200px;
         grid-template-areas:
             "start start"
             "description description"
             "gramm gramm" 
             "stages stages"
-            "comment comment"
             "footer footer"         
     }
     #main {
@@ -366,13 +363,12 @@ a, a:hover {
     .container{
         display:grid;
         grid-template-columns: 100%;
-        grid-template-rows: auto auto auto auto auto 200px;
+        grid-template-rows: auto auto auto auto 200px;
         grid-template-areas:
             "start"
             "description"
             "gramm" 
             "stages"
-            "comment"
             "footer"         
     }
     #main {
@@ -456,40 +452,7 @@ input::-webkit-inner-spin-button {
     background-color: var(--color-primary-a50);
     
 }
-.comments {
-    grid-area: comment;
-    margin: auto;
-    width: 80%;
-            
-}
-.addComm {
-    margin: 30px;
-    display: grid;  
-    grid-template-columns: 50% 50%;
-    grid-template-rows: auto auto;
-    grid-template-areas:
-        "userName date"
-        "commText commText"
-}
-.userName{
-    grid-area: userName;
-    font-weight: bold;
-    font-size: medium;
-}
-.date {
-    grid-area: date;
-    font-weight: bold;
-    font-size: medium;
-}
-.commText {
-    grid-area: commText;
-    outline: 3px solid var(--color-primary-a50);
-	border-radius: 10px;
-	outline-offset:-2px;
-    padding: 20px;
-    font-size: small;
-    
-}
+
 .titleStep {
     grid-area: ts;
     margin: auto;

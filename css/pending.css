@@ -9,7 +9,7 @@
 }
 
 .recipe-info {
-  width: 90%;
+  width: 80%;
   grid-area: description;
   font-size: 14px;
   text-align: justify;
