@@ -19,7 +19,7 @@ async function fetchPendingRecipes() {
     }
 
     const authHeader = `Bearer ${token.trim()}`;
-    console.log('Authorization header:', authHeader); // Лог заголовка
+    console.log('Authorization header:', authHeader);
     console.log('Fetching pending recipes...');
     try {
         const response = await fetch(`${API_BASE_URL}/api/recipes/user/all?status=pending`, {
@@ -48,23 +48,41 @@ async function fetchPendingRecipes() {
     }
 }
 
-function displayPendingRecipes(recipes) {
+async function getAuthorName(authorId, token) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/users/${authorId}`, {
+            headers: { 'Authorization': `Bearer ${token.trim()}` }
+        });
+        if (!response.ok) throw new Error('Не удалось получить данные автора');
+        const userData = await response.json();
+        return userData.username || 'Неизвестный автор';
+    } catch (err) {
+        console.error(`Error fetching author ${authorId}:`, err.message);
+        return 'Неизвестный автор';
+    }
+}
+
+async function displayPendingRecipes(recipes) {
     pendingRecipesList.innerHTML = '';
     if (recipes.length === 0) {
         pendingRecipesList.innerHTML = '<p>Нет рецептов на рассмотрении.</p>';
         return;
     }
-    recipes.forEach(recipe => {
+    const token = localStorage.getItem('token');
+
+    // Обрабатываем каждый рецепт асинхронно
+    for (const recipe of recipes) {
+        const authorName = await getAuthorName(recipe.author, token);
         const recipeDiv = document.createElement('div');
         recipeDiv.className = 'recipe-card';
         recipeDiv.innerHTML = `
             <h4>${recipe.title}</h4>
             <p>Статус: ${statusMap[recipe.status] || recipe.status}</p>
-            <p>Автор: ${recipe.author}</p>
+            <p>Автор: ${authorName}</p>
             <button onclick="approveRecipe('${recipe._id}')">Одобрить</button>
         `;
         pendingRecipesList.appendChild(recipeDiv);
-    });
+    }
 }
 
 async function approveRecipe(recipeId) {
