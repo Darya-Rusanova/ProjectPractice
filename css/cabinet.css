@@ -57,6 +57,14 @@
             grid-template-areas:
                 "btn1 btn2"
     }
+    .navigation2{
+        grid-area: navigation2;
+        display: grid;
+            grid-template-columns: 30% 30% 30%;
+            grid-template-rows: 100px;
+            grid-template-areas:
+                "btn1 btn2 btn3"
+    }
     .user-content{
         right: -140px;
         width: 300px;
@@ -119,6 +127,17 @@
             "btn1"
             "btn2"
     }
+    .navigation2{
+        margin: 0 auto;
+        grid-area: navigation2;
+        display: grid;
+        grid-template-columns: 100%;
+        grid-template-rows: 100px 100px 100px;
+        grid-template-areas:
+            "btn1"
+            "btn2"
+            "btn3"
+    }
     .user-content{
         right: -140px;
         width: 300px;
@@ -178,6 +197,17 @@
             grid-template-areas:
                 "btn1"
                 "btn2"
+    }
+    .navigation2{
+        margin: 0 auto;
+        grid-area: navigation2;
+        display: grid;
+            grid-template-columns: 100%;
+            grid-template-rows: 100px 100px 100px;
+            grid-template-areas:
+                "btn1"
+                "btn2"
+                "btn3"
     }
     .user-content{
         right: -140px;
@@ -339,8 +369,11 @@ body {
 #dropdown2 {
     grid-area: btn2;
 }
+#dropdown3 {
+    grid-area: btn3;
+}
 .dropbtn{    
-    width: 300px;
+    width: 200px;
     font-size: 20px;
     background-color: var(--color-primary-a30);
     color: var(--color-primary-a90);
