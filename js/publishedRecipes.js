@@ -65,7 +65,11 @@ async function getAuthorName(authorId, token) {
 async function displayPublishedRecipes(recipes) {
     publishedRecipesList.innerHTML = '';
     if (recipes.length === 0) {
-        publishedRecipesList.innerHTML = '<p>Нет опубликованных рецептов.</p>';
+        publishedRecipesList.innerHTML = `  
+                <p></p>
+                <p>Нет опубликованных рецепттов.</p>
+                <p></p>
+        `;
         return;
     }
     const token = localStorage.getItem('token');
@@ -90,9 +94,9 @@ async function displayPublishedRecipes(recipes) {
                         <p>Автор: ${authorName}</p>
                     </div>
                 </div>
-                <div class="recipe-buttons">
-                    <button class="edit" onclick="editRecipe('${recipe._id}')">Редактировать</button>
-                    <button class="delete-btn cancel" data-id="${recipe._id}">Удалить</button>
+                <div class="recipe-buttons two">
+                    <button class="edit return" onclick="editRecipe('${recipe._id}')">Редактировать</button>
+                    <button class="delete-btn cancel delete" data-id="${recipe._id}">Удалить</button>
                 </div>
             </a>
         `;

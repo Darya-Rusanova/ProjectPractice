@@ -65,7 +65,11 @@ async function getAuthorName(authorId, token) {
 async function displayPendingRecipes(recipes) {
     pendingRecipesList.innerHTML = '';
     if (recipes.length === 0) {
-        pendingRecipesList.innerHTML = '<p>Нет рецептов на рассмотрении.</p>';
+        pendingRecipesList.innerHTML = `  
+                <p></p>
+                <p>Нет рецептов на рассмотрении.</p>
+                <p></p>
+        `;
         return;
     }
     const token = localStorage.getItem('token');

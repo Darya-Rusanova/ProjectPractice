@@ -32,7 +32,7 @@
     transition: all 0.3s;
     margin: 0 auto;
 }
-
+/*pending*/
 .recipe-buttons{
     margin: 0 auto;
     display: grid;
@@ -43,6 +43,26 @@
         "btn1 btn2"
         "btn3 btn3"
 }
+/*published rejected*/
+.two{
+    margin: 0 auto;
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 60px;
+    grid-template-areas:
+        "btn1 btn2"
+}
+.two > *{
+    width: 160px;
+}
+.return{
+    grid-area: btn1;
+}
+.delete{
+    grid-area: btn2;
+}
+
 .edit{
     grid-area: btn3;
     margin: 0 auto;
@@ -68,6 +88,7 @@
 .cancel:hover{
     background-color: var(--color-primary-a110);
 }
+
 @media (min-width:1300px){
     #pendingRecipesList, #publishedRecipesList {
         display: grid;
