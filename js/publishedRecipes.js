@@ -102,7 +102,7 @@ async function displayPublishedRecipes(recipes) {
         `;
         publishedRecipesList.appendChild(recipeDiv);
 
-        const editButton = recipeDiv.querySelector('.edit');
+        const editButton = recipeDiv.querySelector('.return');
         editButton.addEventListener('click', () => {
             editRecipe(recipe._id, fetchPublishedRecipes);
         });
