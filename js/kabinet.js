@@ -451,6 +451,12 @@ logoutButton.addEventListener('click', () => {
     window.location.href = 'index.html';
 });
 
+const statusMap = {
+    pending: 'на рассмотрении',
+    published: 'опубликовано',
+    rejected: 'отклонено'
+};
+
 // Загрузка рецептов
 async function fetchRecipes() {
     try {
@@ -497,7 +503,7 @@ async function fetchRecipes() {
                         <li>${recipe.cookingTime} минут</li>
                         <li>${recipe.ingredients.length} ингредиентов</li>
                     </ul>
-                    <p class="status">Статус: На рассмотрении</p>
+                    <p class="status">Статус: ${statusMap[recipe.status] || recipe.status}</p>
                 `;
                 
                 // Собираем содержимое

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Личный кабинет | ЧудоБлюдо (Админ)</title>
+  <title>Рецепты на рассмотрении | ЧудоБлюдо</title>
 
   <link href="css/theme.css" type="text/css" rel="stylesheet" media="screen">
   <link href="css/cabinet.css" type="text/css" rel="stylesheet" media="screen">
@@ -58,7 +58,7 @@
 
       <div class="navigation2">
         <div class="dropdown" id="dropdown1">
-          <a href="pendingRecipes.html" class="dropbtn2">Рецепты на рассмотрении</a>
+          <a href="javascript:void(0)" class="dropbtn2">Рецепты на рассмотрении</a>
         </div>
 
         <div class="dropdown" id="dropdown2">
@@ -72,13 +72,17 @@
     </div>
     <div class="information">
       <div class="main-text">
-        <p id="head">ЛИЧНЫЙ КАБИНЕТ</p>
-        <p id="body">Добро пожаловать в личный кабинет администратора!</p>
-        <p id="inf">Здесь вы можете управлять рецептами</p>
+        <p id="head">РЕЦЕПТЫ НА РАССМОТРЕНИИ</p>
+        <p id="body">Добро пожаловать!</p>
+        <p id="inf">Здесь вы можете одобрять или отклонять рецепты</p>
       </div>
     </div>
 
     <div id="error" class="error-notification" aria-live="polite"></div>
+
+    <div id="pending-recipes-section" class="section">
+      <div id="pendingRecipesList"></div>
+    </div>
     
     <div class="footer">
       <div class="col1">
@@ -100,6 +104,6 @@
   <script src="js/theme.js" type="text/javascript" defer></script>
   <script src="js/showNotif.js" defer></script>
   <script src="js/userInfoAdmin.js" defer></script>
-  <script src="js/adminCabinet.js" defer></script>
+  <script src="js/pendingRecipes.js" defer></script>
 </body>
 </html>

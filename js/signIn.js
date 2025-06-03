@@ -19,15 +19,12 @@ async function checkLogin() {
         });
         console.log('checkLogin status:', response.status, 'CORS:', response.headers.get('Access-Control-Allow-Origin'));
         if (response.ok) {
-            window.location.href = 'kabinet.html';
+            window.location.href = localStorage.getItem('isAdmin') === 'true' ? '/adminCabinet.html' : '/kabinet.html';
         } else {
             throw new Error(`HTTP ошибка: ${response.status}`);
         }
     } catch (err) {
         console.error('Ошибка проверки токена:', err.message, err.stack, 'Type:', err.name);
-        // // errorDiv.textContent = err.message.includes('Failed to fetch')
-        //     ? `Ошибка сети (токен): ${err.message} (${err.name})`
-        //     : `Сессия истекла: ${err.message}`;
         showNotification(
             err.message.includes('Failed to fetch')
                 ? `Ошибка сети (токен): ${err.message} (${err.name})`
@@ -48,7 +45,9 @@ loginForm.addEventListener('submit', async (e) => {
     button.textContent = 'Загрузка...';
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    console.log('Email:', email);
+    const adminCode = document.getElementById('adminCode')?.value || ''; // Чтение кода админа
+    console.log('Email:', email, 'AdminCode:', adminCode);
+
     try {
         const response = await fetchWithRetry(`${API_BASE_URL}/api/auth/login`, {
             method: 'POST',
@@ -57,21 +56,25 @@ loginForm.addEventListener('submit', async (e) => {
                 'Accept': 'application/json',
                 'User-Agent': 'Mozilla/5.0 (compatible; ChudoBludo/1.0)'
             },
-            body: JSON.stringify({ email, password }),
+            body: JSON.stringify({ email, password, code: adminCode }),
             mode: 'cors',
             credentials: 'include'
         });
         console.log('Login status:', response.status, 'CORS:', response.headers.get('Access-Control-Allow-Origin'));
         const data = await response.json();
-        console.log('Login data:', data);
+        console.log('Login data from server:', data);
+
         if (data.token) {
-            localStorage.setItem('token', data.token);
+            localStorage.setItem('token', data.token.trim());
             localStorage.setItem('userId', data.userId);
 
+            // Логика определения isAdmin: используем значение из data.isAdmin
+            console.log('Setting isAdmin:', data.isAdmin, 'Code provided:', !!adminCode);
+            localStorage.setItem('isAdmin', data.isAdmin.toString());
 
             try {
                 const userResp = await fetchWithRetry(
-                    `${API_BASE_URL}/api/users/${data.userId}`, 
+                    `${API_BASE_URL}/api/users/${data.userId}`,
                     { headers: { 'Authorization': `Bearer ${data.token}` } }
                 );
                 if (userResp.ok) {
@@ -92,26 +95,15 @@ loginForm.addEventListener('submit', async (e) => {
                 console.warn('Ошибка при запросе имени пользователя после логина:', e);
             }
 
-
-
-
-            // errorDiv.textContent = '';
             showNotification('Успешный вход!', 'success');
-            // window.location.href = 'kabinet.html';
-
-            // Немного подождём, чтобы пользователь увидел «Успешный вход!»
             setTimeout(() => {
-                window.location.href = 'kabinet.html';
+                window.location.href = data.isAdmin ? '/adminCabinet.html' : '/kabinet.html';
             }, 300);
         } else {
-            // errorDiv.textContent = data.message || 'Неверный email или пароль';
             showNotification(data.message || 'Неверный email или пароль', 'error');
         }
     } catch (err) {
         console.error('Ошибка входа:', err.message, err.stack, 'Type:', err.name);
-        // errorDiv.textContent = err.message.includes('Failed to fetch')
-        //     ? `Ошибка сети (вход): ${err.message} (${err.name}). Проверьте настройки браузера.`
-        //     : `Ошибка входа: ${err.message}`;
         showNotification(
             err.message.includes('Failed to fetch')
                 ? `Ошибка сети (вход): ${err.message} (${err.name}). Проверьте настройки браузера.`
