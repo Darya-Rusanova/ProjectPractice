@@ -76,6 +76,7 @@ async function displayPendingRecipes(recipes) {
         const recipeDiv = document.createElement('div');
         recipeDiv.className = 'recipe-card';
         recipeDiv.innerHTML = `
+            <a href="#" class="recipe-link">
             <div class="recipe-content">
                 <div class="recipe-image">
                     ${recipe.image ? `<img src="${recipe.image}" alt="${recipe.title}" />` : '<div class="no-image">Нет изображения</div>'}
@@ -90,6 +91,7 @@ async function displayPendingRecipes(recipes) {
                 <button onclick="editRecipe('${recipe._id}')" disabled>Редактировать</button>
                 <button onclick="rejectRecipe('${recipe._id}')">Отклонить</button>
             </div>
+            </a>
         `;
         pendingRecipesList.appendChild(recipeDiv);
     }
