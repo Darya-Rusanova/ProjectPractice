@@ -73,7 +73,7 @@
 }
 
 @media (min-width:1300px){
-    #pendingRecipesList, #publishedRecipesList {
+    #pendingRecipesList, #publishedRecipesList, #rejectedRecipesList {
         display: grid;
         grid-template-columns: repeat(3, 1fr); 
         gap: 20px;
@@ -100,7 +100,7 @@
 
 @media (800px <= width < 1300px){
 
-    #pendingRecipesList, #publishedRecipesList{
+    #pendingRecipesList, #publishedRecipesList, #rejectedRecipesList{
         display: grid;
         grid-template-columns: repeat(2, 1fr); 
         gap: 20px;
@@ -123,7 +123,7 @@
 }
 @media (width < 800px){
 
-    #pendingRecipesList, #publishedRecipesList {
+    #pendingRecipesList, #publishedRecipesList, #rejectedRecipesList {
         display: grid;
         grid-template-columns: repeat(1, 1fr); 
         gap: 20px;
