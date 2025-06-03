@@ -49,15 +49,35 @@ async function fetchRejectedRecipes() {
     }
 }
 
-function displayRejectedRecipes(recipes) {
+async function getAuthorName(authorId, token) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/users/${authorId}`, {
+            headers: { 'Authorization': `Bearer ${token.trim()}` }
+        });
+        if (!response.ok) throw new Error('Не удалось получить данные автора');
+        const userData = await response.json();
+        return userData.username || 'Неизвестный автор';
+    } catch (err) {
+        console.error(`Error fetching author ${authorId}:`, err.message);
+        return 'Неизвестный автор';
+    }
+}
+
+
+async function displayRejectedRecipes(recipes) {
     rejectedRecipesList.innerHTML = '';
     if (recipes.length === 0) {
         rejectedRecipesList.innerHTML = '<p>Нет отклонённых рецептов.</p>';
         return;
     }
 
+    // Собираем все запросы для авторов
+    const authorPromises = recipes.map(recipe => getAuthorName(recipe.author, token));
+    const authorNames = await Promise.all(authorPromises);
+
+
     recipes.forEach(recipe => {
-        const authorName = recipe.author?.username || 'Неизвестный автор';
+        const authorName = authorNames[index] || 'Неизвестный автор';
         const recipeDiv = document.createElement('div');
         recipeDiv.className = 'recipe-card';
         recipeDiv.innerHTML = `
