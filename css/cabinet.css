@@ -373,7 +373,7 @@ body {
     grid-area: btn3;
 }
 .dropbtn{    
-    width: 200px;
+    width: 300px;
     font-size: 20px;
     background-color: var(--color-primary-a30);
     color: var(--color-primary-a90);
