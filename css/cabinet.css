@@ -39,6 +39,10 @@
   font-weight: bold;
   color:var(--color-primary-a90)
 }
+#head {
+    font-size: 46px;
+    text-decoration:solid;
+}
 @media (min-width:1300px){
     .start{
         grid-area: start;
@@ -276,6 +280,10 @@
         font-weight: bold;
         color:var(--color-primary-a90)
     }
+    #head {
+      font-size: 40px;
+      text-decoration:solid;
+  }
 }
 body > *{
     font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -442,10 +450,7 @@ body {
 #inf {
     font-size: 20px;   
 }
-#head {
-    font-size: 46px;
-    text-decoration:solid;
-}
+
 #body {
     font-size: 30px;
     text-decoration:solid;
