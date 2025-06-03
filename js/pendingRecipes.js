@@ -4,7 +4,8 @@ const errorDiv = document.getElementById('error');
 
 const statusMap = {
     pending: 'на рассмотрении',
-    published: 'опубликовано'
+    published: 'опубликовано',
+    rejected: 'отклонено'
 };
 
 async function fetchPendingRecipes() {
@@ -85,6 +86,7 @@ async function displayPendingRecipes(recipes) {
             <p>Статус: ${statusMap[recipe.status] || recipe.status}</p>
             <p>Автор: ${authorName}</p>
             <button onclick="approveRecipe('${recipe._id}')">Одобрить</button>
+            <button onclick="rejectRecipe('${recipe._id}')">Отклонить</button>
         `;
         pendingRecipesList.appendChild(recipeDiv);
     }
@@ -104,6 +106,26 @@ async function approveRecipe(recipeId) {
         });
         if (!response.ok) throw new Error('Не удалось одобрить рецепт');
         showNotification('Рецепт одобрен', 'success');
+        fetchPendingRecipes(); // Обновляем список
+    } catch (err) {
+        showNotification(`Ошибка: ${err.message}`, 'error');
+    }
+}
+
+async function rejectRecipe(recipeId) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        showNotification('Ошибка: Нет токена авторизации', 'error');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}/reject`, {
+            method: 'PUT',
+            headers: { 'Authorization': `Bearer ${token.trim()}` }
+        });
+        if (!response.ok) throw new Error('Не удалось отклонить рецепт');
+        showNotification('Рецепт отклонён', 'success');
         fetchPendingRecipes(); // Обновляем список
     } catch (err) {
         showNotification(`Ошибка: ${err.message}`, 'error');

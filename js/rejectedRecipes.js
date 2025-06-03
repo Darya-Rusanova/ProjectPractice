@@ -1,4 +1,4 @@
-const publishedRecipesList = document.getElementById('publishedRecipesList');
+const rejectedRecipesList = document.getElementById('rejectedRecipesList');
 const logoutButton = document.getElementById('adminLogout');
 const errorDiv = document.getElementById('error');
 
@@ -8,7 +8,7 @@ const statusMap = {
     rejected: 'отклонено'
 };
 
-async function fetchPublishedRecipes() {
+async function fetchRejectedRecipes() {
     const token = localStorage.getItem('token');
     console.log('Token from localStorage:', token);
     if (!token) {
@@ -21,9 +21,9 @@ async function fetchPublishedRecipes() {
 
     const authHeader = `Bearer ${token.trim()}`;
     console.log('Authorization header:', authHeader);
-    console.log('Fetching published recipes...');
+    console.log('Fetching rejected recipes...');
     try {
-        const response = await fetch(`${API_BASE_URL}/api/recipes/user/all?status=published`, {
+        const response = await fetch(`${API_BASE_URL}/api/recipes/user/all?status=rejected`, {
             headers: { 'Authorization': authHeader }
         });
         console.log('Response status:', response.status);
@@ -37,56 +37,57 @@ async function fetchPublishedRecipes() {
                 }, 1000);
                 return;
             }
-            throw new Error(errorData.message || 'Не удалось загрузить опубликованные рецепты');
+            throw new Error(errorData.message || 'Не удалось загрузить отклонённые рецепты');
         }
-        if (!response.ok) throw new Error('Не удалось загрузить опубликованные рецепты');
+        if (!response.ok) throw new Error('Не удалось загрузить отклонённые рецепты');
         const recipes = await response.json();
         console.log('Recipes received:', recipes);
-        displayPublishedRecipes(recipes);
+        displayRejectedRecipes(recipes);
     } catch (err) {
         console.error('Fetch error:', err.message);
         showNotification(`Ошибка: ${err.message}`, 'error');
     }
 }
 
-async function getAuthorName(authorId, token) {
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/users/${authorId}`, {
-            headers: { 'Authorization': `Bearer ${token.trim()}` }
-        });
-        if (!response.ok) throw new Error('Не удалось получить данные автора');
-        const userData = await response.json();
-        return userData.username || 'Неизвестный автор';
-    } catch (err) {
-        console.error(`Error fetching author ${authorId}:`, err.message);
-        return 'Неизвестный автор';
-    }
-}
-
-async function displayPublishedRecipes(recipes) {
-    publishedRecipesList.innerHTML = '';
+function displayRejectedRecipes(recipes) {
+    rejectedRecipesList.innerHTML = '';
     if (recipes.length === 0) {
-        publishedRecipesList.innerHTML = '<p>Нет опубликованных рецептов.</p>';
+        rejectedRecipesList.innerHTML = '<p>Нет отклонённых рецептов.</p>';
         return;
     }
-    const token = localStorage.getItem('token');
 
-    // Собираем все запросы для авторов
-    const authorPromises = recipes.map(recipe => getAuthorName(recipe.author, token));
-    const authorNames = await Promise.all(authorPromises);
-
-    // Отображаем рецепты с именами авторов
-    recipes.forEach((recipe, index) => {
-        const authorName = authorNames[index] || 'Неизвестный автор';
+    recipes.forEach(recipe => {
+        const authorName = recipe.author?.username || 'Неизвестный автор';
         const recipeDiv = document.createElement('div');
         recipeDiv.className = 'recipe-card';
         recipeDiv.innerHTML = `
             <h4>${recipe.title}</h4>
             <p>Статус: ${statusMap[recipe.status] || recipe.status}</p>
             <p>Автор: ${authorName}</p>
+            <button onclick="reconsiderRecipe('${recipe._id}')">Вернуть на рассмотрение</button>
         `;
-        publishedRecipesList.appendChild(recipeDiv);
+        rejectedRecipesList.appendChild(recipeDiv);
     });
+}
+
+async function reconsiderRecipe(recipeId) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        showNotification('Ошибка: Нет токена авторизации', 'error');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}/reconsider`, {
+            method: 'PUT',
+            headers: { 'Authorization': `Bearer ${token.trim()}` }
+        });
+        if (!response.ok) throw new Error('Не удалось вернуть рецепт на рассмотрение');
+        showNotification('Рецепт возвращён на рассмотрение', 'success');
+        fetchRejectedRecipes(); // Обновляем список
+    } catch (err) {
+        showNotification(`Ошибка: ${err.message}`, 'error');
+    }
 }
 
 logoutButton.addEventListener('click', () => {
@@ -98,5 +99,5 @@ logoutButton.addEventListener('click', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    fetchPublishedRecipes();
+    fetchRejectedRecipes();
 });
