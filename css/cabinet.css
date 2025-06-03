@@ -284,6 +284,14 @@ body {
     background-color: var(--color-primary-a40);
     transition: background-color 0.3s;
 }
+
+#publishedRecipesList > p, #recipes > p, #pendingRecipesList > p, #rejectedRecipesList > p{
+  text-align: center;
+  margin: 0 auto;
+  font-size: 25px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 /*Хедер*/
 
 .start{

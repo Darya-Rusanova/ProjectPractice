@@ -65,7 +65,11 @@ async function getAuthorName(authorId, token) {
 async function displayPublishedRecipes(recipes) {
     publishedRecipesList.innerHTML = '';
     if (recipes.length === 0) {
-        publishedRecipesList.innerHTML = '<p>Нет опубликованных рецептов.</p>';
+        publishedRecipesList.innerHTML = `  
+                <p></p>
+                <p>Нет опубликованных рецепттов.</p>
+                <p></p>
+        `;
         return;
     }
     const token = localStorage.getItem('token');
@@ -80,19 +84,26 @@ async function displayPublishedRecipes(recipes) {
         const recipeDiv = document.createElement('div');
         recipeDiv.className = 'recipe-card';
         recipeDiv.innerHTML = `
-            <div class="recipe-content">
-                <div class="recipe-image">
-                    ${recipe.image ? `<img src="${recipe.image}" alt="${recipe.title}" />` : '<div class="no-image">Нет изображения</div>'}
+            <a href="#" class="recipe-link">
+                <div class="recipe-content">
+                    <div class="recipe-image">
+                        ${recipe.image ? `<img src="${recipe.image}" alt="${recipe.title}" />` : '<div class="no-image">Нет изображения</div>'}
+                    </div>
+                    <div class="recipe-info">
+                        <h4>${recipe.title}</h4>
+                        <p>Автор: ${authorName}</p>
+                    </div>
                 </div>
-                <div class="recipe-info">
-                    <h4>${recipe.title}</h4>
-                    <p>Автор: ${authorName}</p>
+                <div class="recipe-buttons two">
+                    <button class="edit return">Редактировать</button>
+                    <button class="delete-btn cancel delete" data-id="${recipe._id}">Удалить</button>
                 </div>
             </div>
             <div class="recipe-buttons">
                 <button class="edit">Редактировать</button>
-                <button class="delete-btn" data-id="${recipe._id}">Удалить</button>
+                <button class="delete-btn cancel delete" data-id="${recipe._id}">Удалить</button>
             </div>
+            </a>
         `;
         publishedRecipesList.appendChild(recipeDiv);
 
