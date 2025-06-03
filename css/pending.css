@@ -71,6 +71,15 @@
 .cancel:hover{
     background-color: var(--color-primary-a110);
 }
+.pending{
+    background-image: url(https://i.postimg.cc/DmFYjWdm/pending.jpg);
+}
+.published{
+    background-image: url(https://i.postimg.cc/gn1V7QF4/published.jpg);
+}
+.rejected{
+    background-image: url(https://i.postimg.cc/T5pb7qtZ/rejected.jpg);
+}
 
 @media (min-width:1300px){
     #pendingRecipesList, #publishedRecipesList, #rejectedRecipesList {
