@@ -51,13 +51,13 @@
     grid-template-columns: 50% 50%;
     grid-template-rows: 60px;
     grid-template-areas:
-        "btn1 btn2"
+        "btn1 btn4"
 }
 .recipe-buttons2 > *{
     width: 170px;
 }
 .return{
-    grid-area: btn2;
+    grid-area: btn4;
 }
 
 .edit{
