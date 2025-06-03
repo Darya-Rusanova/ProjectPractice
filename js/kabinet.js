@@ -452,8 +452,8 @@ logoutButton.addEventListener('click', () => {
 });
 
 const statusMap = {
-    pending: 'на рассмотрении...',
-    published: 'опубликовано.'
+    pending: 'на рассмотрении',
+    published: 'опубликовано'
 };
 
 // Загрузка рецептов

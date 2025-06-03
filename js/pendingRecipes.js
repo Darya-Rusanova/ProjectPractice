@@ -3,8 +3,8 @@ const logoutButton = document.getElementById('adminLogout');
 const errorDiv = document.getElementById('error');
 
 const statusMap = {
-    pending: 'на рассмотрении...',
-    published: 'опубликовано.'
+    pending: 'на рассмотрении',
+    published: 'опубликовано'
 };
 
 async function fetchPendingRecipes() {
