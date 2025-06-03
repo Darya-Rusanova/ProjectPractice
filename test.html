@@ -102,6 +102,27 @@
                     </div></div>
       </div>
 
+       <dialog id="deleteDialog">
+      <div class="dialog-content">
+        <h4>Отклонить выбранный рецепт?</h4>
+        <div class="dialog-buttons">
+          <button class="cancel-btn" onclick="window.delete.close()">Отмена</button>
+          <button class="confirm-btn">Отклонить</button>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="acceptDialog">
+      <div class="dialog-content">
+        <h4>Одобрить выбранный рецепт?</h4>
+        <div class="dialog-buttons">
+          <button class="cancel-btn" onclick="window.delete.close()">Отмена</button>
+          <button class="confirm-accept-btn">Одобрить</button>
+        </div>
+      </div>
+    </dialog>
+    <button onclick="window.deleteDialog.showModal()"></button>
+
       <dialog id="editDialog"> 
       <div id="edit-recipe-section" class="section">
         <h3>Редактировать рецепт</h3>

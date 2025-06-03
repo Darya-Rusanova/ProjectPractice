@@ -606,7 +606,7 @@ h3{
   background-color: var(--color-primary-a110);
 }
 
-#exit, #delete{
+#exit, #delete, #deleteDialog, #acceptDialog{
     max-width: 80%;
     width: 500px;
     height: 200px;
@@ -615,7 +615,7 @@ h3{
     border: 10px solid var(--color-primary-a50);
     background-color: var(--color-primary-a40);
 }
-#exit h4, #delete h4{
+#exit h4, #delete h4, .dialog-content > h4{
     text-align: center;
     font-size: 18px;
     margin-top: 50px;
@@ -650,8 +650,10 @@ h3{
 }
 
 .cancel-btn,
-.confirm-btn {
+.confirm-btn,
+.confirm-accept-btn {
   padding: 10px 20px;
+  border: none;
   border-radius: 8px;
   font-size: 16px;
   cursor: pointer;
@@ -692,7 +694,7 @@ h3{
     display: block;
     background: transparent;
 }
-#addDialog, #exit, #delete, #editDialog{
+#addDialog, #exit, #delete, #editDialog, #deleteDialog, #acceptDialog{
     transition: display 0.2s allow-discrete, overlay 0.2s allow-discrete;
   
     animation: close 0.3s forwards;

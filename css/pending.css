@@ -53,12 +53,15 @@
 .return:hover{
     background-color: var(--color-primary-a50);
 }
-.accept{
+.confirm-btn{
+    color: var(--color-primary-a90);
+}
+.accept, .confirm-accept-btn{
     grid-area: btn2;
     background-color: var(--color-primary-a120);
     color: var(--color-primary-a90);
 }
-.accept:hover{
+.accept:hover, .confirm-accept-btn:hover{
     background-color: var(--color-primary-a130);
 }
 .cancel{
