@@ -60,7 +60,7 @@
     .navigation2{
         grid-area: navigation;
         display: grid;
-            grid-template-columns: 32% 34% 34%;
+            grid-template-columns: 33% 33% 33%;
             grid-template-rows: 100px;
             grid-template-areas:
                 "btn1 btn2 btn3"
@@ -373,6 +373,18 @@ body {
     grid-area: btn3;
 }
 .dropbtn{    
+    width: 200px;
+    font-size: 20px;
+    background-color: var(--color-primary-a30);
+    color: var(--color-primary-a90);
+    padding: 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 20px;
+    transition: background-color 0.3s;
+}
+.dropbtn2{
+    display: block;    
     width: 200px;
     font-size: 20px;
     background-color: var(--color-primary-a30);
