@@ -1,4 +1,4 @@
-async function deleteRecipe(recipeId, fetchFunction) {
+async function deleteRecipe(recipeId, recipeElement, fetchFunction) {
     const token = localStorage.getItem('token');
     if (!token) {
         showNotification('Ошибка: Нет токена авторизации', 'error');
@@ -15,8 +15,12 @@ async function deleteRecipe(recipeId, fetchFunction) {
             throw new Error(errorData.message || `HTTP ${response.status}`);
         }
         showNotification('Рецепт удалён!', 'success');
-        fetchFunction(); // Обновляем список рецептов
+        // Удаляем элемент из DOM вместо полного перерендера
+        if (recipeElement && recipeElement.parentNode) {
+            recipeElement.parentNode.removeChild(recipeElement);
+        }
+        fetchFunction();
     } catch (err) {
         showNotification(`Ошибка удаления: ${err.message}`, 'error');
     }
-}
+} 
