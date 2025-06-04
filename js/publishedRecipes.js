@@ -66,9 +66,7 @@ async function displayPublishedRecipes(recipes) {
     publishedRecipesList.innerHTML = '';
     if (recipes.length === 0) {
         publishedRecipesList.innerHTML = `  
-            <p></p>
             <p>Нет опубликованных рецептов.</p>
-            <p></p>
         `;
         return;
     }

@@ -177,9 +177,7 @@ async function rejectRecipe() {
             // Проверяем, остались ли рецепты в списке
             if (pendingRecipesList.getElementsByClassName('recipe-card').length === 0) {
                 pendingRecipesList.innerHTML = `  
-                    <p></p>
                     <p>Нет рецептов на рассмотрении.</p>
-                    <p></p>
                 `;
             }
         }
