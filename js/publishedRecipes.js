@@ -67,7 +67,7 @@ async function displayPublishedRecipes(recipes) {
     if (recipes.length === 0) {
         publishedRecipesList.innerHTML = `  
                 <p></p>
-                <p>Нет опубликованных рецепттов.</p>
+                <p>Нет опубликованных рецептов.</p>
                 <p></p>
         `;
         return;
@@ -111,9 +111,15 @@ async function displayPublishedRecipes(recipes) {
         // Добавляем слушатель события для кнопки "Удалить"
         const deleteButton = recipeDiv.querySelector('.delete-btn');
         deleteButton.addEventListener('click', () => {
-            deleteRecipe(recipe._id, recipeDiv, fetchPublishedRecipes);
+            showDeleteDialog(recipe._id, recipeDiv, fetchPublishedRecipes); // Используем showDeleteDialog
         });
     });
+}
+
+// Привязываем обработчик к кнопке "Удалить" в диалоге (должен быть доступен глобально)
+const confirmDeleteButton = document.getElementById('delete')?.querySelector('.confirm-btn');
+if (confirmDeleteButton) {
+    confirmDeleteButton.addEventListener('click', deleteRecipe);
 }
 
 logoutButton.addEventListener('click', () => {

@@ -1,12 +1,37 @@
-async function deleteRecipe(recipeId, recipeElement, fetchFunction) {
+// Глобальные переменные для хранения данных
+let currentRecipeId = null;
+let currentRecipeElement = null;
+let currentFetchFunction = null;
+
+// Функция для показа диалога удаления
+function showDeleteDialog(recipeId, recipeElement, fetchFunction) {
+    currentRecipeId = recipeId;
+    currentRecipeElement = recipeElement;
+    currentFetchFunction = fetchFunction;
+    const deleteDialog = document.getElementById('delete');
+    if (deleteDialog) {
+        deleteDialog.showModal();
+    } else {
+        // Если диалога нет, выполняем удаление напрямую
+        deleteRecipe();
+    }
+}
+
+async function deleteRecipe() {
     const token = localStorage.getItem('token');
     if (!token) {
         showNotification('Ошибка: Нет токена авторизации', 'error');
+        if (document.getElementById('delete')) document.getElementById('delete').close();
+        return;
+    }
+    if (!currentRecipeId) {
+        showNotification('Ошибка: Не выбран рецепт для удаления', 'error');
+        if (document.getElementById('delete')) document.getElementById('delete').close();
         return;
     }
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}`, {
+        const response = await fetch(`${API_BASE_URL}/api/recipes/${currentRecipeId}`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token.trim()}` }
         });
@@ -15,12 +40,18 @@ async function deleteRecipe(recipeId, recipeElement, fetchFunction) {
             throw new Error(errorData.message || `HTTP ${response.status}`);
         }
         showNotification('Рецепт удалён!', 'success');
-        if (recipeElement && recipeElement.parentNode) {
-            recipeElement.parentNode.removeChild(recipeElement);
+        if (currentRecipeElement && currentRecipeElement.parentNode) {
+            currentRecipeElement.parentNode.removeChild(currentRecipeElement);
         }
-        fetchFunction();
+        if (currentFetchFunction) currentFetchFunction();
     } catch (err) {
         showNotification(`Ошибка удаления: ${err.message}`, 'error');
+    } finally {
+        if (document.getElementById('delete')) document.getElementById('delete').close();
+        // Очищаем глобальные переменные
+        currentRecipeId = null;
+        currentRecipeElement = null;
+        currentFetchFunction = null;
     }
 }
 
