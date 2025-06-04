@@ -675,11 +675,10 @@ recipeForm.addEventListener('submit', async (e) => {
         }
 
         // Правильно раскладываем изображения шагов по индексам
-        stepDivs.forEach((div, index) => {
+        stepDivs.forEach((div) => {
             const file = div.querySelector('.step-image')?.files[0];
             if (file) {
-                // именно «stepImages[0]», «stepImages[1]» и т.п.
-                formData.append(`stepImages[${index}]`, file);
+                formData.append('step-image', file);
             }
         });
 
