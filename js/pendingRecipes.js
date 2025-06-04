@@ -3,8 +3,8 @@ let currentRecipeElement = null;
 
 const acceptDialog = document.getElementById('acceptDialog');
 const deleteDialog = document.getElementById('deleteDialog');
-const confirmAcceptButton = document.getElementById('confirm-accept-btn');
-const confirmRejectButton = document.getElementById('#deleteDialog .confirm-btn');
+const confirmAcceptButton = document.getElementById('confirmAcceptButton');
+const confirmRejectButton = document.getElementById('confirmRejectButton');
 const pendingRecipesList = document.getElementById('pendingRecipesList');
 
 function updateEmptyListMessage(listElement) {
