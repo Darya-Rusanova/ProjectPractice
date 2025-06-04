@@ -469,7 +469,7 @@ async function fetchRecipes() {
         const recipes = await response.json();
         recipesList.innerHTML = '';
         if (recipes.length === 0) {
-            recipesList.innerHTML = '<p></p><p>У вас пока нет рецептов</p><p></p>';
+            recipesList.innerHTML = '<p>У вас пока нет рецептов</p>';
         } else {
             recipes.forEach(recipe => {
                 const recipeDiv = document.createElement('div');
