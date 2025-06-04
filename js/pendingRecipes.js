@@ -27,7 +27,7 @@ async function fetchPendingRecipes() {
     }
 
     try {
-        const response = await fetchWithRetry(`${API_BASE_URL}/api/recipes?status=pending`, {
+        const response = await fetchWithRetry(`${API_BASE_URL}/api/recipes/user/all?status=pending`, {
             headers: { 'Authorization': `Bearer ${token.trim()}` }
         });
 
