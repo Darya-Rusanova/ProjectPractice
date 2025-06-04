@@ -16,6 +16,13 @@ const editRemoveRecipeImageButton = document.getElementById('edit-remove-recipe-
 const editStepsContainer = document.getElementById('edit-steps-container');
 const editAddStepButton = document.getElementById('edit-add-step-btn');
 
+initializeTextField(titleInput, true);
+initializeTextField(descriptionInput, true, true);
+restrictInput(servingsInput,     false);
+enforceMinMax(servingsInput,     false);
+restrictInput(cookingTimeInput,  false);
+enforceMinMax(cookingTimeInput,  false);
+
 
 let editCurrentRecipeId = null;
 let editCurrentRecipeElement = null;
@@ -455,7 +462,7 @@ editForm.onsubmit = async (e) => {
                     return;
                 }
                 // Заметьте, здесь мы используем ключ `stepImages[index]`, потому что бэкенд ожидает массив.
-                formData.append(`stepImages[${idx}]`, file);
+                formData.append('step-image', file);
             }
         });
 
