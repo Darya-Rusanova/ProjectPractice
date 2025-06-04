@@ -583,15 +583,30 @@ recipeForm.addEventListener('submit', async (e) => {
         const description = document.getElementById('recipe-description').value;
         const selectedCategories = Array.from(categoryButtons)
             .filter(button => button.classList.contains('active'))
-            .map(button => button.dataset.category);
+            .map(button => {
+                // Преобразуем английские категории в русские
+                const categoryMap = {
+                    'breakfast': 'Завтрак',
+                    'lunch': 'Обед',
+                    'dinner': 'Ужин',
+                    'dessert': 'Десерт',
+                    'snack': 'Закуски',
+                    'chinese': 'Китайская кухня',
+                    'italian': 'Итальянская кухня',
+                    'russian': 'Русская кухня',
+                    'hot': 'Горячее блюдо',
+                    'drinks': 'Напитки'
+                };
+                return categoryMap[button.dataset.category] || button.dataset.category;
+            });
 
         // Валидация
-        if (title.length > 50) {
-            showNotification('Название слишком длинное', 'error');
+        if (!title || title.length > 50) {
+            showNotification(`Длина названия выходит за границы: ${title.length}`, 'error');
             return;
         }
-        if (description.length > 1000) {
-            showNotification('Описание слишком длинное', 'error');
+        if (!description || description.length > 1000) {
+            showNotification(`Длина описания выходит за границы: ${description.length}`, 'error');
             return;
         }
         if (selectedCategories.length === 0) {
@@ -629,7 +644,7 @@ recipeForm.addEventListener('submit', async (e) => {
         for (let div of stepDivs) {
             const description = div.querySelector('.step-description')?.value;
             if (!description || description.length > 1000) {
-                showNotification(`Описание шага не должно превышать 1000 символов`, 'error');
+                showNotification(`Длина описания шага выходит за границы: ${description.length}`, 'error');
                 return;
             }
         }
@@ -639,7 +654,7 @@ recipeForm.addEventListener('submit', async (e) => {
             categories: selectedCategories,
             description,
             servings: parseInt(servingsInput.value) || 1,
-            cookingTime: parseInt(cookingTimeInput.value) || 0,
+            cookingTime: parseInt(cookingTimeInput.value) || 1,
             ingredients: [],
             ingredientQuantities: [],
             ingredientUnits: [],
@@ -661,7 +676,7 @@ recipeForm.addEventListener('submit', async (e) => {
 
         for (let [index, div] of stepDivs.entries()) {
             const description = div.querySelector('.step-description').value;
-            recipe.steps.push({ description, image: null });
+            recipe.steps.push({ description, image: '' });
             console.log(`Шаг ${index + 1}: описание="${description}", изображение=нет`);
         }
 
