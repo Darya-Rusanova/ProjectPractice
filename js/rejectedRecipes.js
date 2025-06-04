@@ -68,7 +68,7 @@ async function displayRejectedRecipes(recipes) {
     if (recipes.length === 0) {
         rejectedRecipesList.innerHTML = `  
                 <p></p>
-                <p>Нет отклоненных рецептов</p>
+                <p>Нет отклонённых рецептов</p>
                 <p></p>
         `;
         return;
@@ -103,7 +103,7 @@ async function displayRejectedRecipes(recipes) {
         // Добавляем слушатель события для кнопки "Удалить"
         const deleteButton = recipeDiv.querySelector('.delete-btn');
         deleteButton.addEventListener('click', () => {
-            deleteRecipe(recipe._id, recipeDiv, fetchRejectedRecipes);
+            showDeleteDialog(recipe._id, recipeDiv, fetchRejectedRecipes); // Используем showDeleteDialog
         });
     }
 }
@@ -126,6 +126,12 @@ async function reconsiderRecipe(recipeId) {
     } catch (err) {
         showNotification(`Ошибка: ${err.message}`, 'error');
     }
+}
+
+// Привязываем обработчик к кнопке "Удалить" в диалоге
+const confirmDeleteButton = document.getElementById('delete')?.querySelector('.confirm-btn');
+if (confirmDeleteButton) {
+    confirmDeleteButton.addEventListener('click', deleteRecipe); // Привязываем deleteRecipe
 }
 
 logoutButton.addEventListener('click', () => {
