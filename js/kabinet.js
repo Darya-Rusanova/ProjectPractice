@@ -659,42 +659,29 @@ recipeForm.addEventListener('submit', async (e) => {
             recipe.ingredientUnits.push(unit);
         }
 
-        for (let [index, div] of stepDivs.entries()) {
-            const description = div.querySelector('.step-description').value;
-            recipe.steps.push({ description, image: '' });
-            console.log(`Шаг ${index + 1}: описание="${description}", изображение=нет`);
-        }
+        // Записываем шаги (описание, без картинки, т.к. её отправим отдельно)
+        stepDivs.forEach((div, index) => {
+            const desc = div.querySelector('.step-description').value;
+            recipe.steps.push({ description: desc, image: '' });
+        });
 
-        if (recipe.ingredients.length !== recipe.ingredientQuantities.length || recipe.ingredients.length !== recipe.ingredientUnits.length) {
-            showNotification('Ошибка: количество ингредиентов, их объёмов и единиц измерения не совпадает', 'error');
-            return;
-        }
-
-        console.log('Recipe data before sending:', JSON.stringify(recipe, null, 2));
-
+        // 3) Упаковываем всё в FormData
         const formData = new FormData();
         formData.append('recipeData', JSON.stringify(recipe));
+
+        // Обязательное изображение самого рецепта
         if (recipeImageInput.files[0]) {
             formData.append('recipeImage', recipeImageInput.files[0]);
-            console.log('Добавлено изображение рецепта');
         }
 
-        for (const [index, div] of stepDivs.entries()) {
-            const stepImageInput = div.querySelector('.step-image');
-            if (stepImageInput?.files[0]) {
-                const file = stepImageInput.files[0];
-                if (!['image/jpeg', 'image/png'].includes(file.type)) {
-                    showNotification(`Изображение для шага ${index + 1} должно быть в формате JPEG или PNG`, 'error');
-                    return;
-                }
-                if (file.size > 5 * 1024 * 1024) {
-                    showNotification(`Изображение для шага ${index + 1} не должно превышать 5 МБ`, 'error');
-                    return;
-                }
+        // Правильно раскладываем изображения шагов по индексам
+        stepDivs.forEach((div, index) => {
+            const file = div.querySelector('.step-image')?.files[0];
+            if (file) {
+                // именно «stepImages[0]», «stepImages[1]» и т.п.
                 formData.append(`stepImages[${index}]`, file);
-                console.log(`Добавлено изображение для шага ${index + 1}: ${file.name}`);
             }
-        }
+        });
 
         const response = await fetch(`${API_BASE_URL}/api/recipes`, {
             method: 'POST',
