@@ -2,6 +2,78 @@ const rejectedRecipesList = document.getElementById('rejectedRecipesList');
 const returnDialog = document.getElementById('returnDialog');
 const confirmReturnButton = returnDialog.querySelector('.confirm-return-btn');
 const dltButton = document.getElementById('dltButton');
+const deleteDialog = document.getElementById('delete')
+
+let editCurrentRecipeId = null;
+let editCurrentRecipeElement = null;
+let editCurrentFetchFunction = null;
+
+function showDeleteDialog(recipeId, recipeElement) {
+    editCurrentRecipeId = recipeId;
+    editCurrentRecipeElement = recipeElement;
+    const deleteDialog = document.getElementById('delete');
+    if (deleteDialog) {
+        deleteDialog.showModal();
+    } else {
+        deleteRecipe();
+    }
+}
+
+async function deleteRecipe() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        showNotification('Ошибка: Нет токена авторизации', 'error');
+        if (document.getElementById('delete')) document.getElementById('delete').close();
+        editCurrentRecipeId = null;
+        editCurrentRecipeElement = null;
+        editCurrentFetchFunction = null;
+        return;
+    }
+    if (!editCurrentRecipeId) {
+        showNotification('Ошибка: Не выбран рецепт для удаления', 'error');
+        if (document.getElementById('delete')) document.getElementById('delete').close();
+        editCurrentRecipeId = null;
+        editCurrentRecipeElement = null;
+        editCurrentFetchFunction = null;
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/recipes/${editCurrentRecipeId}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token.trim()}` }
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `HTTP ${response.status}`);
+        }
+        showNotification('Рецепт удалён!', 'success');
+        if (editCurrentRecipeElement && editCurrentRecipeElement.parentNode) {
+            const parentList = editCurrentRecipeElement.parentNode;
+            editCurrentRecipeElement.parentNode.removeChild(editCurrentRecipeElement);
+            if (parentList.getElementsByClassName('recipe-card').length === 0) {
+                let emptyMessage = '';
+                if (parentList.id === 'publishedRecipesList') {
+                    emptyMessage = `
+                        <p>Нет опубликованных рецептов.</p>
+                    `;
+                } else if (parentList.id === 'rejectedRecipesList') {
+                    emptyMessage = `
+                        <p>Нет отклонённых рецептов</p>
+                    `;
+                }
+                parentList.innerHTML = emptyMessage;
+            }
+        }
+    } catch (err) {
+        showNotification(`Ошибка удаления: ${err.message}`, 'error');
+    } finally {
+        if (document.getElementById('delete')) document.getElementById('delete').close();
+        editCurrentRecipeId = null;
+        editCurrentRecipeElement = null;
+        editCurrentFetchFunction = null;
+    }
+}
 
 // Функция для получения имени автора по ID
 async function getAuthorName(authorId, token) {
