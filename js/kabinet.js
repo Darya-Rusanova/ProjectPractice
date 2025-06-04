@@ -583,30 +583,15 @@ recipeForm.addEventListener('submit', async (e) => {
         const description = document.getElementById('recipe-description').value;
         const selectedCategories = Array.from(categoryButtons)
             .filter(button => button.classList.contains('active'))
-            .map(button => {
-                // Преобразуем английские категории в русские
-                const categoryMap = {
-                    'breakfast': 'Завтрак',
-                    'lunch': 'Обед',
-                    'dinner': 'Ужин',
-                    'dessert': 'Десерт',
-                    'snack': 'Закуски',
-                    'chinese': 'Китайская кухня',
-                    'italian': 'Итальянская кухня',
-                    'russian': 'Русская кухня',
-                    'hot': 'Горячее блюдо',
-                    'drinks': 'Напитки'
-                };
-                return categoryMap[button.dataset.category] || button.dataset.category;
-            });
+            .map(button => button.dataset.category);
 
         // Валидация
         if (!title || title.length > 50) {
-            showNotification(`Длина названия выходит за границы: ${title.length}`, 'error');
+            showNotification(`Название должно быть от 1 до 50 символов (сейчас: ${title.length})`, 'error');
             return;
         }
         if (!description || description.length > 1000) {
-            showNotification(`Длина описания выходит за границы: ${description.length}`, 'error');
+            showNotification(`Описание должно быть от 1 до 1000 символов (сейчас: ${description.length})`, 'error');
             return;
         }
         if (selectedCategories.length === 0) {
@@ -644,7 +629,7 @@ recipeForm.addEventListener('submit', async (e) => {
         for (let div of stepDivs) {
             const description = div.querySelector('.step-description')?.value;
             if (!description || description.length > 1000) {
-                showNotification(`Длина описания шага выходит за границы: ${description.length}`, 'error');
+                showNotification(`Описание шага должно быть от 1 до 1000 символов (сейчас: ${description.length})`, 'error');
                 return;
             }
         }
@@ -699,16 +684,12 @@ recipeForm.addEventListener('submit', async (e) => {
             if (stepImageInput?.files[0]) {
                 const file = stepImageInput.files[0];
                 if (!['image/jpeg', 'image/png'].includes(file.type)) {
-                showNotification(`Изображение для шага ${index + 1} должно быть в формате JPEG или PNG`, 'error');
-                button.disabled = false;
-                button.textContent = originalText;
-                return;
+                    showNotification(`Изображение для шага ${index + 1} должно быть в формате JPEG или PNG`, 'error');
+                    return;
                 }
                 if (file.size > 5 * 1024 * 1024) {
-                showNotification(`Изображение для шага ${index + 1} не должно превышать 5 МБ`, 'error');
-                button.disabled = false;
-                button.textContent = originalText;
-                return;
+                    showNotification(`Изображение для шага ${index + 1} не должно превышать 5 МБ`, 'error');
+                    return;
                 }
                 formData.append(`stepImages[${index}]`, file);
                 console.log(`Добавлено изображение для шага ${index + 1}: ${file.name}`);
@@ -773,7 +754,7 @@ recipeForm.addEventListener('submit', async (e) => {
         }
     } catch (err) {
         console.error('Ошибка при отправке формы:', err);
-        showNotification('Ошибка добавления: ' + err.message, 'error');
+        showNotification(`Ошибка добавления: ${err.message}`, 'error');
     } finally {
         button.disabled = false;
         button.textContent = originalText;
