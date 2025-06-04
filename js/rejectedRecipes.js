@@ -93,7 +93,7 @@ async function displayRejectedRecipes(recipes) {
                 </div>
             </a>
                 <div class="recipe-buttons2">
-                    <button class="return" onclick="reconsiderRecipe('${recipe._id}')">Вернуть на рассмотрение</button>
+                    <button class="return" onclick="reconsiderRecipe('${recipe._id}', this.parentElement.parentElement)">Вернуть на рассмотрение</button>
                     <button class="delete-btn cancel" data-id="${recipe._id}">Удалить</button>
                 </div>
         `;
@@ -101,12 +101,12 @@ async function displayRejectedRecipes(recipes) {
 
         const deleteButton = recipeDiv.querySelector('.delete-btn');
         deleteButton.addEventListener('click', () => {
-            showDeleteDialog(recipe._id, recipeDiv, fetchRejectedRecipes);
+            showDeleteDialog(recipe._id, recipeDiv);
         });
     });
 }
 
-async function reconsiderRecipe(recipeId) {
+async function reconsiderRecipe(recipeId, recipeDiv) {
     const token = localStorage.getItem('token');
     if (!token) {
         showNotification('Ошибка: Нет токена авторизации', 'error');
@@ -120,7 +120,17 @@ async function reconsiderRecipe(recipeId) {
         });
         if (!response.ok) throw new Error('Не удалось вернуть рецепт на рассмотрение');
         showNotification('Рецепт возвращён на рассмотрение', 'success');
-        fetchRejectedRecipes();
+        if (recipeDiv && recipeDiv.parentNode) {
+            recipeDiv.parentNode.removeChild(recipeDiv);
+            // Проверяем, остались ли рецепты в списке
+            if (rejectedRecipesList.getElementsByClassName('recipe-card').length === 0) {
+                rejectedRecipesList.innerHTML = `  
+                    <p></p>
+                    <p>Нет отклонённых рецептов</p>
+                    <p></p>
+                `;
+            }
+        }
     } catch (err) {
         showNotification(`Ошибка: ${err.message}`, 'error');
     }

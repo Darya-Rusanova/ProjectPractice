@@ -2,10 +2,9 @@ let currentRecipeId = null;
 let currentRecipeElement = null;
 let currentFetchFunction = null;
 
-function showDeleteDialog(recipeId, recipeElement, fetchFunction) {
+function showDeleteDialog(recipeId, recipeElement) {
     currentRecipeId = recipeId;
     currentRecipeElement = recipeElement;
-    currentFetchFunction = fetchFunction;
     const deleteDialog = document.getElementById('delete');
     if (deleteDialog) {
         deleteDialog.showModal();
@@ -44,9 +43,27 @@ async function deleteRecipe() {
         }
         showNotification('Рецепт удалён!', 'success');
         if (currentRecipeElement && currentRecipeElement.parentNode) {
+            const parentList = currentRecipeElement.parentNode;
             currentRecipeElement.parentNode.removeChild(currentRecipeElement);
+            // Проверяем, остались ли рецепты в списке
+            if (parentList.getElementsByClassName('recipe-card').length === 0) {
+                let emptyMessage = '';
+                if (parentList.id === 'publishedRecipesList') {
+                    emptyMessage = `
+                        <p></p>
+                        <p>Нет опубликованных рецептов.</p>
+                        <p></p>
+                    `;
+                } else if (parentList.id === 'rejectedRecipesList') {
+                    emptyMessage = `
+                        <p></p>
+                        <p>Нет отклонённых рецептов</p>
+                        <p></p>
+                    `;
+                }
+                parentList.innerHTML = emptyMessage;
+            }
         }
-        if (currentFetchFunction) currentFetchFunction();
     } catch (err) {
         showNotification(`Ошибка удаления: ${err.message}`, 'error');
     } finally {

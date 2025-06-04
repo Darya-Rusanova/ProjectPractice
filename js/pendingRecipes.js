@@ -126,6 +126,7 @@ async function approveRecipe() {
     const token = localStorage.getItem('token');
     if (!token) {
         showNotification('Ошибка: Нет токена авторизации', 'error');
+        acceptDialog.close();
         return;
     }
 
@@ -139,9 +140,16 @@ async function approveRecipe() {
         showNotification('Рецепт одобрен', 'success');
         if (currentRecipeElement && currentRecipeElement.parentNode) {
             currentRecipeElement.parentNode.removeChild(currentRecipeElement);
+            // Проверяем, остались ли рецепты в списке
+            if (pendingRecipesList.getElementsByClassName('recipe-card').length === 0) {
+                pendingRecipesList.innerHTML = `  
+                    <p></p>
+                    <p>Нет рецептов на рассмотрении.</p>
+                    <p></p>
+                `;
+            }
         }
         acceptDialog.close();
-        fetchPendingRecipes();
     } catch (err) {
         showNotification(`Ошибка: ${err.message}`, 'error');
         acceptDialog.close();
@@ -152,6 +160,7 @@ async function rejectRecipe() {
     const token = localStorage.getItem('token');
     if (!token) {
         showNotification('Ошибка: Нет токена авторизации', 'error');
+        deleteDialog.close();
         return;
     }
 
@@ -165,9 +174,16 @@ async function rejectRecipe() {
         showNotification('Рецепт отклонён', 'success');
         if (currentRecipeElement && currentRecipeElement.parentNode) {
             currentRecipeElement.parentNode.removeChild(currentRecipeElement);
+            // Проверяем, остались ли рецепты в списке
+            if (pendingRecipesList.getElementsByClassName('recipe-card').length === 0) {
+                pendingRecipesList.innerHTML = `  
+                    <p></p>
+                    <p>Нет рецептов на рассмотрении.</p>
+                    <p></p>
+                `;
+            }
         }
         deleteDialog.close();
-        fetchPendingRecipes();
     } catch (err) {
         showNotification(`Ошибка: ${err.message}`, 'error');
         deleteDialog.close();
