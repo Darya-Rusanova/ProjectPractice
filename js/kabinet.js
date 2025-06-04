@@ -679,27 +679,26 @@ recipeForm.addEventListener('submit', async (e) => {
             console.log('Добавлено изображение рецепта');
         }
 
-        stepDivs.forEach((div, index) => {
+        for (const [index, div] of stepDivs.entries()) {
             const stepImageInput = div.querySelector('.step-image');
             if (stepImageInput?.files[0]) {
                 const file = stepImageInput.files[0];
-                // Валидация изображения шага
                 if (!['image/jpeg', 'image/png'].includes(file.type)) {
-                    showNotification(`Изображение для шага ${index + 1} должно быть в формате JPEG или PNG`, 'error');
-                    button.disabled = false;
-                    button.textContent = originalText;
-                    return;
+                showNotification(`Изображение для шага ${index + 1} должно быть в формате JPEG или PNG`, 'error');
+                button.disabled = false;
+                button.textContent = originalText;
+                return;
                 }
                 if (file.size > 5 * 1024 * 1024) {
-                    showNotification(`Изображение для шага ${index + 1} не должно превышать 5 МБ`, 'error');
-                    button.disabled = false;
-                    button.textContent = originalText;
-                    return;
+                showNotification(`Изображение для шага ${index + 1} не должно превышать 5 МБ`, 'error');
+                button.disabled = false;
+                button.textContent = originalText;
+                return;
                 }
                 formData.append(`stepImages[${index}]`, file);
                 console.log(`Добавлено изображение для шага ${index + 1}: ${file.name}`);
             }
-        });
+        }
 
         const response = await fetch(`${API_BASE_URL}/api/recipes`, {
             method: 'POST',

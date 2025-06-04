@@ -38,7 +38,7 @@ function immediatelyShowStoredInfo() {
   saveCountElement.textContent   = '0';
 }
 
-async function fetchAndUpdateUserInfo() {
+async function fetchAndUpdateUserInfo({ redirectOnError = true } = {}) {
   const usernameElement    = document.getElementById('username');
   const emailElement       = document.getElementById('email');
   const recipeCountElement = document.getElementById('recipeCount');
