@@ -6,8 +6,9 @@ const deleteDialog = document.getElementById('deleteDialog');
 const confirmAcceptButton = acceptDialog.querySelector('.confirm-accept-btn');
 const confirmRejectButton = deleteDialog.querySelector('.confirm-btn');
 
-let currentRecipeId = null;
-let currentRecipeElement = null;
+// currentRecipeId и currentRecipeElement уже объявлены в recipeActions.js
+// let currentRecipeId = null;
+// let currentRecipeElement = null;
 
 async function fetchPendingRecipes() {
     const token = localStorage.getItem('token');
