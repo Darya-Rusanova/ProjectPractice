@@ -24,20 +24,6 @@ enforceMinMax(servingsInput,     false);
 restrictInput(cookingTimeInput,  false);
 enforceMinMax(cookingTimeInput,  false);
 
-// Обработчик предварительного просмотра и удаления для изображения рецепта
-editRecipeImageInput.addEventListener('change', () => {
-    showImagePreview(editRecipeImageInput, editRecipeImagePreview, editRemoveRecipeImageButton);
-    if (editRecipeImageInput.files[0]) {
-        editRecipeImageInput.removeAttribute('required');
-    } else {
-        editRecipeImageInput.setAttribute('required', 'required');
-    }
-});
-editRemoveRecipeImageButton.addEventListener('click', () => {
-    clearImageInput(editRecipeImageInput, editRecipeImagePreview, editRemoveRecipeImageButton);
-});
-
-
 let editCurrentRecipeId = null;
 let editCurrentRecipeElement = null;
 let editCurrentFetchFunction = null;

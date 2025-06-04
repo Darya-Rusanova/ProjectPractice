@@ -4,6 +4,19 @@ const confirmAcceptButton = document.getElementById('confirmAcceptButton');
 const confirmRejectButton = document.getElementById('confirmRejectButton');
 const pendingRecipesList = document.getElementById('pendingRecipesList');
 
+// Обработчик предварительного просмотра и удаления для изображения рецепта
+editRecipeImageInput.addEventListener('change', () => {
+    showImagePreview(editRecipeImageInput, editRecipeImagePreview, editRemoveRecipeImageButton);
+    if (editRecipeImageInput.files[0]) {
+        editRecipeImageInput.removeAttribute('required');
+    } else {
+        editRecipeImageInput.setAttribute('required', 'required');
+    }
+});
+editRemoveRecipeImageButton.addEventListener('click', () => {
+    clearImageInput(editRecipeImageInput, editRecipeImagePreview, editRemoveRecipeImageButton);
+});
+
 // Функция для получения имени автора по ID (аналогично rejectedRecipes.js)
 async function getAuthorName(authorId, token) {
     try {
