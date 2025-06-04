@@ -94,8 +94,8 @@
             "img description"
     }
     .recipe-image img, #edit-recipe-image img{
-        max-width: 400px;
-        max-height: 300px;
+        max-width: 350px;
+        max-height: 250px;
     }
     #add-ingredient-btn, #edit-add-ingredient-btn,
     #add-step-btn, #edit-add-step-btn {
@@ -176,8 +176,8 @@
             "img description"
     }
     .recipe-image img, #edit-recipe-image img{
-        max-width: 400px;
-        max-height: 300px;
+        max-width: 350px;
+        max-height: 250px;
     }
     #add-ingredient-btn, #edit-add-ingredient-btn,
     #add-step-btn, #edit-add-step-btn{
