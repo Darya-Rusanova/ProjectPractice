@@ -79,7 +79,7 @@ async function displayRejectedRecipes(recipes) {
     for (const recipe of recipes) {
         const authorName = await getAuthorName(recipe.author, token);
         const recipeDiv = document.createElement('div');
-        recipeDiv.className = 'recipe-card';
+        recipeDiv.className = 'recipe-card'; 
         recipeDiv.innerHTML = `
             <a href="#" class="recipe-link">
                 <div class="recipe-content">

@@ -2,6 +2,13 @@ const pendingRecipesList = document.getElementById('pendingRecipesList');
 const logoutButton = document.getElementById('adminLogout');
 const errorDiv = document.getElementById('error');
 
+const acceptDialog = document.getElementById('acceptDialog');
+const deleteDialog = document.getElementById('deleteDialog');
+const confirmAcceptButton = acceptDialog.querySelector('.confirm-accept-btn');
+const confirmRejectButton = deleteDialog.querySelector('.confirm-btn');
+
+let currentRecipeId = null; // Переменная для хранения текущего recipeId
+
 async function fetchPendingRecipes() {
     const token = localStorage.getItem('token');
     console.log('Token from localStorage:', token);
@@ -92,9 +99,9 @@ async function displayPendingRecipes(recipes) {
                     </div>
                 </a>
                     <div class="recipe-buttons">
-                        <button class="accept" onclick="approveRecipe('${recipe._id}')">Одобрить</button>
+                        <button class="accept" onclick="showApproveDialog('${recipe._id}')">Одобрить</button>
                         <button class="return">Редактировать</button>
-                        <button class="cancel" onclick="rejectRecipe('${recipe._id}')">Отклонить</button>
+                        <button class="cancel" onclick="showRejectDialog('${recipe._id}')">Отклонить</button>
                     </div>
                  
         `;
@@ -107,7 +114,19 @@ async function displayPendingRecipes(recipes) {
     }
 }
 
-async function approveRecipe(recipeId) {
+// Функция для показа диалога одобрения
+function showApproveDialog(recipeId) {
+    currentRecipeId = recipeId; // Сохраняем текущий ID рецепта
+    acceptDialog.showModal();
+}
+
+// Функция для показа диалога отклонения
+function showRejectDialog(recipeId) {
+    currentRecipeId = recipeId; // Сохраняем текущий ID рецепта
+    deleteDialog.showModal();
+}
+
+async function approveRecipe() {
     const token = localStorage.getItem('token');
     if (!token) {
         showNotification('Ошибка: Нет токена авторизации', 'error');
@@ -115,19 +134,22 @@ async function approveRecipe(recipeId) {
     }
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}/approve`, {
+        console.log(`currentRecipe ID: ${currentRecipeId}`);
+        const response = await fetch(`${API_BASE_URL}/api/recipes/${currentRecipeId}/approve`, {
             method: 'PUT',
             headers: { 'Authorization': `Bearer ${token.trim()}` }
         });
         if (!response.ok) throw new Error('Не удалось одобрить рецепт');
         showNotification('Рецепт одобрен', 'success');
+        acceptDialog.close(); // Закрываем диалог после успеха
         fetchPendingRecipes(); // Обновляем список
     } catch (err) {
         showNotification(`Ошибка: ${err.message}`, 'error');
+        acceptDialog.close(); // Добавляем закрытие при ошибке
     }
 }
 
-async function rejectRecipe(recipeId) {
+async function rejectRecipe() {
     const token = localStorage.getItem('token');
     if (!token) {
         showNotification('Ошибка: Нет токена авторизации', 'error');
@@ -135,17 +157,24 @@ async function rejectRecipe(recipeId) {
     }
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}/reject`, {
+        console.log(`currentRecipe ID: ${currentRecipeId}`);
+        const response = await fetch(`${API_BASE_URL}/api/recipes/${currentRecipeId}/reject`, {
             method: 'PUT',
             headers: { 'Authorization': `Bearer ${token.trim()}` }
         });
         if (!response.ok) throw new Error('Не удалось отклонить рецепт');
         showNotification('Рецепт отклонён', 'success');
+        deleteDialog.close(); // Закрываем диалог после успеха
         fetchPendingRecipes(); // Обновляем список
     } catch (err) {
         showNotification(`Ошибка: ${err.message}`, 'error');
+        deleteDialog.close(); // Добавляем закрытие при ошибке
     }
 }
+
+// Привязываем обработчики к кнопкам в диалогах
+confirmAcceptButton.addEventListener('click', approveRecipe);
+confirmRejectButton.addEventListener('click', rejectRecipe);
 
 logoutButton.addEventListener('click', () => {
     localStorage.removeItem('token');
