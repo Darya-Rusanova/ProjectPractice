@@ -25,16 +25,16 @@ restrictInput(cookingTimeInput,  false);
 enforceMinMax(cookingTimeInput,  false);
 
 // Обработчик предварительного просмотра и удаления для изображения рецепта
-recipeImageInput.addEventListener('change', () => {
-    showImagePreview(recipeImageInput, recipeImagePreview, removeRecipeImageButton);
-    if (recipeImageInput.files[0]) {
-        recipeImageInput.removeAttribute('required');
+editRecipeImageInput.addEventListener('change', () => {
+    showImagePreview(editRecipeImageInput, editRecipeImagePreview, editRemoveRecipeImageButton);
+    if (editRecipeImageInput.files[0]) {
+        editRecipeImageInput.removeAttribute('required');
     } else {
-        recipeImageInput.setAttribute('required', 'required');
+        editRecipeImageInput.setAttribute('required', 'required');
     }
 });
-removeRecipeImageButton.addEventListener('click', () => {
-    clearImageInput(recipeImageInput, recipeImagePreview, removeRecipeImageButton);
+editRemoveRecipeImageButton.addEventListener('click', () => {
+    clearImageInput(editRecipeImageInput, editRecipeImagePreview, editRemoveRecipeImageButton);
 });
 
 
