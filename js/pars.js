@@ -71,6 +71,7 @@ function clearImageInput(input, previewElement, removeButton) {
 
 // Функция ограничения ввода
 function restrictInput(input, isDecimal = false) {
+    if (!input) return;
     input.addEventListener('input', (e) => {
         if (input.disabled) return;
         let value = input.value;
@@ -119,6 +120,7 @@ function restrictInput(input, isDecimal = false) {
 
 // Функция проверки границ
 function enforceMinMax(input, isDecimal = false) {
+    if (!input) return;
     input.addEventListener('change', () => {
         if (input.disabled) return;
         const min = parseFloat(input.min);
