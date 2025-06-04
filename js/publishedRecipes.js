@@ -1,5 +1,4 @@
-const deleteDialog = document.getElementById('delete');
-const deleteButton = document.getElementById('deleteButton');
+const dltButton = document.getElementById('dltButton');
 const publishedRecipesList = document.getElementById('publishedRecipesList');
 
 // Функция для получения имени автора по ID (аналогично rejectedRecipes.js)
@@ -97,8 +96,7 @@ async function displayPublishedRecipes(recipes) {
         });
     });
 
-    const confirmDeleteButton = document.getElementById('confirmDeleteButton');
-    confirmDeleteButton.addEventListener('click', deleteRecipe);
+    dltButton.addEventListener('click', deleteRecipe);
 }
 
 async function editRecipe(recipeId, recipeElement) {

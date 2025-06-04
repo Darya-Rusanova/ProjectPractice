@@ -1,6 +1,7 @@
 // --- 1) Схема получения полей формы и диалога “Редактировать” ---
 const editDialog = document.getElementById('editDialog');
 const editForm = document.getElementById('edit-recipe-form');
+const deleteDialog = document.getElementById('delete')
 
 // Поля внутри формы «Редактировать рецепт»
 const titleInput = document.getElementById('edit-recipe-title');
