@@ -248,7 +248,7 @@ async function editRecipe(recipeId, recipeElement) {
                 <button type="button" class="remove-btn remove-ingredient-btn">Удалить ингредиент</button>
             `;
             editIngredientsContainer.appendChild(div);
-            // Убрали вызов initializeIngredient(div);
+            initializeIngredient(div);
         });
 
         // 7) Шаги: очищаем контейнер, потом создаём нужное число полей
@@ -281,7 +281,7 @@ async function editRecipe(recipeId, recipeElement) {
                 <button type="button" class="remove-btn remove-step-btn">Удалить шаг</button>
             `;
             editStepsContainer.appendChild(stepDiv);
-            // Убрали вызов initializeStep(stepDiv);
+            initializeStep(stepDiv);
         });
         updateStepLabels();
 
