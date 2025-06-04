@@ -2,7 +2,7 @@ const rejectedRecipesList = document.getElementById('rejectedRecipesList');
 const logoutButton = document.getElementById('adminLogout');
 const errorDiv = document.getElementById('error');
 const returnDialog = document.getElementById('returnDialog');
-const confirmReturnButton = returnDialog.querySelector('.confirm-btn');
+const confirmReturnButton = returnDialog.querySelector('.confirm-return-btn');
 
 async function fetchRejectedRecipes() {
     const token = localStorage.getItem('token');
