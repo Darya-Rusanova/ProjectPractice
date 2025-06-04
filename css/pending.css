@@ -98,11 +98,9 @@
             "img description"
     }
     .recipe-image img{
-        max-width: 250px;
-        max-height: 150px;
+        max-width: 200px;
+        max-height: 100px;
     }
-
-
     
 }
 
@@ -125,8 +123,8 @@
             "img description"
     }
     .recipe-image img{
-        max-width: 200px;
-        max-height: 100px;
+        max-width: 250px;
+        max-height: 150px;
     }
 
 }

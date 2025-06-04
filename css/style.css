@@ -97,8 +97,8 @@
         min-width: 300px;
     } 
     .picture {
-        height: 266px;
-        width: 400px;
+        max-height: 200px;
+        max-width: 300px;
         border-radius: 20px;
     }
     .dropbtn{
@@ -167,8 +167,8 @@
         min-width: 200px;
     } 
     .picture {
-        height: 266px;
-        width: 400px;
+        max-height: 200px;
+        max-width: 300px;
         border-radius: 20px;
     }
      .dropbtn{
@@ -249,8 +249,8 @@
         min-width: 300px;
     } 
     .picture {
-        height: 200px;
-        width: 300px;
+        max-height: 200px;
+        max-width: 300px;
         border-radius: 20px;
     }
     .dropbtn{
