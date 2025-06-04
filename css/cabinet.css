@@ -611,7 +611,7 @@ h3{
   background-color: var(--color-primary-a110);
 }
 
-#exit, #delete, #deleteDialog, #acceptDialog{
+#exit, #delete, #deleteDialog, #acceptDialog, #returnDialog{
     max-width: 80%;
     width: 500px;
     height: 200px;
