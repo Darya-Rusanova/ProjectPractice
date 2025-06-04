@@ -718,7 +718,7 @@ recipeForm.addEventListener('submit', async (e) => {
         stepDivs.forEach((div, index) => {
             const stepImageInput = div.querySelector('.step-image');
             if (stepImageInput?.files[0]) {
-                formData.append('stepImages', stepImageInput.files[0]);
+                formData.append(`stepImages[${index}]`, stepImageInput.files[0]);
             }
         });
 
