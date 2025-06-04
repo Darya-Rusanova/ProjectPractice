@@ -1,6 +1,8 @@
 const rejectedRecipesList = document.getElementById('rejectedRecipesList');
 const logoutButton = document.getElementById('adminLogout');
 const errorDiv = document.getElementById('error');
+const returnDialog = document.getElementById('returnDialog');
+const confirmReturnButton = returnDialog.querySelector('.confirm-btn');
 
 async function fetchRejectedRecipes() {
     const token = localStorage.getItem('token');
@@ -93,7 +95,7 @@ async function displayRejectedRecipes(recipes) {
                 </div>
             </a>
                 <div class="recipe-buttons2">
-                    <button class="return" onclick="reconsiderRecipe('${recipe._id}', this.parentElement.parentElement)">Вернуть на рассмотрение</button>
+                    <button class="return" onclick="showReturnDialog('${recipe._id}', this.parentElement.parentElement)">Вернуть на рассмотрение</button>
                     <button class="delete-btn cancel" data-id="${recipe._id}">Удалить</button>
                 </div>
         `;
@@ -106,35 +108,44 @@ async function displayRejectedRecipes(recipes) {
     });
 }
 
-async function reconsiderRecipe(recipeId, recipeDiv) {
+function showReturnDialog(recipeId, recipeDiv) {
+    currentRecipeId = recipeId;
+    currentRecipeElement = recipeDiv;
+    returnDialog.showModal();
+}
+
+async function reconsiderRecipe() {
     const token = localStorage.getItem('token');
     if (!token) {
         showNotification('Ошибка: Нет токена авторизации', 'error');
+        returnDialog.close();
         return;
     }
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}/reconsider`, {
+        const response = await fetch(`${API_BASE_URL}/api/recipes/${currentRecipeId}/reconsider`, {
             method: 'PUT',
             headers: { 'Authorization': `Bearer ${token.trim()}` }
         });
         if (!response.ok) throw new Error('Не удалось вернуть рецепт на рассмотрение');
         showNotification('Рецепт возвращён на рассмотрение', 'success');
-        if (recipeDiv && recipeDiv.parentNode) {
-            recipeDiv.parentNode.removeChild(recipeDiv);
+        if (currentRecipeElement && currentRecipeElement.parentNode) {
+            currentRecipeElement.parentNode.removeChild(currentRecipeElement);
             // Проверяем, остались ли рецепты в списке
             if (rejectedRecipesList.getElementsByClassName('recipe-card').length === 0) {
                 rejectedRecipesList.innerHTML = `  
-                    <p></p>
                     <p>Нет отклонённых рецептов</p>
-                    <p></p>
                 `;
             }
         }
+        returnDialog.close();
     } catch (err) {
         showNotification(`Ошибка: ${err.message}`, 'error');
+        returnDialog.close();
     }
 }
+
+confirmReturnButton.addEventListener('click', reconsiderRecipe);
 
 const confirmDeleteButton = document.getElementById('delete')?.querySelector('.confirm-btn');
 if (confirmDeleteButton) {
