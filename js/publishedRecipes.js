@@ -66,19 +66,16 @@ async function displayPublishedRecipes(recipes) {
     publishedRecipesList.innerHTML = '';
     if (recipes.length === 0) {
         publishedRecipesList.innerHTML = `  
-                <p></p>
-                <p>Нет опубликованных рецептов.</p>
-                <p></p>
+            <p></p>
+            <p>Нет опубликованных рецептов.</p>
+            <p></p>
         `;
         return;
     }
     const token = localStorage.getItem('token');
-
-    // Собираем все запросы для авторов
     const authorPromises = recipes.map(recipe => getAuthorName(recipe.author, token));
     const authorNames = await Promise.all(authorPromises);
 
-    // Отображаем рецепты с именами авторов
     recipes.forEach((recipe, index) => {
         const authorName = authorNames[index] || 'Неизвестный автор';
         const recipeDiv = document.createElement('div');
@@ -96,10 +93,9 @@ async function displayPublishedRecipes(recipes) {
                 </div>
             </a>
                 <div class="recipe-buttons2">
-                    <button class="return">Редактировать</button>
+                    <button class="return" onclick="editRecipe('${recipe._id}', fetchPublishedRecipes)">Редактировать</button>
                     <button class="delete-btn cancel" data-id="${recipe._id}">Удалить</button>
                 </div>
-            
         `;
         publishedRecipesList.appendChild(recipeDiv);
 
@@ -108,15 +104,13 @@ async function displayPublishedRecipes(recipes) {
             editRecipe(recipe._id, fetchPublishedRecipes);
         });
 
-        // Добавляем слушатель события для кнопки "Удалить"
         const deleteButton = recipeDiv.querySelector('.delete-btn');
         deleteButton.addEventListener('click', () => {
-            showDeleteDialog(recipe._id, recipeDiv, fetchPublishedRecipes); // Используем showDeleteDialog
+            showDeleteDialog(recipe._id, recipeDiv, fetchPublishedRecipes);
         });
     });
 }
 
-// Привязываем обработчик к кнопке "Удалить" в диалоге (должен быть доступен глобально)
 const confirmDeleteButton = document.getElementById('delete')?.querySelector('.confirm-btn');
 if (confirmDeleteButton) {
     confirmDeleteButton.addEventListener('click', deleteRecipe);

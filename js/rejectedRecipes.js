@@ -62,22 +62,22 @@ async function getAuthorName(authorId, token) {
     }
 }
 
-
 async function displayRejectedRecipes(recipes) {
     rejectedRecipesList.innerHTML = '';
     if (recipes.length === 0) {
         rejectedRecipesList.innerHTML = `  
-                <p></p>
-                <p>Нет отклонённых рецептов</p>
-                <p></p>
+            <p></p>
+            <p>Нет отклонённых рецептов</p>
+            <p></p>
         `;
         return;
     }
     const token = localStorage.getItem('token');
+    const authorPromises = recipes.map(recipe => getAuthorName(recipe.author, token));
+    const authorNames = await Promise.all(authorPromises);
 
-    // Обрабатываем каждый рецепт асинхронно
-    for (const recipe of recipes) {
-        const authorName = await getAuthorName(recipe.author, token);
+    recipes.forEach((recipe, index) => {
+        const authorName = authorNames[index] || 'Неизвестный автор';
         const recipeDiv = document.createElement('div');
         recipeDiv.className = 'recipe-card'; 
         recipeDiv.innerHTML = `
@@ -96,16 +96,14 @@ async function displayRejectedRecipes(recipes) {
                     <button class="return" onclick="reconsiderRecipe('${recipe._id}')">Вернуть на рассмотрение</button>
                     <button class="delete-btn cancel" data-id="${recipe._id}">Удалить</button>
                 </div>
-            
         `;
         rejectedRecipesList.appendChild(recipeDiv);
 
-        // Добавляем слушатель события для кнопки "Удалить"
         const deleteButton = recipeDiv.querySelector('.delete-btn');
         deleteButton.addEventListener('click', () => {
-            showDeleteDialog(recipe._id, recipeDiv, fetchRejectedRecipes); // Используем showDeleteDialog
+            showDeleteDialog(recipe._id, recipeDiv, fetchRejectedRecipes);
         });
-    }
+    });
 }
 
 async function reconsiderRecipe(recipeId) {
@@ -122,16 +120,15 @@ async function reconsiderRecipe(recipeId) {
         });
         if (!response.ok) throw new Error('Не удалось вернуть рецепт на рассмотрение');
         showNotification('Рецепт возвращён на рассмотрение', 'success');
-        fetchRejectedRecipes(); // Обновляем список
+        fetchRejectedRecipes();
     } catch (err) {
         showNotification(`Ошибка: ${err.message}`, 'error');
     }
 }
 
-// Привязываем обработчик к кнопке "Удалить" в диалоге
 const confirmDeleteButton = document.getElementById('delete')?.querySelector('.confirm-btn');
 if (confirmDeleteButton) {
-    confirmDeleteButton.addEventListener('click', deleteRecipe); // Привязываем deleteRecipe
+    confirmDeleteButton.addEventListener('click', deleteRecipe);
 }
 
 logoutButton.addEventListener('click', () => {

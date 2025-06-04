@@ -1,13 +1,13 @@
 const pendingRecipesList = document.getElementById('pendingRecipesList');
 const logoutButton = document.getElementById('adminLogout');
 const errorDiv = document.getElementById('error');
-
 const acceptDialog = document.getElementById('acceptDialog');
 const deleteDialog = document.getElementById('deleteDialog');
 const confirmAcceptButton = acceptDialog.querySelector('.confirm-accept-btn');
 const confirmRejectButton = deleteDialog.querySelector('.confirm-btn');
 
-let currentRecipeId = null; // Переменная для хранения текущего recipeId
+let currentRecipeId = null;
+let currentRecipeElement = null;
 
 async function fetchPendingRecipes() {
     const token = localStorage.getItem('token');
@@ -73,56 +73,51 @@ async function displayPendingRecipes(recipes) {
     pendingRecipesList.innerHTML = '';
     if (recipes.length === 0) {
         pendingRecipesList.innerHTML = `  
-                <p></p>
-                <p>Нет рецептов на рассмотрении.</p>
-                <p></p>
+            <p></p>
+            <p>Нет рецептов на рассмотрении.</p>
+            <p></p>
         `;
         return;
     }
     const token = localStorage.getItem('token');
+    const authorPromises = recipes.map(recipe => getAuthorName(recipe.author, token));
+    const authorNames = await Promise.all(authorPromises);
 
-    // Обрабатываем каждый рецепт асинхронно
-    for (const recipe of recipes) {
-        const authorName = await getAuthorName(recipe.author, token);
+    recipes.forEach((recipe, index) => {
+        const authorName = authorNames[index] || 'Неизвестный автор';
         const recipeDiv = document.createElement('div');
         recipeDiv.className = 'recipe-card';
         recipeDiv.innerHTML = `  
-                <a href="#" class="recipe-link">
-                    <div class="recipe-content">
-                        <div class="recipe-image">
-                            ${recipe.image ? `<img src="${recipe.image}" alt="${recipe.title}" />` : '<div class="no-image">Нет изображения</div>'}
-                        </div>
-                        <div class="recipe-info">
-                            <h4>${recipe.title}</h4>
-                            <p>Автор: ${authorName}</p>
-                        </div>
+            <a href="#" class="recipe-link">
+                <div class="recipe-content">
+                    <div class="recipe-image">
+                        ${recipe.image ? `<img src="${recipe.image}" alt="${recipe.title}" />` : '<div class="no-image">Нет изображения</div>'}
                     </div>
-                </a>
-                    <div class="recipe-buttons">
-                        <button class="accept" onclick="showApproveDialog('${recipe._id}')">Одобрить</button>
-                        <button class="return">Редактировать</button>
-                        <button class="cancel" onclick="showRejectDialog('${recipe._id}')">Отклонить</button>
+                    <div class="recipe-info">
+                        <h4>${recipe.title}</h4>
+                        <p>Автор: ${authorName}</p>
                     </div>
-                 
+                </div>
+            </a>
+                <div class="recipe-buttons">
+                    <button class="accept" onclick="showApproveDialog('${recipe._id}', this.parentElement.parentElement)">Одобрить</button>
+                    <button class="return" onclick="editRecipe('${recipe._id}', fetchPendingRecipes)">Редактировать</button>
+                    <button class="cancel" onclick="showRejectDialog('${recipe._id}', this.parentElement.parentElement)">Отклонить</button>
+                </div>
         `;
         pendingRecipesList.appendChild(recipeDiv);
-
-        const editButton = recipeDiv.querySelector('.return');
-        editButton.addEventListener('click', () => {
-            editRecipe(recipe._id, fetchPendingRecipes);
-        });
-    }
+    });
 }
 
-// Функция для показа диалога одобрения
-function showApproveDialog(recipeId) {
-    currentRecipeId = recipeId; // Сохраняем текущий ID рецепта
+function showApproveDialog(recipeId, recipeDiv) {
+    currentRecipeId = recipeId;
+    currentRecipeElement = recipeDiv;
     acceptDialog.showModal();
 }
 
-// Функция для показа диалога отклонения
-function showRejectDialog(recipeId) {
-    currentRecipeId = recipeId; // Сохраняем текущий ID рецепта
+function showRejectDialog(recipeId, recipeDiv) {
+    currentRecipeId = recipeId;
+    currentRecipeElement = recipeDiv;
     deleteDialog.showModal();
 }
 
@@ -141,11 +136,14 @@ async function approveRecipe() {
         });
         if (!response.ok) throw new Error('Не удалось одобрить рецепт');
         showNotification('Рецепт одобрен', 'success');
-        acceptDialog.close(); // Закрываем диалог после успеха
-        fetchPendingRecipes(); // Обновляем список
+        if (currentRecipeElement && currentRecipeElement.parentNode) {
+            currentRecipeElement.parentNode.removeChild(currentRecipeElement);
+        }
+        acceptDialog.close();
+        fetchPendingRecipes();
     } catch (err) {
         showNotification(`Ошибка: ${err.message}`, 'error');
-        acceptDialog.close(); // Добавляем закрытие при ошибке
+        acceptDialog.close();
     }
 }
 
@@ -164,15 +162,17 @@ async function rejectRecipe() {
         });
         if (!response.ok) throw new Error('Не удалось отклонить рецепт');
         showNotification('Рецепт отклонён', 'success');
-        deleteDialog.close(); // Закрываем диалог после успеха
-        fetchPendingRecipes(); // Обновляем список
+        if (currentRecipeElement && currentRecipeElement.parentNode) {
+            currentRecipeElement.parentNode.removeChild(currentRecipeElement);
+        }
+        deleteDialog.close();
+        fetchPendingRecipes();
     } catch (err) {
         showNotification(`Ошибка: ${err.message}`, 'error');
-        deleteDialog.close(); // Добавляем закрытие при ошибке
+        deleteDialog.close();
     }
 }
 
-// Привязываем обработчики к кнопкам в диалогах
 confirmAcceptButton.addEventListener('click', approveRecipe);
 confirmRejectButton.addEventListener('click', rejectRecipe);
 
