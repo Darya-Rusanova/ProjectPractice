@@ -342,20 +342,36 @@ editForm.onsubmit = async (e) => {
         const stepDivs = Array.from(editStepsContainer.getElementsByClassName('step'));
         if (stepDivs.length === 0) {
             showNotification('Добавьте хотя бы один шаг', 'error');
+            saveButton.disabled = false;
+            saveButton.textContent = originalText;
             return;
         }
-        const steps = [];
         for (let idx = 0; idx < stepDivs.length; idx++) {
             const div = stepDivs[idx];
             const descTextarea = div.querySelector('.step-description');
-            const stepDescription = descTextarea.value;
+            const stepDescription = descTextarea.value.trim();
             if (!stepDescription || stepDescription.length > 1000) {
                 showNotification(`Описание шага ${idx + 1} должно быть от 1 до 1000 символов`, 'error');
+                saveButton.disabled = false;
+                saveButton.textContent = originalText;
                 return;
             }
-            // Если в prevJson есть старое изображение и пользователь его не перезаписал
-            steps.push({ description: stepDescription, image: '' });
+
+            // Проверяем “обязательность” картинки:
+            const stepImagePreview = div.querySelector('.step-image-preview');
+            const stepFileInput = div.querySelector('.step-image');
+
+            // Если превью пустое (пользователь удалил старую картинку) И нового файла нет → ошибка
+            const hasOldPreview = stepImagePreview.innerHTML.trim() !== '';
+            const hasNewFile = stepFileInput.files && stepFileInput.files[0];
+            if (!hasOldPreview && !hasNewFile) {
+                showNotification(`Для шага ${idx + 1} обязательно загрузите изображение`, 'error');
+                saveButton.disabled = false;
+                saveButton.textContent = originalText;
+                return;
+            }
         }
+
 
         // 4) Подготовка объекта updatedRecipe
         //    Нам нужно сохранить старые URL картинок (главного и шагов), если пользователь их не изменил.
@@ -389,15 +405,14 @@ editForm.onsubmit = async (e) => {
             const desc = div.querySelector('.step-description').value;
             const stepImagePreview = div.querySelector('.step-image-preview');
             const stepImageInput = div.querySelector('.step-image');
-            let image = '';
+            let imageURL = '';
 
-            if (stepImagePreview.innerHTML && !stepImageInput.files[0]) {
-                // Старая картинка остаётся
-                image = originalRecipe.steps[index]?.image || '';
+            // Если превью непустое и нового файла не выбрано → оставляем старую ссылку
+            if (stepImagePreview.innerHTML.trim() && !stepImageInput.files[0]) {
+                imageURL = originalRecipe.steps[index]?.image || '';
             }
-            // Если превью пусто и нет нового файла — image = ''
-
-            updatedRecipe.steps.push({ description: desc, image });
+            // Иначе (если превью пустое, то либо файл, либо изображение будет пустой строкой)
+            updatedRecipe.steps.push({ description: desc, image: imageURL });
         });
 
         // 6) Формируем FormData

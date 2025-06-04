@@ -271,7 +271,7 @@ async function editRecipe(recipeId, recipeElement) {
                               required>${stepObj.description}</textarea>
                 </label>
                 <label>Изображение шага:
-                    <input type="file" class="step-image" name="step-image" accept="image/jpeg,image/png">
+                    <input type="file" class="step-image" name="step-image" accept="image/jpeg,image/png" required>
                 </label>
                 <div class="image-controls">
                     <div class="step-image-preview">${

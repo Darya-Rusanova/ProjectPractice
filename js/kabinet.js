@@ -271,6 +271,7 @@ function createStep(stepNumber) {
     imageInput.className = 'step-image';
     imageInput.name = 'step-image';
     imageInput.accept = 'image/jpeg,image/png';
+    imageInput.setAttribute('required', 'required');
     imageLabel.appendChild(imageInput);
     stepDiv.appendChild(imageLabel);
 
@@ -630,6 +631,12 @@ recipeForm.addEventListener('submit', async (e) => {
             const description = div.querySelector('.step-description')?.value;
             if (!description || description.length > 1000) {
                 showNotification(`Описание шага должно быть от 1 до 1000 символов (сейчас: ${description.length})`, 'error');
+                return;
+            }
+
+            const stepFileInput = div.querySelector('.step-image');
+            if (!stepFileInput || !stepFileInput.files[0]) {
+                showNotification('Для каждого шага обязательно загрузите изображение', 'error');
                 return;
             }
         }
