@@ -106,7 +106,7 @@ async function displayPublishedRecipes(recipes) {
 
         const deleteButton = recipeDiv.querySelector('.delete-btn');
         deleteButton.addEventListener('click', () => {
-            showDeleteDialog(recipe._id, recipeDiv, fetchPublishedRecipes);
+            showDeleteDialog(recipe._id, recipeDiv);
         });
     });
 }
