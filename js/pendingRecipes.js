@@ -1,3 +1,5 @@
+// pendingRecipes.js
+
 let currentRecipeId = null;
 let currentRecipeElement = null;
 
@@ -62,7 +64,6 @@ async function fetchPendingRecipes() {
     }
 }
 
-
 async function displayPendingRecipes(recipes) {
     pendingRecipesList.innerHTML = '';
 
@@ -71,7 +72,7 @@ async function displayPendingRecipes(recipes) {
         return;
     }
 
-     const token = localStorage.getItem('token').trim();
+    const token = localStorage.getItem('token').trim();
 
     // Собираем имена авторов для каждого рецепта параллельно
     const authorPromises = recipes.map(r => getAuthorName(r.author, token));
@@ -130,12 +131,15 @@ async function approveRecipe() {
     }
 
     try {
-        console.log(`currentRecipe ID: ${currentRecipeId}`);
-        const response = await fetch(`${API_BASE_URL}/api/recipes/${currentRecipeId}/approve`, {
-            method: 'PUT',
-            headers: { 'Authorization': `Bearer ${token.trim()}` }
-        });
+        const response = await fetch(
+            `${API_BASE_URL}/api/recipes/${currentRecipeId}/approve`,
+            {
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${token.trim()}` }
+            }
+        );
         if (!response.ok) throw new Error('Не удалось одобрить рецепт');
+
         showNotification('Рецепт одобрен', 'success');
         if (currentRecipeElement && currentRecipeElement.parentNode) {
             currentRecipeElement.parentNode.removeChild(currentRecipeElement);
@@ -157,12 +161,15 @@ async function rejectRecipe() {
     }
 
     try {
-        console.log(`currentRecipe ID: ${currentRecipeId}`);
-        const response = await fetch(`${API_BASE_URL}/api/recipes/${currentRecipeId}/reject`, {
-            method: 'PUT',
-            headers: { 'Authorization': `Bearer ${token.trim()}` }
-        });
+        const response = await fetch(
+            `${API_BASE_URL}/api/recipes/${currentRecipeId}/reject`,
+            {
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${token.trim()}` }
+            }
+        );
         if (!response.ok) throw new Error('Не удалось отклонить рецепт');
+
         showNotification('Рецепт отклонён', 'success');
         if (currentRecipeElement && currentRecipeElement.parentNode) {
             currentRecipeElement.parentNode.removeChild(currentRecipeElement);
@@ -246,7 +253,7 @@ async function editRecipe(recipeId, recipeElement) {
                 <button type="button" class="remove-btn remove-ingredient-btn">Удалить ингредиент</button>
             `;
             editIngredientsContainer.appendChild(div);
-            initializeIngredient(div);
+            // Убрали вызов initializeIngredient(div);
         });
 
         // 7) Шаги: очищаем контейнер, потом создаём нужное число полей
@@ -279,7 +286,7 @@ async function editRecipe(recipeId, recipeElement) {
                 <button type="button" class="remove-btn remove-step-btn">Удалить шаг</button>
             `;
             editStepsContainer.appendChild(stepDiv);
-            initializeStep(stepDiv);
+            // Убрали вызов initializeStep(stepDiv);
         });
         updateStepLabels();
 
