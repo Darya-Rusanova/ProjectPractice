@@ -17,13 +17,13 @@ const editStepsContainer = document.getElementById('edit-steps-container');
 const editAddStepButton = document.getElementById('edit-add-step-btn');
 
 
-let currentRecipeId = null;
-let currentRecipeElement = null;
-let currentFetchFunction = null;
+let editCurrentRecipeId = null;
+let editCurrentRecipeElement = null;
+let editCurrentFetchFunction = null;
 
 function showDeleteDialog(recipeId, recipeElement) {
-    currentRecipeId = recipeId;
-    currentRecipeElement = recipeElement;
+    editCurrentRecipeId = recipeId;
+    editCurrentRecipeElement = recipeElement;
     const deleteDialog = document.getElementById('delete');
     if (deleteDialog) {
         deleteDialog.showModal();
@@ -37,22 +37,22 @@ async function deleteRecipe() {
     if (!token) {
         showNotification('Ошибка: Нет токена авторизации', 'error');
         if (document.getElementById('delete')) document.getElementById('delete').close();
-        currentRecipeId = null;
-        currentRecipeElement = null;
-        currentFetchFunction = null;
+        editCurrentRecipeId = null;
+        editCurrentRecipeElement = null;
+        editCurrentFetchFunction = null;
         return;
     }
-    if (!currentRecipeId) {
+    if (!editCurrentRecipeId) {
         showNotification('Ошибка: Не выбран рецепт для удаления', 'error');
         if (document.getElementById('delete')) document.getElementById('delete').close();
-        currentRecipeId = null;
-        currentRecipeElement = null;
-        currentFetchFunction = null;
+        editCurrentRecipeId = null;
+        editCurrentRecipeElement = null;
+        editCurrentFetchFunction = null;
         return;
     }
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/recipes/${currentRecipeId}`, {
+        const response = await fetch(`${API_BASE_URL}/api/recipes/${editCurrentRecipeId}`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token.trim()}` }
         });
@@ -61,9 +61,9 @@ async function deleteRecipe() {
             throw new Error(errorData.message || `HTTP ${response.status}`);
         }
         showNotification('Рецепт удалён!', 'success');
-        if (currentRecipeElement && currentRecipeElement.parentNode) {
-            const parentList = currentRecipeElement.parentNode;
-            currentRecipeElement.parentNode.removeChild(currentRecipeElement);
+        if (editCurrentRecipeElement && editCurrentRecipeElement.parentNode) {
+            const parentList = editCurrentRecipeElement.parentNode;
+            editCurrentRecipeElement.parentNode.removeChild(editCurrentRecipeElement);
             if (parentList.getElementsByClassName('recipe-card').length === 0) {
                 let emptyMessage = '';
                 if (parentList.id === 'publishedRecipesList') {
@@ -82,9 +82,9 @@ async function deleteRecipe() {
         showNotification(`Ошибка удаления: ${err.message}`, 'error');
     } finally {
         if (document.getElementById('delete')) document.getElementById('delete').close();
-        currentRecipeId = null;
-        currentRecipeElement = null;
-        currentFetchFunction = null;
+        editCurrentRecipeId = null;
+        editCurrentRecipeElement = null;
+        editCurrentFetchFunction = null;
     }
 }
 
@@ -360,7 +360,7 @@ editForm.onsubmit = async (e) => {
         // 4) Подготовка объекта updatedRecipe
         //    Нам нужно сохранить старые URL картинок (главного и шагов), если пользователь их не изменил.
         //    Для этого сперва получим оригинальный объект рецепта:
-        const originalRecipeResponse = await fetchWithRetry(`${API_BASE_URL}/api/recipes/${currentRecipeId}`, {
+        const originalRecipeResponse = await fetchWithRetry(`${API_BASE_URL}/api/recipes/${editCurrentRecipeId}`, {
             headers: { 'Authorization': `Bearer ${token.trim()}` }
         });
         if (!originalRecipeResponse.ok) {
@@ -450,7 +450,7 @@ editForm.onsubmit = async (e) => {
         }
 
         // 10) Отправляем PUT-запрос на бэкенд
-        const response = await fetchWithRetry(`${API_BASE_URL}/api/recipes/${currentRecipeId}`, {
+        const response = await fetchWithRetry(`${API_BASE_URL}/api/recipes/${editCurrentRecipeId}`, {
             method: 'PUT',
             headers: { 'Authorization': `Bearer ${token.trim()}` },
             body: formData
@@ -461,16 +461,16 @@ editForm.onsubmit = async (e) => {
             editDialog.close();
 
             // При желании обновляем картинку и заголовок в карточке 
-            if (currentRecipeElement) {
-                const img = currentRecipeElement.querySelector('img');
-                const titleEl = currentRecipeElement.querySelector('h4');
+            if (editCurrentRecipeElement) {
+                const img = editCurrentRecipeElement.querySelector('img');
+                const titleEl = editCurrentRecipeElement.querySelector('h4');
                 if (img && data.image) img.src = data.image;
                 if (titleEl) titleEl.textContent = title;
             }
 
             // Если нужно снова перезагрузить список (fetchPendingRecipes), можно вызвать currentFetchFunction()
-            if (typeof currentFetchFunction === 'function') {
-                currentFetchFunction();
+            if (typeof editCurrentFetchFunction === 'function') {
+                editCurrentFetchFunction();
             }
         } else {
             throw new Error(data.message || 'Ошибка обновления рецепта');
