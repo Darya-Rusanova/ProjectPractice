@@ -1,79 +1,72 @@
 const rejectedRecipesList = document.getElementById('rejectedRecipesList');
-const logoutButton = document.getElementById('adminLogout');
-const errorDiv = document.getElementById('error');
 const returnDialog = document.getElementById('returnDialog');
 const confirmReturnButton = returnDialog.querySelector('.confirm-return-btn');
+const dltButton = document.getElementById('dltButton');
 
-async function fetchRejectedRecipes() {
-    const token = localStorage.getItem('token');
-    console.log('Token from localStorage:', token);
-    if (!token) {
-        showNotification('Ошибка: Нет токена авторизации', 'error');
-        setTimeout(() => {
-            window.location.href = '/signIn.html';
-        }, 1000);
-        return;
-    }
-
-    const authHeader = `Bearer ${token.trim()}`;
-    console.log('Authorization header:', authHeader);
-    console.log('Fetching rejected recipes...');
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/recipes/user/all?status=rejected`, {
-            headers: { 'Authorization': authHeader }
-        });
-        console.log('Response status:', response.status);
-        if (response.status === 400 || response.status === 401 || response.status === 403) {
-            const errorData = await response.json();
-            console.log('Error response:', errorData);
-            if (errorData.message === 'Токен не предоставлен' || errorData.message === 'Пожалуйста, авторизуйтесь') {
-                showNotification('Сессия истекла. Пожалуйста, войдите заново.', 'error');
-                setTimeout(() => {
-                    window.location.href = '/signIn.html';
-                }, 1000);
-                return;
-            }
-            throw new Error(errorData.message || 'Не удалось загрузить отклонённые рецепты');
-        }
-        if (!response.ok) throw new Error('Не удалось загрузить отклонённые рецепты');
-        const recipes = await response.json();
-        console.log('Recipes received structure:', recipes.map(r => ({ _id: r._id, author: r.author, title: r.title })));
-        displayRejectedRecipes(recipes);
-    } catch (err) {
-        console.error('Fetch error:', err.message);
-        showNotification(`Ошибка: ${err.message}`, 'error');
-    }
-}
-
+// Функция для получения имени автора по ID
 async function getAuthorName(authorId, token) {
     try {
-        console.log(`Fetching author data for ID: ${authorId}`);
         const response = await fetch(`${API_BASE_URL}/api/users/${authorId}`, {
-            headers: { 'Authorization': `Bearer ${token.trim()}` }
+            headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!response.ok) {
-            console.log(`Author request failed for ID ${authorId}, status: ${response.status}`);
             throw new Error('Не удалось получить данные автора');
         }
         const userData = await response.json();
-        console.log(`Author data for ID ${authorId}:`, userData);
         return userData.username || 'Неизвестный автор';
-    } catch (err) {
-        console.error(`Error fetching author ${authorId}:`, err.message);
+    } catch {
         return 'Неизвестный автор';
+    }
+}
+
+function updateEmptyListMessage(listElement) {
+    if (listElement.getElementsByClassName('recipe-card').length === 0) {
+        listElement.innerHTML = `
+            <p>Нет отклоненных рецептов.</p>
+        `;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    fetchRejectedRecipes();
+});
+
+async function fetchRejectedRecipes() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        showNotification('Ошибка: Нет токена авторизации', 'error');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/recipes/user/all?status=rejected`, {
+            headers: { 'Authorization': `Bearer ${token.trim()}` }
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `HTTP ${response.status}`);
+        }
+
+        const recipes = await response.json();
+        displayRejectedRecipes(recipes);
+    } catch (err) {
+        showNotification(`Ошибка загрузки рецептов: ${err.message}`, 'error');
     }
 }
 
 async function displayRejectedRecipes(recipes) {
     rejectedRecipesList.innerHTML = '';
-    if (recipes.length === 0) {
-        rejectedRecipesList.innerHTML = `  
-            <p>Нет отклонённых рецептов</p>
-        `;
+
+    if (!recipes || recipes.length === 0) {
+        updateEmptyListMessage(rejectedRecipesList);
         return;
     }
+
     const token = localStorage.getItem('token');
-    const authorPromises = recipes.map(recipe => getAuthorName(recipe.author, token));
+
+    // Собираем имена авторов для каждого рецепта параллельно
+    const authorPromises = recipes.map(r => getAuthorName(r.author, token));
     const authorNames = await Promise.all(authorPromises);
 
     recipes.forEach((recipe, index) => {
@@ -104,6 +97,8 @@ async function displayRejectedRecipes(recipes) {
             showDeleteDialog(recipe._id, recipeDiv);
         });
     });
+
+    dltButton.addEventListener('click', deleteRecipe);
 }
 
 function showReturnDialog(recipeId, recipeDiv) {
@@ -144,20 +139,3 @@ async function reconsiderRecipe() {
 }
 
 confirmReturnButton.addEventListener('click', reconsiderRecipe);
-
-const confirmDeleteButton = document.getElementById('delete')?.querySelector('.confirm-btn');
-if (confirmDeleteButton) {
-    confirmDeleteButton.addEventListener('click', deleteRecipe);
-}
-
-logoutButton.addEventListener('click', () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('username');
-    localStorage.removeItem('isAdmin');
-    window.location.href = '/signIn.html';
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    fetchRejectedRecipes();
-});

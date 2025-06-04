@@ -27,7 +27,7 @@ function immediatelyShowStoredInfo() {
   }
 }
 
-async function fetchAndUpdateUserInfo() {
+async function fetchAndUpdateUserInfo({ redirectOnError = true } = {}) {
   const usernameElement    = document.getElementById('username');
   const emailElement       = document.getElementById('email');
 
