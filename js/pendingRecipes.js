@@ -3,16 +3,14 @@ let currentRecipeElement = null;
 
 const acceptDialog = document.getElementById('acceptDialog');
 const deleteDialog = document.getElementById('deleteDialog');
-const confirmAcceptButton = document.getElementById('confirmAcceptButton');
-const confirmRejectButton = document.getElementById('confirmRejectButton');
+const confirmAcceptButton = document.getElementById('confirm-accept-btn');
+const confirmRejectButton = document.getElementById('#deleteDialog .confirm-btn');
 const pendingRecipesList = document.getElementById('pendingRecipesList');
 
 function updateEmptyListMessage(listElement) {
     if (listElement.getElementsByClassName('recipe-card').length === 0) {
         listElement.innerHTML = `
-            <p></p>
             <p>Нет рецептов на рассмотрении.</p>
-            <p></p>
         `;
     }
 }
@@ -49,11 +47,7 @@ async function displayPendingRecipes(recipes) {
     pendingRecipesList.innerHTML = '';
 
     if (!recipes || recipes.length === 0) {
-        pendingRecipesList.innerHTML = `
-            <p></p>
-            <p>Нет рецептов на рассмотрении.</p>
-            <p></p>
-        `;
+        updateEmptyListMessage(pendingRecipesList);
         return;
     }
 
@@ -88,7 +82,7 @@ async function displayPendingRecipes(recipes) {
             <div class="recipe-buttons">
                 <button class="accept" onclick="showAcceptDialog('${recipe._id}', this.parentElement.parentElement)">Одобрить</button>
                 <button class="delete-btn cancel" onclick="showRejectDialog('${recipe._id}', this.parentElement.parentElement)">Отклонить</button>
-                <button class="return" onclick="editRecipe('${recipe._id}', null, this.parentElement.parentElement)">Редактировать</button>
+                <button class="return" onclick="editRecipe('${recipe._id}', this.closest('.recipe-card'))">Редактировать</button>
             </div>
         `;
         pendingRecipesList.appendChild(recipeDiv);
@@ -161,5 +155,131 @@ async function rejectRecipe() {
     } catch (err) {
         showNotification(`Ошибка: ${err.message}`, 'error');
         deleteDialog.close();
+    }
+}
+
+async function editRecipe(recipeId, recipeElement) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        showNotification('Ошибка: Нет токена авторизации', 'error');
+        return;
+    }
+
+    try {
+        // 1) Получаем полные данные рецепта
+        const response = await fetchWithRetry(`${API_BASE_URL}/api/recipes/${recipeId}`, {
+            headers: { 'Authorization': `Bearer ${token.trim()}` }
+        });
+        if (!response.ok) {
+            const errData = await response.json();
+            throw new Error(errData.message || `HTTP ${response.status}`);
+        }
+        const recipe = await response.json();
+
+        // 2) Сохраняем «state» (id и элемент карточки)
+        currentRecipeId = recipeId;
+        currentRecipeElement = recipeElement;
+
+        // 3) Открываем диалог «Редактировать рецепт»
+        editDialog.showModal();
+
+        // 4) Заполняем поля формы текущими значениями
+        //    Предположим, что в recipeActions.js вы уже экспортировали доступ к этим полям:
+        //    titleInput, descriptionInput, categoryButtons, servingsInput, cookingTimeInput, ingredientsContainer, stepsContainer, recipeImagePreview и т. д.
+
+        titleInput.value = recipe.title;
+        descriptionInput.value = recipe.description;
+        servingsInput.value = recipe.servings;
+        cookingTimeInput.value = recipe.cookingTime;
+
+        // 5) Устанавливаем активные категории
+        categoryButtons.forEach(btn => {
+            if (recipe.categories.includes(btn.dataset.category)) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        // 6) Ингредиенты: очищаем контейнер, потом создаём нужное число полей
+        editIngredientsContainer.innerHTML = '';
+        recipe.ingredients.forEach((ingrName, idx) => {
+            // Создаём разметку ингредиента «ручками» (аналогично createIngredient)
+            const div = document.createElement('div');
+            div.className = 'ingredient';
+            div.innerHTML = `
+                <label>Ингредиент: <input type="text" class="ingredient-name" maxlength="50" value="${ingrName}" required></label>
+                <label class="quantity-label">Количество:
+                    <div class="quantity-wrapper">
+                        <input type="text" class="quantity-input" min="0" max="1000" 
+                               pattern="[0-9]+(,[0-9]*)?" inputmode="decimal"
+                               value="${recipe.ingredientQuantities[idx].toString().replace('.', ',')}" required>
+                        <select class="type-unit" required>
+                            <option value="г" ${recipe.ingredientUnits[idx] === 'г' ? 'selected' : ''}>г</option>
+                            <option value="кг" ${recipe.ingredientUnits[idx] === 'кг' ? 'selected' : ''}>кг</option>
+                            <option value="мл" ${recipe.ingredientUnits[idx] === 'мл' ? 'selected' : ''}>мл</option>
+                            <option value="л" ${recipe.ingredientUnits[idx] === 'л' ? 'selected' : ''}>л</option>
+                            <option value="шт" ${recipe.ingredientUnits[idx] === 'шт' ? 'selected' : ''}>шт.</option>
+                            <option value="ст" ${recipe.ingredientUnits[idx] === 'ст' ? 'selected' : ''}>ст.</option>
+                            <option value="стл" ${recipe.ingredientUnits[idx] === 'стл' ? 'selected' : ''}>ст.л.</option>
+                            <option value="чл" ${recipe.ingredientUnits[idx] === 'чл' ? 'selected' : ''}>ч.л.</option>
+                            <option value="пв" ${recipe.ingredientUnits[idx] === 'пв' ? 'selected' : ''}>по вкусу</option>
+                        </select>
+                    </div>
+                </label>
+                <button type="button" class="remove-btn remove-ingredient-btn">Удалить ингредиент</button>
+            `;
+            editIngredientsContainer.appendChild(div);
+            // Инициализируем ограничения, удаление и т. д.
+            initializeIngredient(div);
+        });
+
+        // 7) Шаги: очищаем контейнер, потом создаём нужное число полей
+        editStepsContainer.innerHTML = '';
+        recipe.steps.forEach((stepObj, idx) => {
+            // Создаём «div» шаг вручную
+            const stepDiv = document.createElement('div');
+            stepDiv.className = 'step';
+            stepDiv.innerHTML = `
+                <label for="edit-step-description-${idx + 1}">
+                    Шаг ${idx + 1} (описание):
+                    <textarea id="edit-step-description-${idx + 1}"
+                              class="step-description"
+                              rows="4"
+                              maxlength="1000"
+                              required>${stepObj.description}</textarea>
+                </label>
+                <label>Изображение шага:
+                    <input type="file" class="step-image" name="step-image" accept="image/jpeg,image/png">
+                </label>
+                <div class="image-controls">
+                    <div class="step-image-preview">${stepObj.image ? `<img src="${stepObj.image}" style="max-width:100px; margin-top:5px; border-radius:4px;">` : ''}</div>
+                    <button type="button" class="remove-btn remove-step-image-btn" style="${stepObj.image ? 'display:block' : 'display:none'}">Удалить изображение</button>
+                </div>
+                <button type="button" class="remove-btn remove-step-btn">Удалить шаг</button>
+            `;
+            editStepsContainer.appendChild(stepDiv);
+            initializeStep(stepDiv);
+        });
+        updateStepLabels();
+
+        // 8) Превью главного изображения
+        if (recipe.image) {
+            editRecipeImagePreview.innerHTML = `<img src="${recipe.image}" style="max-width:100px; margin-top:5px; border-radius:4px;">`;
+            editRemoveRecipeImageButton.style.display = 'block';
+        } else {
+            editRecipeImagePreview.innerHTML = '';
+            editRemoveRecipeImageButton.style.display = 'none';
+        }
+
+        // 9) Обработчики «удалить изображение главного» уже должны висеть в recipeActions.js
+
+        // Через globals, экспортированные в recipeActions.js, у нас есть:
+        // editDialog, editForm, titleInput, descriptionInput, categoryButtons,
+        // servingsInput, cookingTimeInput, editIngredientsContainer, editStepsContainer,
+        // editRecipeImageInput, editRecipeImagePreview, editRemoveRecipeImageButton и т. д.
+
+    } catch (err) {
+        showNotification(`Ошибка при загрузке рецепта для редактирования: ${err.message}`, 'error');
     }
 }

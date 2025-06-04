@@ -68,9 +68,7 @@ async function displayRejectedRecipes(recipes) {
     rejectedRecipesList.innerHTML = '';
     if (recipes.length === 0) {
         rejectedRecipesList.innerHTML = `  
-            <p></p>
             <p>Нет отклонённых рецептов</p>
-            <p></p>
         `;
         return;
     }
