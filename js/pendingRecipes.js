@@ -1,5 +1,5 @@
 const acceptDialog = document.getElementById('acceptDialog');
-const deleteDialog = document.getElementById('deleteDialog');
+const deleteDialog2 = document.getElementById('deleteDialog');
 const confirmAcceptButton = document.getElementById('confirmAcceptButton');
 const confirmRejectButton = document.getElementById('confirmRejectButton');
 const pendingRecipesList = document.getElementById('pendingRecipesList');
@@ -114,7 +114,7 @@ function showAcceptDialog(recipeId, recipeElement) {
 function showRejectDialog(recipeId, recipeElement) {
     editCurrentRecipeId = recipeId;
     editCurrentRecipeElement = recipeElement;
-    deleteDialog.showModal();
+    deleteDialog2.showModal();
 }
 
 async function approveRecipe() {
@@ -151,7 +151,7 @@ async function rejectRecipe() {
     const token = localStorage.getItem('token');
     if (!token) {
         showNotification('Ошибка: Нет токена авторизации', 'error');
-        deleteDialog.close();
+        deleteDialog2.close();
         return;
     }
 
@@ -170,10 +170,10 @@ async function rejectRecipe() {
             editCurrentRecipeElement.parentNode.removeChild(editCurrentRecipeElement);
             updateEmptyListMessage(pendingRecipesList);
         }
-        deleteDialog.close();
+        deleteDialog2.close();
     } catch (err) {
         showNotification(`Ошибка: ${err.message}`, 'error');
-        deleteDialog.close();
+        deleteDialog2.close();
     }
 }
 
