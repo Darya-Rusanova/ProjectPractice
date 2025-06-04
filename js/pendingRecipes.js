@@ -7,6 +7,22 @@ const confirmAcceptButton = document.getElementById('confirmAcceptButton');
 const confirmRejectButton = document.getElementById('confirmRejectButton');
 const pendingRecipesList = document.getElementById('pendingRecipesList');
 
+// Функция для получения имени автора по ID (аналогично rejectedRecipes.js)
+async function getAuthorName(authorId, token) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/users/${authorId}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) {
+            throw new Error('Не удалось получить данные автора');
+        }
+        const userData = await response.json();
+        return userData.username || 'Неизвестный автор';
+    } catch {
+        return 'Неизвестный автор';
+    }
+}
+
 function updateEmptyListMessage(listElement) {
     if (listElement.getElementsByClassName('recipe-card').length === 0) {
         listElement.innerHTML = `
@@ -27,9 +43,12 @@ async function fetchPendingRecipes() {
     }
 
     try {
-        const response = await fetchWithRetry(`${API_BASE_URL}/api/recipes/user/all?status=pending`, {
-            headers: { 'Authorization': `Bearer ${token.trim()}` }
-        });
+        const response = await fetchWithRetry(
+            `${API_BASE_URL}/api/recipes/user/all?status=pending`,
+            {
+                headers: { 'Authorization': `Bearer ${token.trim()}` }
+            }
+        );
 
         if (!response.ok) {
             const errorData = await response.json();
@@ -43,6 +62,7 @@ async function fetchPendingRecipes() {
     }
 }
 
+
 async function displayPendingRecipes(recipes) {
     pendingRecipesList.innerHTML = '';
 
@@ -51,27 +71,24 @@ async function displayPendingRecipes(recipes) {
         return;
     }
 
-    const userPromises = recipes.map(recipe => 
-        fetchWithRetry(`${API_BASE_URL}/api/users/${recipe.author}`, {
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('token').trim()}` }
-        }).then(res => res.json())
-    );
+     const token = localStorage.getItem('token').trim();
 
-    const users = await Promise.all(userPromises);
-    const userMap = users.reduce((map, user) => {
-        map[user._id] = user.username || 'Неизвестный автор';
-        return map;
-    }, {});
+    // Собираем имена авторов для каждого рецепта параллельно
+    const authorPromises = recipes.map(r => getAuthorName(r.author, token));
+    const authorNames = await Promise.all(authorPromises);
 
-    recipes.forEach(recipe => {
-        const authorName = userMap[recipe.author] || 'Неизвестный автор';
+    recipes.forEach((recipe, idx) => {
+        const authorName = authorNames[idx] || 'Неизвестный автор';
+
         const recipeDiv = document.createElement('div');
         recipeDiv.className = 'recipe-card';
         recipeDiv.innerHTML = `
             <a href="#" class="recipe-link">
                 <div class="recipe-content">
                     <div class="recipe-image">
-                        ${recipe.image ? `<img src="${recipe.image}" alt="${recipe.title}" />` : '<div class="no-image">Нет изображения</div>'}
+                        ${recipe.image
+                            ? `<img src="${recipe.image}" alt="${recipe.title}" />`
+                            : '<div class="no-image">Нет изображения</div>'}
                     </div>
                     <div class="recipe-info">
                         <h4>${recipe.title}</h4>
@@ -167,9 +184,12 @@ async function editRecipe(recipeId, recipeElement) {
 
     try {
         // 1) Получаем полные данные рецепта
-        const response = await fetchWithRetry(`${API_BASE_URL}/api/recipes/${recipeId}`, {
-            headers: { 'Authorization': `Bearer ${token.trim()}` }
-        });
+        const response = await fetchWithRetry(
+            `${API_BASE_URL}/api/recipes/${recipeId}`,
+            {
+                headers: { 'Authorization': `Bearer ${token.trim()}` }
+            }
+        );
         if (!response.ok) {
             const errData = await response.json();
             throw new Error(errData.message || `HTTP ${response.status}`);
@@ -184,9 +204,6 @@ async function editRecipe(recipeId, recipeElement) {
         editDialog.showModal();
 
         // 4) Заполняем поля формы текущими значениями
-        //    Предположим, что в recipeActions.js вы уже экспортировали доступ к этим полям:
-        //    titleInput, descriptionInput, categoryButtons, servingsInput, cookingTimeInput, ingredientsContainer, stepsContainer, recipeImagePreview и т. д.
-
         titleInput.value = recipe.title;
         descriptionInput.value = recipe.description;
         servingsInput.value = recipe.servings;
@@ -204,14 +221,13 @@ async function editRecipe(recipeId, recipeElement) {
         // 6) Ингредиенты: очищаем контейнер, потом создаём нужное число полей
         editIngredientsContainer.innerHTML = '';
         recipe.ingredients.forEach((ingrName, idx) => {
-            // Создаём разметку ингредиента «ручками» (аналогично createIngredient)
             const div = document.createElement('div');
             div.className = 'ingredient';
             div.innerHTML = `
                 <label>Ингредиент: <input type="text" class="ingredient-name" maxlength="50" value="${ingrName}" required></label>
                 <label class="quantity-label">Количество:
                     <div class="quantity-wrapper">
-                        <input type="text" class="quantity-input" min="0" max="1000" 
+                        <input type="text" class="quantity-input" min="0" max="1000"
                                pattern="[0-9]+(,[0-9]*)?" inputmode="decimal"
                                value="${recipe.ingredientQuantities[idx].toString().replace('.', ',')}" required>
                         <select class="type-unit" required>
@@ -230,14 +246,12 @@ async function editRecipe(recipeId, recipeElement) {
                 <button type="button" class="remove-btn remove-ingredient-btn">Удалить ингредиент</button>
             `;
             editIngredientsContainer.appendChild(div);
-            // Инициализируем ограничения, удаление и т. д.
             initializeIngredient(div);
         });
 
         // 7) Шаги: очищаем контейнер, потом создаём нужное число полей
         editStepsContainer.innerHTML = '';
         recipe.steps.forEach((stepObj, idx) => {
-            // Создаём «div» шаг вручную
             const stepDiv = document.createElement('div');
             stepDiv.className = 'step';
             stepDiv.innerHTML = `
@@ -253,8 +267,14 @@ async function editRecipe(recipeId, recipeElement) {
                     <input type="file" class="step-image" name="step-image" accept="image/jpeg,image/png">
                 </label>
                 <div class="image-controls">
-                    <div class="step-image-preview">${stepObj.image ? `<img src="${stepObj.image}" style="max-width:100px; margin-top:5px; border-radius:4px;">` : ''}</div>
-                    <button type="button" class="remove-btn remove-step-image-btn" style="${stepObj.image ? 'display:block' : 'display:none'}">Удалить изображение</button>
+                    <div class="step-image-preview">${
+                      stepObj.image
+                        ? `<img src="${stepObj.image}" style="max-width:100px; margin-top:5px; border-radius:4px;">`
+                        : ''
+                    }</div>
+                    <button type="button" class="remove-btn remove-step-image-btn" style="${
+                      stepObj.image ? 'display:block' : 'display:none'
+                    }">Удалить изображение</button>
                 </div>
                 <button type="button" class="remove-btn remove-step-btn">Удалить шаг</button>
             `;
@@ -271,14 +291,6 @@ async function editRecipe(recipeId, recipeElement) {
             editRecipeImagePreview.innerHTML = '';
             editRemoveRecipeImageButton.style.display = 'none';
         }
-
-        // 9) Обработчики «удалить изображение главного» уже должны висеть в recipeActions.js
-
-        // Через globals, экспортированные в recipeActions.js, у нас есть:
-        // editDialog, editForm, titleInput, descriptionInput, categoryButtons,
-        // servingsInput, cookingTimeInput, editIngredientsContainer, editStepsContainer,
-        // editRecipeImageInput, editRecipeImagePreview, editRemoveRecipeImageButton и т. д.
-
     } catch (err) {
         showNotification(`Ошибка при загрузке рецепта для редактирования: ${err.message}`, 'error');
     }
