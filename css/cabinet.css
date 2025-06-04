@@ -659,7 +659,8 @@ h3{
 
 .cancel-btn,
 .confirm-btn,
-.confirm-accept-btn {
+.confirm-accept-btn,
+.confirm-return-btn {
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
@@ -670,24 +671,32 @@ h3{
   max-width: 120px;
 }
 
-.cancel-btn {
+.cancel-btn{
   background-color: var(--color-primary-a40);
   color: var(--color-primary-a90);
-  border: 3px solid var(--color-primary-a50);
+  border: 2px solid var(--color-primary-a50);
 }
 
 .confirm-btn {
   background-color: var(--color-primary-a100);
   color: white;
-  border: 1px solid var(--color-primary-a100);
+  border: 2px solid var(--color-primary-a100);
 }
 
-.cancel-btn:hover {
+
+.confirm-return-btn {
+  background-color: var(--color-primary-a30);
+  border: 2px solid var(--color-primary-a30);
+}
+
+.cancel-btn:hover, .confirm-return-btn:hover {
   background-color: var(--color-primary-a50);
+  border: 2px solid var(--color-primary-a50);
 }
 
 .confirm-btn:hover {
   background-color: var(--color-primary-a110);
+  border: 2px solid var(--color-primary-a110);
 }
 #addDialog::-webkit-scrollbar, #editDialog::-webkit-scrollbar {
     width: 15px;
