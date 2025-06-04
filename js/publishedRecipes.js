@@ -93,16 +93,11 @@ async function displayPublishedRecipes(recipes) {
                 </div>
             </a>
                 <div class="recipe-buttons2">
-                    <button class="return" onclick="editRecipe('${recipe._id}', fetchPublishedRecipes)">Редактировать</button>
+                    <button class="return" onclick="editRecipe('${recipe._id}', null, this.parentElement.parentElement)">Редактировать</button>
                     <button class="delete-btn cancel" data-id="${recipe._id}">Удалить</button>
                 </div>
         `;
         publishedRecipesList.appendChild(recipeDiv);
-
-        const editButton = recipeDiv.querySelector('.return');
-        editButton.addEventListener('click', () => {
-            editRecipe(recipe._id, fetchPublishedRecipes);
-        });
 
         const deleteButton = recipeDiv.querySelector('.delete-btn');
         deleteButton.addEventListener('click', () => {

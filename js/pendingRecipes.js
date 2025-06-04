@@ -102,7 +102,7 @@ async function displayPendingRecipes(recipes) {
             </a>
                 <div class="recipe-buttons">
                     <button class="accept" onclick="showApproveDialog('${recipe._id}', this.parentElement.parentElement)">Одобрить</button>
-                    <button class="return" onclick="editRecipe('${recipe._id}', fetchPendingRecipes)">Редактировать</button>
+                    <button class="return" onclick="editRecipe('${recipe._id}', null, this.parentElement.parentElement)">Редактировать</button>
                     <button class="cancel" onclick="showRejectDialog('${recipe._id}', this.parentElement.parentElement)">Отклонить</button>
                 </div>
         `;

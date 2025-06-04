@@ -74,7 +74,7 @@ async function deleteRecipe() {
     }
 }
 
-async function editRecipe(recipeId, fetchFunction) {
+async function editRecipe(recipeId, fetchFunction, recipeElement = null) {
     const token = localStorage.getItem('token');
     if (!token) {
         showNotification('Ошибка: Нет токена авторизации', 'error');
@@ -604,7 +604,17 @@ async function editRecipe(recipeId, fetchFunction) {
                 if (response.ok) {
                     showNotification('Рецепт обновлён!', 'success');
                     editDialog.close();
-                    fetchFunction();
+
+                    // Обновляем данные в карточке рецепта в DOM
+                    if (recipeElement) {
+                        const recipeImageDiv = recipeElement.querySelector('.recipe-image');
+                        const recipeInfoDiv = recipeElement.querySelector('.recipe-info h4');
+                        const updatedImage = data.image || recipe.image; // Если изображение не обновлено, оставляем старое
+                        recipeImageDiv.innerHTML = updatedImage 
+                            ? `<img src="${updatedImage}" alt="${data.title}" />` 
+                            : '<div class="no-image">Нет изображения</div>';
+                        recipeInfoDiv.textContent = data.title;
+                    }
                 } else {
                     throw new Error(data.message || 'Ошибка обновления рецепта');
                 }
