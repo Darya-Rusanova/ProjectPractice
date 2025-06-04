@@ -1,8 +1,3 @@
-// pendingRecipes.js
-
-let currentRecipeId = null;
-let currentRecipeElement = null;
-
 const acceptDialog = document.getElementById('acceptDialog');
 const deleteDialog = document.getElementById('deleteDialog');
 const confirmAcceptButton = document.getElementById('confirmAcceptButton');
@@ -111,14 +106,14 @@ async function displayPendingRecipes(recipes) {
 }
 
 function showAcceptDialog(recipeId, recipeElement) {
-    currentRecipeId = recipeId;
-    currentRecipeElement = recipeElement;
+    editCurrentRecipeId = recipeId;
+    editCurrentRecipeElement = recipeElement;
     acceptDialog.showModal();
 }
 
 function showRejectDialog(recipeId, recipeElement) {
-    currentRecipeId = recipeId;
-    currentRecipeElement = recipeElement;
+    editCurrentRecipeId = recipeId;
+    editCurrentRecipeElement = recipeElement;
     deleteDialog.showModal();
 }
 
@@ -132,7 +127,7 @@ async function approveRecipe() {
 
     try {
         const response = await fetch(
-            `${API_BASE_URL}/api/recipes/${currentRecipeId}/approve`,
+            `${API_BASE_URL}/api/recipes/${editCurrentRecipeId}/approve`,
             {
                 method: 'PUT',
                 headers: { 'Authorization': `Bearer ${token.trim()}` }
@@ -141,8 +136,8 @@ async function approveRecipe() {
         if (!response.ok) throw new Error('Не удалось одобрить рецепт');
 
         showNotification('Рецепт одобрен', 'success');
-        if (currentRecipeElement && currentRecipeElement.parentNode) {
-            currentRecipeElement.parentNode.removeChild(currentRecipeElement);
+        if (editCurrentRecipeElement && editCurrentRecipeElement.parentNode) {
+            editCurrentRecipeElement.parentNode.removeChild(editCurrentRecipeElement);
             updateEmptyListMessage(pendingRecipesList);
         }
         acceptDialog.close();
@@ -162,7 +157,7 @@ async function rejectRecipe() {
 
     try {
         const response = await fetch(
-            `${API_BASE_URL}/api/recipes/${currentRecipeId}/reject`,
+            `${API_BASE_URL}/api/recipes/${editCurrentRecipeId}/reject`,
             {
                 method: 'PUT',
                 headers: { 'Authorization': `Bearer ${token.trim()}` }
@@ -171,8 +166,8 @@ async function rejectRecipe() {
         if (!response.ok) throw new Error('Не удалось отклонить рецепт');
 
         showNotification('Рецепт отклонён', 'success');
-        if (currentRecipeElement && currentRecipeElement.parentNode) {
-            currentRecipeElement.parentNode.removeChild(currentRecipeElement);
+        if (editCurrentRecipeElement && editCurrentRecipeElement.parentNode) {
+            editCurrentRecipeElement.parentNode.removeChild(editCurrentRecipeElement);
             updateEmptyListMessage(pendingRecipesList);
         }
         deleteDialog.close();
