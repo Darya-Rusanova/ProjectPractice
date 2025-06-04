@@ -45,20 +45,15 @@ async function deleteRecipe() {
         if (currentRecipeElement && currentRecipeElement.parentNode) {
             const parentList = currentRecipeElement.parentNode;
             currentRecipeElement.parentNode.removeChild(currentRecipeElement);
-            // Проверяем, остались ли рецепты в списке
             if (parentList.getElementsByClassName('recipe-card').length === 0) {
                 let emptyMessage = '';
                 if (parentList.id === 'publishedRecipesList') {
                     emptyMessage = `
-                        <p></p>
                         <p>Нет опубликованных рецептов.</p>
-                        <p></p>
                     `;
                 } else if (parentList.id === 'rejectedRecipesList') {
                     emptyMessage = `
-                        <p></p>
                         <p>Нет отклонённых рецептов</p>
-                        <p></p>
                     `;
                 }
                 parentList.innerHTML = emptyMessage;
@@ -592,7 +587,7 @@ async function editRecipe(recipeId, fetchFunction, recipeElement = null) {
                 if (recipeImageInput.files[0]) formData.append('recipeImage', recipeImageInput.files[0]);
                 Array.from(stepDivs).forEach((div, index) => {
                     const stepImageInput = div.querySelector('.step-image');
-                    if (stepImageInput?.files[0]) formData.append('stepImages', stepImageInput.files[0]);
+                    if (stepImageInput?.files[0]) formData.append(`stepImages[${index}]`, stepImageInput.files[0]);
                 });
 
                 const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}`, {
@@ -604,16 +599,11 @@ async function editRecipe(recipeId, fetchFunction, recipeElement = null) {
                 if (response.ok) {
                     showNotification('Рецепт обновлён!', 'success');
                     editDialog.close();
-
-                    // Обновляем данные в карточке рецепта в DOM
                     if (recipeElement) {
-                        const recipeImageDiv = recipeElement.querySelector('.recipe-image');
-                        const recipeInfoDiv = recipeElement.querySelector('.recipe-info h4');
-                        const updatedImage = data.image || recipe.image; // Если изображение не обновлено, оставляем старое
-                        recipeImageDiv.innerHTML = updatedImage 
-                            ? `<img src="${updatedImage}" alt="${data.title}" />` 
-                            : '<div class="no-image">Нет изображения</div>';
-                        recipeInfoDiv.textContent = data.title;
+                        const img = recipeElement.querySelector('img');
+                        const titleElement = recipeElement.querySelector('h4');
+                        if (img && data.image) img.src = data.image;
+                        if (titleElement) titleElement.textContent = title;
                     }
                 } else {
                     throw new Error(data.message || 'Ошибка обновления рецепта');
