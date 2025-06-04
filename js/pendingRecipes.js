@@ -1,6 +1,13 @@
 const pendingRecipesList = document.getElementById('pendingRecipesList');
 const logoutButton = document.getElementById('adminLogout');
 const errorDiv = document.getElementById('error');
+const acceptDialog = document.getElementById('acceptDialog');
+const deleteDialog = document.getElementById('deleteDialog');
+const confirmAcceptButton = acceptDialog.querySelector('.confirm-accept-btn');
+const confirmRejectButton = deleteDialog.querySelector('.confirm-btn');
+
+let currentRecipeId = null;
+let currentRecipeElement = null;
 
 async function fetchPendingRecipes() {
     const token = localStorage.getItem('token');
@@ -66,48 +73,55 @@ async function displayPendingRecipes(recipes) {
     pendingRecipesList.innerHTML = '';
     if (recipes.length === 0) {
         pendingRecipesList.innerHTML = `  
-                <p></p>
-                <p>Нет рецептов на рассмотрении.</p>
-                <p></p>
+            <p></p>
+            <p>Нет рецептов на рассмотрении.</p>
+            <p></p>
         `;
         return;
     }
     const token = localStorage.getItem('token');
+    const authorPromises = recipes.map(recipe => getAuthorName(recipe.author, token));
+    const authorNames = await Promise.all(authorPromises);
 
-    // Обрабатываем каждый рецепт асинхронно
-    for (const recipe of recipes) {
-        const authorName = await getAuthorName(recipe.author, token);
+    recipes.forEach((recipe, index) => {
+        const authorName = authorNames[index] || 'Неизвестный автор';
         const recipeDiv = document.createElement('div');
         recipeDiv.className = 'recipe-card';
         recipeDiv.innerHTML = `  
-                <a href="#" class="recipe-link">
-                    <div class="recipe-content">
-                        <div class="recipe-image">
-                            ${recipe.image ? `<img src="${recipe.image}" alt="${recipe.title}" />` : '<div class="no-image">Нет изображения</div>'}
-                        </div>
-                        <div class="recipe-info">
-                            <h4>${recipe.title}</h4>
-                            <p>Автор: ${authorName}</p>
-                        </div>
+            <a href="#" class="recipe-link">
+                <div class="recipe-content">
+                    <div class="recipe-image">
+                        ${recipe.image ? `<img src="${recipe.image}" alt="${recipe.title}" />` : '<div class="no-image">Нет изображения</div>'}
                     </div>
-                </a>
-                    <div class="recipe-buttons">
-                        <button class="accept" onclick="approveRecipe('${recipe._id}')">Одобрить</button>
-                        <button class="return">Редактировать</button>
-                        <button class="cancel" onclick="rejectRecipe('${recipe._id}')">Отклонить</button>
+                    <div class="recipe-info">
+                        <h4>${recipe.title}</h4>
+                        <p>Автор: ${authorName}</p>
                     </div>
-                 
+                </div>
+            </a>
+                <div class="recipe-buttons">
+                    <button class="accept" onclick="showApproveDialog('${recipe._id}', this.parentElement.parentElement)">Одобрить</button>
+                    <button class="return" onclick="editRecipe('${recipe._id}', fetchPendingRecipes)">Редактировать</button>
+                    <button class="cancel" onclick="showRejectDialog('${recipe._id}', this.parentElement.parentElement)">Отклонить</button>
+                </div>
         `;
         pendingRecipesList.appendChild(recipeDiv);
-
-        const editButton = recipeDiv.querySelector('.return');
-        editButton.addEventListener('click', () => {
-            editRecipe(recipe._id, fetchPendingRecipes);
-        });
-    }
+    });
 }
 
-async function approveRecipe(recipeId) {
+function showApproveDialog(recipeId, recipeDiv) {
+    currentRecipeId = recipeId;
+    currentRecipeElement = recipeDiv;
+    acceptDialog.showModal();
+}
+
+function showRejectDialog(recipeId, recipeDiv) {
+    currentRecipeId = recipeId;
+    currentRecipeElement = recipeDiv;
+    deleteDialog.showModal();
+}
+
+async function approveRecipe() {
     const token = localStorage.getItem('token');
     if (!token) {
         showNotification('Ошибка: Нет токена авторизации', 'error');
@@ -115,19 +129,25 @@ async function approveRecipe(recipeId) {
     }
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}/approve`, {
+        console.log(`currentRecipe ID: ${currentRecipeId}`);
+        const response = await fetch(`${API_BASE_URL}/api/recipes/${currentRecipeId}/approve`, {
             method: 'PUT',
             headers: { 'Authorization': `Bearer ${token.trim()}` }
         });
         if (!response.ok) throw new Error('Не удалось одобрить рецепт');
         showNotification('Рецепт одобрен', 'success');
-        fetchPendingRecipes(); // Обновляем список
+        if (currentRecipeElement && currentRecipeElement.parentNode) {
+            currentRecipeElement.parentNode.removeChild(currentRecipeElement);
+        }
+        acceptDialog.close();
+        fetchPendingRecipes();
     } catch (err) {
         showNotification(`Ошибка: ${err.message}`, 'error');
+        acceptDialog.close();
     }
 }
 
-async function rejectRecipe(recipeId) {
+async function rejectRecipe() {
     const token = localStorage.getItem('token');
     if (!token) {
         showNotification('Ошибка: Нет токена авторизации', 'error');
@@ -135,17 +155,26 @@ async function rejectRecipe(recipeId) {
     }
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}/reject`, {
+        console.log(`currentRecipe ID: ${currentRecipeId}`);
+        const response = await fetch(`${API_BASE_URL}/api/recipes/${currentRecipeId}/reject`, {
             method: 'PUT',
             headers: { 'Authorization': `Bearer ${token.trim()}` }
         });
         if (!response.ok) throw new Error('Не удалось отклонить рецепт');
         showNotification('Рецепт отклонён', 'success');
-        fetchPendingRecipes(); // Обновляем список
+        if (currentRecipeElement && currentRecipeElement.parentNode) {
+            currentRecipeElement.parentNode.removeChild(currentRecipeElement);
+        }
+        deleteDialog.close();
+        fetchPendingRecipes();
     } catch (err) {
         showNotification(`Ошибка: ${err.message}`, 'error');
+        deleteDialog.close();
     }
 }
+
+confirmAcceptButton.addEventListener('click', approveRecipe);
+confirmRejectButton.addEventListener('click', rejectRecipe);
 
 logoutButton.addEventListener('click', () => {
     localStorage.removeItem('token');

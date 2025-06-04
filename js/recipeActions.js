@@ -1,12 +1,40 @@
-async function deleteRecipe(recipeId, recipeElement, fetchFunction) {
+let currentRecipeId = null;
+let currentRecipeElement = null;
+let currentFetchFunction = null;
+
+function showDeleteDialog(recipeId, recipeElement, fetchFunction) {
+    currentRecipeId = recipeId;
+    currentRecipeElement = recipeElement;
+    currentFetchFunction = fetchFunction;
+    const deleteDialog = document.getElementById('delete');
+    if (deleteDialog) {
+        deleteDialog.showModal();
+    } else {
+        deleteRecipe();
+    }
+}
+
+async function deleteRecipe() {
     const token = localStorage.getItem('token');
     if (!token) {
         showNotification('Ошибка: Нет токена авторизации', 'error');
+        if (document.getElementById('delete')) document.getElementById('delete').close();
+        currentRecipeId = null;
+        currentRecipeElement = null;
+        currentFetchFunction = null;
+        return;
+    }
+    if (!currentRecipeId) {
+        showNotification('Ошибка: Не выбран рецепт для удаления', 'error');
+        if (document.getElementById('delete')) document.getElementById('delete').close();
+        currentRecipeId = null;
+        currentRecipeElement = null;
+        currentFetchFunction = null;
         return;
     }
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}`, {
+        const response = await fetch(`${API_BASE_URL}/api/recipes/${currentRecipeId}`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token.trim()}` }
         });
@@ -15,12 +43,17 @@ async function deleteRecipe(recipeId, recipeElement, fetchFunction) {
             throw new Error(errorData.message || `HTTP ${response.status}`);
         }
         showNotification('Рецепт удалён!', 'success');
-        if (recipeElement && recipeElement.parentNode) {
-            recipeElement.parentNode.removeChild(recipeElement);
+        if (currentRecipeElement && currentRecipeElement.parentNode) {
+            currentRecipeElement.parentNode.removeChild(currentRecipeElement);
         }
-        fetchFunction();
+        if (currentFetchFunction) currentFetchFunction();
     } catch (err) {
         showNotification(`Ошибка удаления: ${err.message}`, 'error');
+    } finally {
+        if (document.getElementById('delete')) document.getElementById('delete').close();
+        currentRecipeId = null;
+        currentRecipeElement = null;
+        currentFetchFunction = null;
     }
 }
 
@@ -31,8 +64,10 @@ async function editRecipe(recipeId, fetchFunction) {
         return;
     }
 
-    // Получаем данные рецепта
     try {
+        const editDialog = document.getElementById('editDialog');
+        if (!editDialog) throw new Error('Диалоговое окно редактирования не найдено');
+
         const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}`, {
             headers: { 'Authorization': `Bearer ${token.trim()}` }
         });
@@ -42,11 +77,8 @@ async function editRecipe(recipeId, fetchFunction) {
         }
         const recipe = await response.json();
 
-        // Открываем диалоговое окно
-        const editDialog = document.getElementById('editDialog');
         editDialog.showModal();
 
-        // Инициализация формы
         const editForm = document.getElementById('edit-recipe-form');
         const titleInput = document.getElementById('edit-recipe-title');
         const descriptionInput = document.getElementById('edit-recipe-description');
@@ -61,7 +93,6 @@ async function editRecipe(recipeId, fetchFunction) {
         const addIngredientButton = document.getElementById('edit-add-ingredient-btn');
         const addStepButton = document.getElementById('edit-add-step-btn');
 
-        // Функции из kabinet.js для обработки ввода
         function capitalizeFirstWord(text) {
             if (!text) return text;
             const trimmed = text.trimStart();
@@ -70,8 +101,7 @@ async function editRecipe(recipeId, fetchFunction) {
             const firstWord = words[0];
             const capitalizedFirstWord = firstWord.charAt(0).toUpperCase() + firstWord.slice(1);
             words[0] = capitalizedFirstWord;
-            const newText = text.slice(0, text.indexOf(firstWord)) + words.join(' ');
-            return newText;
+            return text.slice(0, text.indexOf(firstWord)) + words.join(' ');
         }
 
         function ensureEndingWithPeriod(text) {
@@ -88,7 +118,7 @@ async function editRecipe(recipeId, fetchFunction) {
         function showImagePreview(input, previewElement, removeButton) {
             if (input.files && input.files[0]) {
                 const file = input.files[0];
-                const maxSize = 5 * 1024 * 1024; // 5 МБ
+                const maxSize = 5 * 1024 * 1024;
                 if (!['image/jpeg', 'image/png'].includes(file.type)) {
                     showNotification('Пожалуйста, загрузите изображение в формате JPEG или PNG', 'error');
                     input.value = '';
@@ -133,13 +163,9 @@ async function editRecipe(recipeId, fetchFunction) {
                 let value = input.value;
                 if (isDecimal) {
                     value = value.replace(/[^0-9,]/g, '');
-                    if (value.startsWith(',')) {
-                        value = '0' + value;
-                    }
+                    if (value.startsWith(',')) value = '0' + value;
                     const parts = value.split(',');
-                    if (parts.length > 2) {
-                        value = parts[0] + ',' + parts[1];
-                    }
+                    if (parts.length > 2) value = parts[0] + ',' + parts[1];
                     if (parts[0].startsWith('0') && parts[0].length > 1 && !value.startsWith('0,')) {
                         parts[0] = parts[0].replace(/^0+/, '') || '0';
                         value = parts[0] + (parts[1] !== undefined ? ',' + parts[1] : '');
@@ -158,15 +184,11 @@ async function editRecipe(recipeId, fetchFunction) {
                 const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
                 if (isDecimal) {
                     if ((e.key >= '0' && e.key <= '9') || e.key === ',' || allowedKeys.includes(e.key)) {
-                        if (e.key === ',' && input.value.includes(',')) {
-                            e.preventDefault();
-                        }
+                        if (e.key === ',' && input.value.includes(',')) e.preventDefault();
                         return;
                     }
                 } else {
-                    if ((e.key >= '0' && e.key <= '9') || allowedKeys.includes(e.key)) {
-                        return;
-                    }
+                    if ((e.key >= '0' && e.key <= '9') || allowedKeys.includes(e.key)) return;
                 }
                 e.preventDefault();
             });
@@ -179,10 +201,7 @@ async function editRecipe(recipeId, fetchFunction) {
                 const max = parseFloat(input.max);
                 let value = input.value;
                 if (isDecimal) {
-                    if (value.endsWith(',')) {
-                        input.value = value.slice(0, -1);
-                        value = input.value;
-                    }
+                    if (value.endsWith(',')) value = value.slice(0, -1);
                     value = parseFloat(value.replace(',', '.')) || 0;
                 } else {
                     value = parseInt(value) || 0;
@@ -203,9 +222,7 @@ async function editRecipe(recipeId, fetchFunction) {
                 quantityInput.disabled = true;
             } else {
                 quantityInput.disabled = false;
-                if (quantityInput.value === '0') {
-                    quantityInput.value = '';
-                }
+                if (quantityInput.value === '0') quantityInput.value = '';
             }
         }
 
@@ -216,9 +233,7 @@ async function editRecipe(recipeId, fetchFunction) {
                     const end = input.selectionEnd;
                     const originalValue = input.value;
                     input.value = capitalizeFirstWord(input.value);
-                    if (input.value !== originalValue) {
-                        input.setSelectionRange(start, end);
-                    }
+                    if (input.value !== originalValue) input.setSelectionRange(start, end);
                 });
             }
             if (addPeriod) {
@@ -256,8 +271,7 @@ async function editRecipe(recipeId, fetchFunction) {
 
             const descriptionLabel = document.createElement('label');
             descriptionLabel.setAttribute('for', `edit-step-description-${stepNumber}`);
-            const labelText = document.createTextNode(`Шаг ${stepNumber} (описание): `);
-            descriptionLabel.appendChild(labelText);
+            descriptionLabel.appendChild(document.createTextNode(`Шаг ${stepNumber} (описание): `));
 
             const textarea = document.createElement('textarea');
             textarea.id = `edit-step-description-${stepNumber}`;
@@ -335,36 +349,24 @@ async function editRecipe(recipeId, fetchFunction) {
                 const label = stepDiv.querySelector('label[for^="edit-step-description-"]');
                 const textarea = stepDiv.querySelector('.step-description');
                 if (label && textarea) {
-                    const labelTextNode = label.childNodes[0];
-                    if (labelTextNode && labelTextNode.nodeType === Node.TEXT_NODE) {
-                        labelTextNode.textContent = `Шаг ${stepNumber} (описание): `;
-                    } else {
-                        label.replaceChild(document.createTextNode(`Шаг ${stepNumber} (описание): `), labelTextNode);
-                    }
+                    label.childNodes[0].textContent = `Шаг ${stepNumber} (описание): `;
                     label.setAttribute('for', `edit-step-description-${stepNumber}`);
                     textarea.id = `edit-step-description-${stepNumber}`;
                 }
             });
         }
 
-        // Заполняем форму данными рецепта
         titleInput.value = recipe.title;
         descriptionInput.value = recipe.description;
         servingsInput.value = recipe.servings;
         cookingTimeInput.value = recipe.cookingTime;
 
-        // Активируем категории
         categoryButtons.forEach(button => {
             button.classList.remove('active');
-            if (recipe.categories.includes(button.dataset.category)) {
-                button.classList.add('active');
-            }
-            button.addEventListener('click', () => {
-                button.classList.toggle('active');
-            });
+            if (recipe.categories.includes(button.dataset.category)) button.classList.add('active');
+            button.addEventListener('click', () => button.classList.toggle('active'));
         });
 
-        // Заполняем ингредиенты
         ingredientsContainer.innerHTML = '';
         recipe.ingredients.forEach((ingredient, index) => {
             const ingredientDiv = document.createElement('div');
@@ -393,7 +395,6 @@ async function editRecipe(recipeId, fetchFunction) {
             initializeIngredient(ingredientDiv);
         });
 
-        // Заполняем шаги
         stepsContainer.innerHTML = '';
         recipe.steps.forEach((step, index) => {
             const stepNumber = index + 1;
@@ -416,7 +417,6 @@ async function editRecipe(recipeId, fetchFunction) {
             initializeStep(stepDiv);
         });
 
-        // Показываем текущее изображение рецепта
         if (recipe.image) {
             recipeImagePreview.innerHTML = `<img src="${recipe.image}" style="max-width: 100px; border-radius: 4px; margin-top: 5px;" />`;
             removeRecipeImageButton.style.display = 'block';
@@ -432,7 +432,6 @@ async function editRecipe(recipeId, fetchFunction) {
             clearImageInput(recipeImageInput, recipeImagePreview, removeRecipeImageButton);
         });
 
-        // Добавление ингредиента
         addIngredientButton.addEventListener('click', () => {
             const ingredientCount = ingredientsContainer.getElementsByClassName('ingredient').length;
             if (ingredientCount >= 100) {
@@ -465,7 +464,6 @@ async function editRecipe(recipeId, fetchFunction) {
             initializeIngredient(ingredientDiv);
         });
 
-        // Добавление шага
         addStepButton.addEventListener('click', () => {
             const stepCount = stepsContainer.getElementsByClassName('step').length;
             if (stepCount >= 50) {
@@ -479,7 +477,6 @@ async function editRecipe(recipeId, fetchFunction) {
             updateStepLabels();
         });
 
-        // Применяем ограничения
         restrictInput(servingsInput);
         restrictInput(cookingTimeInput);
         enforceMinMax(servingsInput);
@@ -487,7 +484,6 @@ async function editRecipe(recipeId, fetchFunction) {
         initializeTextField(titleInput, true);
         initializeTextField(descriptionInput, true, true);
 
-        // Обработчик отправки формы
         editForm.onsubmit = async (e) => {
             e.preventDefault();
             const saveButton = document.getElementById('edit-save-btn');
@@ -502,7 +498,6 @@ async function editRecipe(recipeId, fetchFunction) {
                     .filter(button => button.classList.contains('active'))
                     .map(button => button.dataset.category);
 
-                // Валидация
                 if (title.length > 50) {
                     showNotification('Название слишком длинное', 'error');
                     return;
@@ -563,9 +558,7 @@ async function editRecipe(recipeId, fetchFunction) {
                     const name = div.querySelector('.ingredient-name').value;
                     let quantity = div.querySelector('.quantity-input').value;
                     const unit = div.querySelector('.type-unit').value;
-                    if (quantity.endsWith(',')) {
-                        quantity = quantity.slice(0, -1);
-                    }
+                    if (quantity.endsWith(',')) quantity = quantity.slice(0, -1);
                     quantity = unit === 'пв' ? 0 : parseFloat(quantity.replace(',', '.')) || 0;
                     updatedRecipe.ingredients.push(name);
                     updatedRecipe.ingredientQuantities.push(quantity);
@@ -579,14 +572,10 @@ async function editRecipe(recipeId, fetchFunction) {
 
                 const formData = new FormData();
                 formData.append('recipeData', JSON.stringify(updatedRecipe));
-                if (recipeImageInput.files[0]) {
-                    formData.append('recipeImage', recipeImageInput.files[0]);
-                }
+                if (recipeImageInput.files[0]) formData.append('recipeImage', recipeImageInput.files[0]);
                 Array.from(stepDivs).forEach((div, index) => {
                     const stepImageInput = div.querySelector('.step-image');
-                    if (stepImageInput?.files[0]) {
-                        formData.append('stepImages', stepImageInput.files[0]);
-                    }
+                    if (stepImageInput?.files[0]) formData.append('stepImages', stepImageInput.files[0]);
                 });
 
                 const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}`, {
