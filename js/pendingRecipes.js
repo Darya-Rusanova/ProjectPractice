@@ -204,8 +204,8 @@ async function editRecipe(recipeId, recipeElement) {
         const recipe = await response.json();
 
         // 2) Сохраняем «state» (id и элемент карточки)
-        currentRecipeId = recipeId;
-        currentRecipeElement = recipeElement;
+        editCurrentRecipeId = recipeId;
+        editCurrentRecipeElement = recipeElement;
 
         // 3) Открываем диалог «Редактировать рецепт»
         editDialog.showModal();
