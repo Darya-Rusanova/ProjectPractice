@@ -158,6 +158,7 @@ function handleUnitChange(select, quantityInput) {
 
 // Добавляем обработчики для заглавной буквы и точки
 function initializeTextField(input, capitalize = false, addPeriod = false) {
+    if (!input) return;
     if (capitalize) {
         input.addEventListener('input', () => {
             const start = input.selectionStart;
