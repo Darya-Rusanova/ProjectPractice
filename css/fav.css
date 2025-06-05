@@ -30,10 +30,9 @@
         top: 30px;
         right: 40px;
     }
-    .picture {
-        height: 200px;
+    .image img{
         max-width: 300px;
-        border-radius: 20px;
+        height: 200px;
     }
 }
 
@@ -59,10 +58,9 @@
         top: 30px;
         right: 40px;
     }
-    .picture {
-        height: 200px;
-        max-width: 300px;
-        border-radius: 20px;
+    .image img {
+        max-width: 350px;
+        height: 250px;
     }
 }
 @media (width < 800px){
@@ -87,13 +85,18 @@
         top: 250px;
         right: auto;
     }
-    .picture {
-        height: 200px;
+    .recipe-image img {
+        margin: 20px;
         max-width: 300px;
-        border-radius: 20px;
+        height: 200px;
     }
 }
-
+.image {
+    grid-area: img;
+}
+.image img {
+  border-radius: 10px;
+}
 .recipes > p {
   margin: 0 auto;
   font-size: 25px;
@@ -103,7 +106,6 @@
   text-align: center; 
   width: 100%;
 }
-
 .recipe {
     transition: outline 0.3s;
     position: relative; /* Это создает контекст позиционирования для absolute-потомков */
@@ -129,11 +131,6 @@ a {
     text-decoration: none;
     color: black;
 }
-.image {
-    padding: 30px;
-    grid-area: img;
-    margin: 0 auto;
-}
 .discription {
     grid-area: discription;
     padding: 30px;
@@ -141,7 +138,7 @@ a {
     font-size: medium;  
     width: 80%;  
 }
-.recipe:hover{
+.recipe:hover {
     outline: 3px solid var(--color-primary-a50);
 	border-radius: 20px;
 	outline-offset:-2px;
@@ -152,10 +149,3 @@ a {
     text-decoration: dashed;
     text-align: center;
 }
-#img {
-    border-radius: 20px;
-    outline: 15px solid var(--color-primary-a50);
-    margin-bottom: 30px;
-}
-
-
