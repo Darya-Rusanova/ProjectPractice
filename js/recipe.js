@@ -9,6 +9,15 @@ const favoriteIcon = document.getElementById('favorite-icon');
 let pendingRecipeToRemove = null;
 let recipeData = null;
 
+// Функция debounce для ограничения частоты вызовов
+function debounce(func, wait) {
+  let timeout;
+  return function (...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  };
+}
+
 async function toggleFavorite(event, recipeId) {
   event.stopPropagation();
   event.preventDefault();
@@ -40,7 +49,7 @@ async function toggleFavorite(event, recipeId) {
       favoriteIcon.classList.add('checked');
       showNotification('Рецепт добавлен в избранное', 'success');
       localStorage.setItem('favoritesCount', data.favoritesCount.toString());
-      window.dispatchEvent(new Event('favoritesUpdated')); // Триггерит обновление в userInfo.js
+      window.dispatchEvent(new Event('favoritesUpdated'));
     } catch (err) {
       console.error('Ошибка при добавлении в избранное:', err.message);
       showNotification('Не удалось добавить в избранное: ' + err.message, 'error');
@@ -69,7 +78,7 @@ if (confirmRemoveButton) {
       favoriteIcon.classList.remove('checked');
       showNotification('Рецепт удалён из избранного', 'success');
       localStorage.setItem('favoritesCount', data.favoritesCount.toString());
-      window.dispatchEvent(new Event('favoritesUpdated')); // Триггерит обновление в userInfo.js
+      window.dispatchEvent(new Event('favoritesUpdated'));
     } catch (err) {
       console.error('Ошибка при удалении из избранного:', err.message);
       showNotification('Не удалось удалить из избранного: ' + err.message, 'error');
@@ -87,7 +96,7 @@ if (cancelRemoveButton) {
   });
 }
 
-function generateIngredients(ingredients, quantities, units, baseServings, userServings = baseServings) {
+function generateIngredients(ingredients, quantities, units, baseServings, userServings) {
   const parent = document.getElementById('grams');
   parent.innerHTML = '';
 
@@ -105,7 +114,8 @@ function generateIngredients(ingredients, quantities, units, baseServings, userS
     if (quantities[index] === 0) {
       result = 'по вкусу';
     } else {
-      result = (quantities[index] / baseServings * userServings).toFixed(1);
+      const scaledQuantity = (quantities[index] / baseServings) * userServings;
+      result = scaledQuantity.toFixed(1);
       if (result.endsWith('.0')) result = result.split('.')[0];
     }
     pGram.textContent = result;
@@ -116,8 +126,17 @@ function generateIngredients(ingredients, quantities, units, baseServings, userS
 }
 
 function countGrams(baseServings) {
-  const userPortion = parseInt(document.getElementById('portion').value) || baseServings;
-  generateIngredients(recipeData.ingredients, recipeData.ingredientQuantities, recipeData.ingredientUnits, baseServings, userServings);
+  const portionInput = document.getElementById('portion');
+  const userPortion = parseInt(portionInput.value);
+  
+  if (isNaN(userPortion) || userPortion < 1) {
+    showNotification('Введите количество порций (не менее 1)', 'error');
+    portionInput.value = baseServings; // Сбрасываем на базовое значение
+    generateIngredients(recipeData.ingredients, recipeData.ingredientQuantities, recipeData.ingredientUnits, baseServings, baseServings);
+    return;
+  }
+
+  generateIngredients(recipeData.ingredients, recipeData.ingredientQuantities, recipeData.ingredientUnits, baseServings, userPortion);
 }
 
 async function fetchRecipe() {
@@ -193,9 +212,33 @@ async function fetchRecipe() {
     if (recipeData.ingredients && Array.isArray(recipeData.ingredients) &&
         recipeData.ingredientQuantities && Array.isArray(recipeData.ingredientQuantities) &&
         recipeData.ingredientUnits && Array.isArray(recipeData.ingredientUnits)) {
-      generateIngredients(recipeData.ingredients, recipeData.ingredientQuantities, recipeData.ingredientUnits, recipeData.servings);
-      document.getElementById('portion').value = recipeData.servings;
-      document.getElementById('count').addEventListener('click', () => countGrams(recipeData.servings));
+      const baseServings = recipeData.servings;
+      generateIngredients(recipeData.ingredients, recipeData.ingredientQuantities, recipeData.ingredientUnits, baseServings, baseServings);
+      const portionInput = document.getElementById('portion');
+      portionInput.value = baseServings;
+
+      // Запрет ввода не-цифр
+      portionInput.addEventListener('keypress', (event) => {
+        const charCode = event.charCode || event.keyCode;
+        if (charCode < 48 || charCode > 57) { // Разрешены только 0-9
+          event.preventDefault();
+        }
+      });
+
+      // Очистка нечисловых символов
+      portionInput.addEventListener('input', () => {
+        const cleanedValue = portionInput.value.replace(/[^0-9]/g, '');
+        if (cleanedValue !== portionInput.value) {
+          portionInput.value = cleanedValue;
+        }
+      });
+      
+      // Обработчик клика на кнопку
+      document.getElementById('count').addEventListener('click', () => countGrams(baseServings));
+      
+      // Обработчик изменения поля ввода
+      const debouncedCountGrams = debounce(() => countGrams(baseServings), 300);
+      portionInput.addEventListener('input', debouncedCountGrams);
     } else {
       document.getElementById('grams').innerHTML = '<p>Ингредиенты не указаны.</p>';
     }
