@@ -55,12 +55,16 @@ async function removeFromFavorites(recipeId, cardElement) {
     if (!resp.ok) {
       throw new Error(data.message || `Ошибка ${resp.status}`);
     }
-    cardElement.remove();
+    // Удаляем карточку из DOM
+    if (cardElement && cardElement.parentNode) {
+      cardElement.parentNode.removeChild(cardElement);
+    }
     showNotification('Рецепт удалён из избранного', 'success');
     localStorage.setItem('favoritesCount', data.favoritesCount.toString());
     document.getElementById('saveCount').textContent = data.favoritesCount;
-    window.dispatchEvent(new Event('favoritesUpdated'));
-    if (recipesSection.getElementsByClassName('recipe').length === 0) {
+    window.dispatchEvent(new Event('favoritesUpdated')); // Для userInfo.js
+    // Проверяем, остались ли рецепты
+    if (recipesSection && recipesSection.getElementsByClassName('recipe').length === 0) {
       recipesSection.innerHTML = '<p>У вас пока нет избранных рецептов.</p>';
     }
   } catch (err) {
@@ -128,7 +132,7 @@ if (confirmRemoveButton) {
     const { recipeId, cardElement } = pendingRecipeToRemove;
     await removeFromFavorites(recipeId, cardElement);
     pendingRecipeToRemove = null;
-    deleteDialog.close();
+    if (deleteDialog) deleteDialog.close();
   });
 }
 
@@ -136,11 +140,15 @@ if (confirmRemoveButton) {
 if (cancelRemoveButton) {
   cancelRemoveButton.addEventListener('click', () => {
     pendingRecipeToRemove = null;
-    deleteDialog.close();
+    if (deleteDialog) deleteDialog.close();
   });
 }
 
 async function fetchFavoriteRecipes() {
+  if (!recipesSection) {
+    console.error('Контейнер .recipes не найден');
+    return;
+  }
   recipesSection.innerHTML = '';
   try {
     const favResp = await fetchWithRetry(`${API_BASE_URL}/api/users/${currentUserId}/favorites`, {
@@ -195,9 +203,4 @@ async function fetchFavoriteRecipes() {
 document.addEventListener('DOMContentLoaded', async () => {
   await checkToken();
   await fetchFavoriteRecipes();
-});
-
-// Обновляем список при изменении избранного
-window.addEventListener('favoritesUpdated', () => {
-  fetchFavoriteRecipes();
 });

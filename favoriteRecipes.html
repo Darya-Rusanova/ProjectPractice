@@ -81,18 +81,16 @@
         <div class="dialog-content">
           <h4>Убрать рецепт из избранных?</h4>
           <div class="dialog-buttons">
-            <button class="cancel-btn" onclick="window.delete.close()">Отмена</button>
+            <button class="cancel-btn" id="cancel-remove">Отмена</button>
             <button class="confirm-btn" id="confirm-remove">Убрать</button>
           </div>
         </div>
     </dialog>
 
     <div id="error" class="error-notification" aria-live="polite"></div>
-    
-    <div id="cabinet-section" class="cabinet-section section">
-        <div class="recipes"></div>
-    </div>
 
+    <div class="recipes"></div>
+    
     <div class="footer">
       <div class="col1">
           <a href="navigation/calendars.html">
