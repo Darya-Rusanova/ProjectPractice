@@ -91,25 +91,25 @@ if (cancelRemoveButton) {
   });
 }
 
-function generateIngredients(ingredients, baseServings, userServings = baseServings) {
+function generateIngredients(ingredients, quantities, units, baseServings, userServings = baseServings) {
   const parent = document.getElementById('grams');
   parent.innerHTML = '';
 
-  ingredients.forEach(ingredient => {
+  ingredients.forEach((name, index) => {
     const div = document.createElement('div');
     div.className = 'menu';
     const pName = document.createElement('p');
     pName.className = 'pName';
-    pName.textContent = `${ingredient.name} (${ingredient.unit})`;
+    pName.textContent = `${name} (${units[index]})`;
     div.appendChild(pName);
 
     const pGram = document.createElement('p');
     pGram.className = 'pGram';
     let result;
-    if (ingredient.quantity === 0) {
+    if (quantities[index] === 0) {
       result = 'по вкусу';
     } else {
-      result = (ingredient.quantity / baseServings * userServings).toFixed(1);
+      result = (quantities[index] / baseServings * userServings).toFixed(1);
       if (result.endsWith('.0')) result = result.split('.')[0];
     }
     pGram.textContent = result;
@@ -121,7 +121,7 @@ function generateIngredients(ingredients, baseServings, userServings = baseServi
 
 function countGrams(baseServings) {
   const userPortion = parseInt(document.getElementById('portion').value) || baseServings;
-  generateIngredients(recipeData.ingredients, baseServings, userPortion);
+  generateIngredients(recipeData.ingredients, recipeData.ingredientQuantities, recipeData.ingredientUnits, baseServings, userPortion);
 }
 
 async function fetchRecipe() {
@@ -136,6 +136,7 @@ async function fetchRecipe() {
   }
 
   try {
+    console.log('Fetching recipe with ID:', recipeId);
     const response = await fetchWithRetry(`${API_BASE_URL}/api/recipes/public/recipe/${recipeId}`, {
       headers: {
         'Content-Type': 'application/json',
@@ -144,13 +145,14 @@ async function fetchRecipe() {
     });
 
     if (!response.ok) {
-      throw new Error(`Ошибка при получении рецепта: ${response.status}`);
+      const errData = await response.json();
+      console.error('Response error:', errData);
+      throw new Error(errData.message || `Ошибка ${response.status}`);
     }
 
     recipeData = await response.json();
     console.log('Recipe data:', recipeData);
 
-    // Заполнение заголовка и описания
     document.getElementById('recipe-title').textContent = recipeData.title || 'Без названия';
     document.getElementById('main-image').src = recipeData.image || 'images/placeholder.png';
     document.getElementById('main-image').alt = recipeData.title || 'Рецепт';
@@ -158,7 +160,6 @@ async function fetchRecipe() {
     document.getElementById('recipe-time').textContent = recipeData.cookingTime || 'Не указано';
     document.getElementById('recipe-servings').textContent = recipeData.servings || 'Не указано';
 
-    // Получение имени автора
     try {
       const userResp = await fetchWithRetry(`${API_BASE_URL}/api/recipes/public/${recipeData.author}`, {
         headers: {
@@ -177,7 +178,6 @@ async function fetchRecipe() {
       document.getElementById('recipe-author').textContent = 'Неизвестный автор';
     }
 
-    // Проверка, в избранном ли рецепт
     if (currentUserId && token) {
       try {
         const favoritesResp = await fetchWithRetry(`${API_BASE_URL}/api/users/${currentUserId}/favorites`, {
@@ -194,16 +194,16 @@ async function fetchRecipe() {
       }
     }
 
-    // Заполнение ингредиентов
-    if (recipeData.ingredients && Array.isArray(recipeData.ingredients)) {
-      generateIngredients(recipeData.ingredients, recipeData.servings);
+    if (recipeData.ingredients && Array.isArray(recipeData.ingredients) &&
+        recipeData.ingredientQuantities && Array.isArray(recipeData.ingredientQuantities) &&
+        recipeData.ingredientUnits && Array.isArray(recipeData.ingredientUnits)) {
+      generateIngredients(recipeData.ingredients, recipeData.ingredientQuantities, recipeData.ingredientUnits, recipeData.servings);
       document.getElementById('portion').value = recipeData.servings;
       document.getElementById('count').addEventListener('click', () => countGrams(recipeData.servings));
     } else {
       document.getElementById('grams').innerHTML = '<p>Ингредиенты не указаны.</p>';
     }
 
-    // Заполнение шагов
     const stagesContainer = document.getElementById('recipe-stages');
     if (recipeData.steps && Array.isArray(recipeData.steps)) {
       recipeData.steps.forEach((step, index) => {
@@ -230,7 +230,6 @@ async function fetchRecipe() {
       stagesContainer.innerHTML = '<p>Шаги приготовления не указаны.</p>';
     }
 
-    // Обработчик иконки избранного
     favoriteIcon.addEventListener('click', (event) => toggleFavorite(event, recipeId));
 
   } catch (err) {
