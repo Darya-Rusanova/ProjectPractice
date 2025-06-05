@@ -45,7 +45,7 @@ loginForm.addEventListener('submit', async (e) => {
     button.textContent = 'Загрузка...';
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    const adminCode = document.getElementById('adminCode')?.value || ''; // Чтение кода админа
+    const adminCode = document.getElementById('adminCode')?.value || '';
     console.log('Email:', email, 'AdminCode:', adminCode);
 
     try {
@@ -68,7 +68,6 @@ loginForm.addEventListener('submit', async (e) => {
             localStorage.setItem('token', data.token.trim());
             localStorage.setItem('userId', data.userId);
 
-            // Логика определения isAdmin: используем значение из data.isAdmin
             console.log('Setting isAdmin:', data.isAdmin, 'Code provided:', !!adminCode);
             localStorage.setItem('isAdmin', data.isAdmin.toString());
 

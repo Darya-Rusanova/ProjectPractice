@@ -12,8 +12,6 @@
             html.setAttribute('data-theme', newTheme);
             localStorage.setItem('data-theme', newTheme);
         });
-        
-        // Проверяем сохранённую тему при загрузке
         if (localStorage.getItem('data-theme') === 'dark') {
             html.setAttribute('data-theme', 'dark');
         }else{

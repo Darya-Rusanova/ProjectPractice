@@ -245,7 +245,7 @@ function initializeIngredient(ingredientDiv) {
     initializeTextField(ingredientNameInput, true);
 }
 
-// Функция для создания шага через DOM-методы
+// Функция для создания шага
 function createStep(stepNumber) {
     const stepDiv = document.createElement('div');
     stepDiv.className = 'step';
@@ -666,13 +666,12 @@ recipeForm.addEventListener('submit', async (e) => {
             recipe.ingredientUnits.push(unit);
         }
 
-        // Записываем шаги (описание, без картинки, т.к. её отправим отдельно)
+        // Записываем шаги
         stepDivs.forEach((div, index) => {
             const desc = div.querySelector('.step-description').value;
             recipe.steps.push({ description: desc, image: '' });
         });
 
-        // 3) Упаковываем всё в FormData
         const formData = new FormData();
         formData.append('recipeData', JSON.stringify(recipe));
 
@@ -681,7 +680,6 @@ recipeForm.addEventListener('submit', async (e) => {
             formData.append('recipeImage', recipeImageInput.files[0]);
         }
 
-        // Правильно раскладываем изображения шагов по индексам
         stepDivs.forEach((div) => {
             const file = div.querySelector('.step-image')?.files[0];
             if (file) {

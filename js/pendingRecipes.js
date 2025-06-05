@@ -17,7 +17,7 @@ editRemoveRecipeImageButton.addEventListener('click', () => {
     clearImageInput(editRecipeImageInput, editRecipeImagePreview, editRemoveRecipeImageButton);
 });
 
-// Функция для получения имени автора по ID (аналогично rejectedRecipes.js)
+// Функция для получения имени автора по ID
 async function getAuthorName(authorId, token) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/users/${authorId}`, {
@@ -82,7 +82,6 @@ async function displayPendingRecipes(recipes) {
 
     const token = localStorage.getItem('token').trim();
 
-    // Собираем имена авторов для каждого рецепта параллельно
     const authorPromises = recipes.map(r => getAuthorName(r.author, token));
     const authorNames = await Promise.all(authorPromises);
 
@@ -154,7 +153,7 @@ async function approveRecipe() {
             updateEmptyListMessage(pendingRecipesList);
         }
         acceptDialog.close();
-        window.dispatchEvent(new Event('recipesUpdated')); // Уведомляем об изменении
+        window.dispatchEvent(new Event('recipesUpdated'));
     } catch (err) {
         showNotification(`Ошибка: ${err.message}`, 'error');
         acceptDialog.close();
@@ -185,7 +184,7 @@ async function rejectRecipe() {
             updateEmptyListMessage(pendingRecipesList);
         }
         deleteDialog2.close();
-        window.dispatchEvent(new Event('recipesUpdated')); // Уведомляем об изменении
+        window.dispatchEvent(new Event('recipesUpdated'));
     } catch (err) {
         showNotification(`Ошибка: ${err.message}`, 'error');
         deleteDialog2.close();
@@ -200,7 +199,6 @@ async function editRecipe(recipeId, recipeElement) {
     }
 
     try {
-        // 1) Получаем полные данные рецепта
         const response = await fetchWithRetry(
             `${API_BASE_URL}/api/recipes/${recipeId}`,
             {
@@ -213,20 +211,16 @@ async function editRecipe(recipeId, recipeElement) {
         }
         const recipe = await response.json();
 
-        // 2) Сохраняем «state» (id и элемент карточки)
         editCurrentRecipeId = recipeId;
         editCurrentRecipeElement = recipeElement;
 
-        // 3) Открываем диалог «Редактировать рецепт»
         editDialog.showModal();
 
-        // 4) Заполняем поля формы текущими значениями
         titleInput.value = recipe.title;
         descriptionInput.value = recipe.description;
         servingsInput.value = recipe.servings;
         cookingTimeInput.value = recipe.cookingTime;
 
-        // 5) Устанавливаем активные категории
         categoryButtons.forEach(btn => {
             if (recipe.categories.includes(btn.dataset.category)) {
                 btn.classList.add('active');
@@ -235,7 +229,6 @@ async function editRecipe(recipeId, recipeElement) {
             }
         });
 
-        // 6) Ингредиенты: очищаем контейнер, потом создаём нужное число полей
         editIngredientsContainer.innerHTML = '';
         recipe.ingredients.forEach((ingrName, idx) => {
             const div = document.createElement('div');
@@ -266,7 +259,6 @@ async function editRecipe(recipeId, recipeElement) {
             initializeIngredient(div);
         });
 
-        // 7) Шаги: очищаем контейнер, потом создаём нужное число полей
         editStepsContainer.innerHTML = '';
         recipe.steps.forEach((stepObj, idx) => {
             const stepDiv = document.createElement('div');
@@ -300,7 +292,6 @@ async function editRecipe(recipeId, recipeElement) {
         });
         updateStepLabels();
 
-        // 8) Превью главного изображения
         if (recipe.image) {
             editRecipeImagePreview.innerHTML = `<img src="${recipe.image}" style="max-width:100px; margin-top:5px; border-radius:4px;">`;
             editRemoveRecipeImageButton.style.display = 'block';

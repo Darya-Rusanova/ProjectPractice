@@ -1,4 +1,3 @@
-// --- 1) Схема получения полей формы и диалога “Редактировать” ---
 const editDialog = document.getElementById('editDialog');
 const editForm = document.getElementById('edit-recipe-form');
 const deleteDialog = document.getElementById('delete')
@@ -95,7 +94,6 @@ async function deleteRecipe() {
     }
 }
 
-// --- 3) Функции для инициализации новых ингредиентов/шагов при редактировании (скопированы из kabinet.js) ---
 function initializeIngredient(ingredientDiv) {
     const quantityInput = ingredientDiv.querySelector('.quantity-input');
     const unitSelect = ingredientDiv.querySelector('.type-unit');
@@ -275,8 +273,7 @@ editRecipeImageInput.addEventListener('change', () => {
     }
 });
 
-// ------------------------------------------------------------
-// 4) Логика «Сохранить изменения» (onsubmit для editForm)
+// Логика «Сохранить изменения»
 editForm.onsubmit = async (e) => {
     e.preventDefault();
     const saveButton = document.getElementById('edit-save-btn');
@@ -291,7 +288,6 @@ editForm.onsubmit = async (e) => {
             return;
         }
 
-        // 1) Считываем обновлённые поля
         const title = titleInput.value;
         const description = descriptionInput.value;
         const selectedCategories = Array.from(categoryButtons)
@@ -317,7 +313,7 @@ editForm.onsubmit = async (e) => {
             return;
         }
 
-        // 2) Ингредиенты
+        // Ингредиенты
         const ingredientDivs = Array.from(editIngredientsContainer.getElementsByClassName('ingredient'));
         if (ingredientDivs.length === 0) {
             showNotification('Добавьте хотя бы один ингредиент', 'error');
@@ -345,7 +341,7 @@ editForm.onsubmit = async (e) => {
             ingredientUnits.push(unit);
         }
 
-        // 3) Шаги
+        // Шаги
         const stepDivs = Array.from(editStepsContainer.getElementsByClassName('step'));
         if (stepDivs.length === 0) {
             showNotification('Добавьте хотя бы один шаг', 'error');
@@ -368,7 +364,7 @@ editForm.onsubmit = async (e) => {
             const stepImagePreview = div.querySelector('.step-image-preview');
             const stepFileInput = div.querySelector('.step-image');
 
-            // Если превью пустое (пользователь удалил старую картинку) И нового файла нет → ошибка
+            // Если превью пустое (пользователь удалил старую картинку) И нового файла нет - ошибка
             const hasOldPreview = stepImagePreview.innerHTML.trim() !== '';
             const hasNewFile = stepFileInput.files && stepFileInput.files[0];
             if (!hasOldPreview && !hasNewFile) {
@@ -379,10 +375,6 @@ editForm.onsubmit = async (e) => {
             }
         }
 
-
-        // 4) Подготовка объекта updatedRecipe
-        //    Нам нужно сохранить старые URL картинок (главного и шагов), если пользователь их не изменил.
-        //    Для этого сперва получим оригинальный объект рецепта:
         const originalRecipeResponse = await fetchWithRetry(`${API_BASE_URL}/api/recipes/${editCurrentRecipeId}`, {
             headers: { 'Authorization': `Bearer ${token.trim()}` }
         });
@@ -392,7 +384,6 @@ editForm.onsubmit = async (e) => {
         }
         const originalRecipe = await originalRecipeResponse.json();
 
-        // Формируем payload
         const updatedRecipe = {
             title,
             categories: selectedCategories,
@@ -403,30 +394,24 @@ editForm.onsubmit = async (e) => {
             ingredientQuantities,
             ingredientUnits,
             steps: [],
-            // Флаг удалить главное изображение, если превью пусто (и нет выбранного нового файла)
             removeRecipeImage: editRecipeImagePreview.innerHTML === '' && !editRecipeImageInput.files[0]
         };
 
-        // 5) Шаги: если превью шага не пусто и нет нового файла, берём старый URL из originalRecipe
         stepDivs.forEach((div, index) => {
             const desc = div.querySelector('.step-description').value;
             const stepImagePreview = div.querySelector('.step-image-preview');
             const stepImageInput = div.querySelector('.step-image');
             let imageURL = '';
 
-            // Если превью непустое и нового файла не выбрано → оставляем старую ссылку
             if (stepImagePreview.innerHTML.trim() && !stepImageInput.files[0]) {
                 imageURL = originalRecipe.steps[index]?.image || '';
             }
-            // Иначе (если превью пустое, то либо файл, либо изображение будет пустой строкой)
             updatedRecipe.steps.push({ description: desc, image: imageURL });
         });
 
-        // 6) Формируем FormData
         const formData = new FormData();
         formData.append('recipeData', JSON.stringify(updatedRecipe));
 
-        // 7) Если выбрано новое главное изображение — добавляем его
         if (editRecipeImageInput.files[0]) {
             const file = editRecipeImageInput.files[0];
             if (!['image/jpeg', 'image/png'].includes(file.type)) {
@@ -444,7 +429,6 @@ editForm.onsubmit = async (e) => {
             formData.append('recipeImage', file);
         }
 
-        // 8) Для каждого шага, если выбран новый файл, добавляем в FormData
         stepDivs.forEach((div, idx) => {
             const stepImageInput = div.querySelector('.step-image');
             if (stepImageInput?.files[0]) {
@@ -461,17 +445,14 @@ editForm.onsubmit = async (e) => {
                     saveButton.textContent = originalText;
                     return;
                 }
-                // Заметьте, здесь мы используем ключ `stepImages[index]`, потому что бэкенд ожидает массив.
                 formData.append('step-image', file);
             }
         });
 
-        // 9) Логируем FormData (для отладки)
         for (let [key, value] of formData.entries()) {
             console.log(`FormData: ${key} = ${value instanceof File ? value.name : value}`);
         }
 
-        // 10) Отправляем PUT-запрос на бэкенд
         const response = await fetchWithRetry(`${API_BASE_URL}/api/recipes/${editCurrentRecipeId}`, {
             method: 'PUT',
             headers: { 'Authorization': `Bearer ${token.trim()}` },
@@ -482,7 +463,6 @@ editForm.onsubmit = async (e) => {
             showNotification('Рецепт обновлён!', 'success');
             editDialog.close();
 
-            // При желании обновляем картинку и заголовок в карточке 
             if (editCurrentRecipeElement) {
                 const img = editCurrentRecipeElement.querySelector('img');
                 const titleEl = editCurrentRecipeElement.querySelector('h4');
@@ -490,12 +470,11 @@ editForm.onsubmit = async (e) => {
                 if (titleEl) titleEl.textContent = title;
             }
 
-            // Если нужно снова перезагрузить список (fetchPendingRecipes), можно вызвать currentFetchFunction()
             if (typeof editCurrentFetchFunction === 'function') {
                 editCurrentFetchFunction();
             }
             localStorage.removeItem('recipeCount');
-            window.dispatchEvent(new Event('recipesUpdated')); // Уведомляем об изменении
+            window.dispatchEvent(new Event('recipesUpdated'));
         } else {
             throw new Error(data.message || 'Ошибка обновления рецепта');
         }

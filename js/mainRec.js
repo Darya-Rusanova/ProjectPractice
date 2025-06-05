@@ -19,11 +19,9 @@ async function toggleFavorite(event, recipeId, favIcon) {
   const token = localStorage.getItem('token') || '';
 
   if (isChecked) {
-    // Показываем диалоговое окно для подтверждения удаления
     pendingRecipeToRemove = { recipeId: recipeId, favIcon };
     deleteDialog.showModal();
   } else {
-    // Добавляем в избранное
     try {
       const addResp = await fetchWithRetry(`${API_BASE_URL}/api/users/${currentUserId}/favorites/${recipeId}`, {
         method: 'PUT',

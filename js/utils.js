@@ -5,7 +5,7 @@ async function fetchWithRetry(url, options, retries = 5, delay = 1000) {
         try {
             console.log(`Попытка ${i + 1} для ${url}`);
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 20000); // 20 секунд
+            const timeoutId = setTimeout(() => controller.abort(), 20000);
             const response = await fetch(url, { ...options, signal: controller.signal });
             clearTimeout(timeoutId);
             console.log(`Статус ответа для ${url}: ${response.status}`);

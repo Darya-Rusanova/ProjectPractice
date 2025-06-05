@@ -219,7 +219,6 @@ async function fetchRecipe() {
         }
       });
 
-      // Очистка нечисловых символов (для вставки текста)
       portionInput.addEventListener('input', () => {
         const cleanedValue = portionInput.value.replace(/[^0-9]/g, '');
         if (cleanedValue !== portionInput.value) {

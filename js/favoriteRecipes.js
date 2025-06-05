@@ -55,15 +55,13 @@ async function removeFromFavorites(recipeId, cardElement) {
     if (!resp.ok) {
       throw new Error(data.message || `Ошибка ${resp.status}`);
     }
-    // Удаляем карточку из DOM
     if (cardElement && cardElement.parentNode) {
       cardElement.parentNode.removeChild(cardElement);
     }
     showNotification('Рецепт удалён из избранного', 'success');
     localStorage.setItem('favoritesCount', data.favoritesCount.toString());
     document.getElementById('saveCount').textContent = data.favoritesCount;
-    window.dispatchEvent(new Event('favoritesUpdated')); // Для userInfo.js
-    // Проверяем, остались ли рецепты
+    window.dispatchEvent(new Event('favoritesUpdated'));
     if (recipesSection && recipesSection.getElementsByClassName('recipe').length === 0) {
       recipesSection.innerHTML = '<p>У вас пока нет избранных рецептов.</p>';
     }

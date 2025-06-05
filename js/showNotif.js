@@ -2,7 +2,7 @@ function showNotification(message, type = 'error') {
     const notification = document.getElementById('error');
 
     notification.classList.remove('show', 'hide');
-    void notification.offsetWidth; // Триггер reflow
+    void notification.offsetWidth;
 
     notification.textContent = message;
     notification.className = `error-notification ${type}`;

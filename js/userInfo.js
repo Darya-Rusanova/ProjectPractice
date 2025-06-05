@@ -1,5 +1,3 @@
-// При загрузке страницы отображаем то, что уже есть в localStorage (если есть),
-// а затем асинхронно подтягиваем остальные данные с сервера
 document.addEventListener('DOMContentLoaded', () => {
   immediatelyShowStoredInfo();
   fetchAndUpdateUserInfo();
@@ -17,8 +15,6 @@ function immediatelyShowStoredInfo() {
     console.error('Элементы для отображения информации о пользователе не найдены');
     return;
   }
-
-  // Если при входе мы сохранили в localStorage, сразу их покажем:
   const storedName  = localStorage.getItem('username');
   const storedEmail = localStorage.getItem('email');
   const storedRecipeCount = localStorage.getItem('recipeCount');
@@ -59,7 +55,6 @@ async function fetchAndUpdateUserInfo({ redirectOnError = true } = {}) {
   const userId = localStorage.getItem('userId') || '';
 
   if (!token || !userId) {
-    // Если нет сессии, перенаправляем на страницу входа
     if (redirectOnError) {
       redirectToSignIn();
     }
@@ -68,7 +63,6 @@ async function fetchAndUpdateUserInfo({ redirectOnError = true } = {}) {
 
   try {
     console.log('Запрос данных пользователя...');
-    // Запрашиваем базовую информацию о пользователе
     const userResp = await fetchWithRetry(
       `${API_BASE_URL}/api/users/${userId}`,
       { headers: { 'Authorization': `Bearer ${token}` } }
@@ -85,7 +79,6 @@ async function fetchAndUpdateUserInfo({ redirectOnError = true } = {}) {
       throw new Error(`Ошибка ${userResp.status}`);
     }
 
-    // В ответе ожидаем { username, email, recipeCount, favoritesCount }
     const userData = await userResp.json();
     console.log('Данные пользователя получены:', {
       username: userData.username,
@@ -93,13 +86,11 @@ async function fetchAndUpdateUserInfo({ redirectOnError = true } = {}) {
       favoritesCount: userData.favoritesCount
     });
 
-    // Обновляем на странице
     usernameElement.textContent    = userData.username    || 'Не указано';
     emailElement.textContent       = userData.email       || 'Не указано';
     recipeCountElement.textContent = userData.recipeCount || 0;
     saveCountElement.textContent   = userData.favoritesCount || 0;
 
-    // Перезапишем localStorage, чтобы сразу показать при следующей загрузке
     if (userData.username) {
       localStorage.setItem('username', userData.username);
     }
@@ -114,10 +105,9 @@ async function fetchAndUpdateUserInfo({ redirectOnError = true } = {}) {
       localStorage.setItem('favoritesCount', userData.favoritesCount.toString());
       console.log(`Обновлено favoritesCount в localStorage: ${userData.favoritesCount}`);
     }
-    return true; // Явно возвращаем true при успехе
+    return true;
   } catch (err) {
     console.error('Ошибка при получении данных пользователя:', err.message);
-    // Любая другая ошибка — стереть сессию и увести на вход
     if (redirectOnError) {
       redirectToSignIn();
     }

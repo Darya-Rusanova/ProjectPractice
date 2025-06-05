@@ -137,7 +137,6 @@ async function displayRejectedRecipes(recipes) {
 
     const token = localStorage.getItem('token');
 
-    // Собираем имена авторов для каждого рецепта параллельно
     const authorPromises = recipes.map(r => getAuthorName(r.author, token));
     const authorNames = await Promise.all(authorPromises);
 
@@ -196,7 +195,6 @@ async function reconsiderRecipe() {
         showNotification('Рецепт возвращён на рассмотрение', 'success');
         if (currentRecipeElement && currentRecipeElement.parentNode) {
             currentRecipeElement.parentNode.removeChild(currentRecipeElement);
-            // Проверяем, остались ли рецепты в списке
             if (rejectedRecipesList.getElementsByClassName('recipe-card').length === 0) {
                 rejectedRecipesList.innerHTML = `  
                     <p>Нет отклонённых рецептов</p>
@@ -204,7 +202,7 @@ async function reconsiderRecipe() {
             }
         }
         returnDialog.close();
-        window.dispatchEvent(new Event('recipesUpdated')); // Уведомляем об изменении
+        window.dispatchEvent(new Event('recipesUpdated'));
     } catch (err) {
         showNotification(`Ошибка: ${err.message}`, 'error');
         returnDialog.close();
