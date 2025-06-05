@@ -11,7 +11,7 @@ function immediatelyShowStoredInfo() {
   const recipeCountElement = document.getElementById('recipeCount');
   const saveCountElement   = document.getElementById('saveCount');
 
-  if (!usernameElement || !emailElement || !recipeCountElement || !saveCountElement) {
+  if (!usernameElement || !emailElement) {
     console.error('Элементы для отображения информации о пользователе не найдены');
     return;
   }
@@ -44,7 +44,7 @@ async function fetchAndUpdateUserInfo({ redirectOnError = true } = {}) {
   const recipeCountElement = document.getElementById('recipeCount');
   const saveCountElement   = document.getElementById('saveCount');
 
-  if (!usernameElement || !emailElement || !recipeCountElement || !saveCountElement) {
+  if (!usernameElement || !emailElement) {
     // Если этих элементов нет, ничего не делаем
     console.error('Элементы для отображения информации о пользователе не найдены');
     return;
