@@ -4,6 +4,7 @@ const currentUserId = localStorage.getItem('userId') || '';
 const recipesSection = document.getElementById('recipes-section');
 const errorDiv = document.getElementById('error');
 const logoutButton = document.getElementById('logout');
+
 const deleteDialog = document.getElementById('delete');
 const confirmRemoveButton = document.getElementById('confirm-remove');
 
@@ -131,7 +132,7 @@ async function fetchFavoriteRecipes() {
       throw new Error(`Ошибка при получении избранного: ${favResp.status}`);
     }
     const favoriteRecipes = await favResp.json();
-    if (favoriteRecipes.length === 0) {
+    if (!Array.isArray(favoriteRecipes) || favoriteRecipes.length === 0) {
       recipesSection.innerHTML = '<p>У вас пока нет избранных рецептов.</p>';
       return;
     }

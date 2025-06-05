@@ -103,8 +103,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       throw new Error(`Ошибка при получении рецептов: ${response.status}`);
     }
 
-    const { recipes, total } = await response.json();
-    if (recipes.length === 0) {
+    const recipes = await response.json();
+    if (!Array.isArray(recipes) || recipes.length === 0) {
       container.innerHTML = '<p>Рецепты не найдены.</p>';
       return;
     }
