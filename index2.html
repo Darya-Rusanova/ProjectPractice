@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ru" >
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" type="text/css" rel="stylesheet" media="screen">
+    <link href="css/theme.css" type="text/css" rel="stylesheet" media="screen">
+    <link rel="icon" href="images/functional/logo.png" type="image/png">
+    <title>ЧудоБлюдо</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="start">
+            <div class="header">
+                <div class="theme-bg"></div>
+            </div>
+            <div class="theme-switcher-wrapper">
+                <button id="theme-toggle" class="theme-toggle">
+                    <span class="sun">
+                        <img src="images/functional/sun.png"/>
+                    </span>
+                    <span class="moon">
+                        <img src="images/functional/moon.png" width="40px" height="40px"/>
+                    </span>
+                </button>
+            </div>
+            
+            <!-- <div class="user">
+                <div class="user-bg" href="#" id="lk"></div>
+                <a class="text-toggle" href="#" id="lk-text"></a>
+            </div> -->
+
+            <div class="user">
+                <a href="#" id="lk">
+                    <div class="user-bg"></div>
+                    <span class="text-toggle" id="lk-text"></span>
+                </a>
+            </div>
+            
+
+            <div class="navigation">
+                <div class="dropdown" id="dropdown1">
+                    <button class="dropbtn">Выбери прием пищи</button>
+                    <div class="dropdown-content">
+                        <a href="navigation/breakfast.html">Завтрак</a>
+                        <a href="navigation/lanch.html">Обед</a>
+                        <a href="navigation/dinner.html">Ужин</a>
+                    </div>
+                </div>
+        
+                <div class="dropdown" id="dropdown2">
+                    <button class="dropbtn">Выбери кухню</button>
+                    <div class="dropdown-content">
+                        <a href="navigation/china.html">Китайская кухня</a>
+                        <a href="navigation/italy.html">Итальянская кухня</a>
+                        <a href="navigation/russia.html">Русская кухня</a>
+                    </div>
+                </div>
+
+                <div class="dropdown" id="dropdown3">
+                    <button class="dropbtn">Выбери тип блюда</button>
+                    <div class="dropdown-content">
+                        <a href="navigation/hot.html">Горячее блюдо</a>
+                        <a href="navigation/snack.html">Закуски</a>
+                        <a href="navigation/dessert.html">Десерт</a>
+                        <a href="navigation/drink.html">Напитки</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="information">
+            <div class="main-text">
+                <p id="head">РЕЦЕПТЫ</p>
+                <p id="body">Как в ресторане, но по-домашнему</p>
+                <p id="inf">Данный сайт предоставит вам доступ к различным рецептам. Вы можете выбрать категорию и найти
+                    понравившиеся блюдо.</p>
+            </div>
+        </div>
+
+
+        <div class="recipes">
+
+            <a href="navigation/chiken.html">
+                <div class="recipe">
+                    <div class="favorite" onclick="toggleFavorite(event)">
+                    </div>
+                    <div class="image">
+                        <img src="https://i.postimg.cc/tCmVQPJb/chiken.jpg" class="picture" alt="chicken" />
+                    </div>
+                    <div class="discription">
+                        <p class="name">Курица, тушенная в кисло-сладком соусе</p>
+                        <ul>
+                            <li>4 порции</li>
+                            <li>30 минут</li>
+                            <li>11 ингредиентов</li>
+                        </ul>
+                    </div>
+                </div>
+            </a>
+
+            <div class="recipe">
+                <div class="favorite" onclick="toggleFavorite(event)"></div>
+                <div class="image">
+                    <img src="https://i.postimg.cc/SNKzvVyV/ribs.jpg" class="picture" alt="ribs" />
+                </div>
+                <div class="discription">
+                    <p class="name">Жареная свинина в медово-соевом соусе с чесноком</p>
+                    <ul>
+                        <li>2 порции</li>
+                        <li>60 минут</li>
+                        <li>11 ингредиентов</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="recipe">
+                <div class="favorite" onclick="toggleFavorite(event)"></div>
+                <div class="image">
+                    <img src="https://i.postimg.cc/zGbHJBHg/rice.jpg"  class="picture" alt="rice" />
+                </div>
+                <div class="discription">
+                    <p class="name">Жареный рис по-янчжоуски</p>
+                    <ul>
+                        <li>6 порций</li>
+                        <li>60 минут</li>
+                        <li>14 ингредиентов</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="recipe">
+                <div class="favorite" onclick="toggleFavorite(event)"></div>
+                <div class="image">
+                    <img src="https://i.postimg.cc/25nqZKwj/souffle.jpg" class="picture" alt="souffle" />
+                </div>
+                <div class="discription">
+                    <p class="name">Шоколадное суфле</p>
+                    <ul>
+                        <li>2 порции</li>
+                        <li>20 минут</li>
+                        <li>6 ингредиентов</li>
+                    </ul>
+                </div>
+            </div>
+
+
+
+            <a href="navigation/waffles.html">
+                <div class="recipe">
+                    <div class="favorite" onclick="toggleFavorite(event)">  
+                    </div>
+                    <div class="image">
+                        <img src="https://i.postimg.cc/XJ3rckHf/waffles.jpg" class="picture" alt="waffles" />
+                    </div>
+                    <div class="discription">
+                        <p class="name">Венские вафли</p>
+                        <ul>
+                            <li>8 порций</li>
+                            <li>30 минут</li>
+                            <li>9 ингредиентов</li>
+                        </ul>
+                    </div>
+                </div>
+            </a>
+
+            <div class="recipe">
+                <div class="favorite" onclick="toggleFavorite(event)"></div>
+                <div class="image">
+                    <img src="https://i.postimg.cc/dQ6y6gKL/gato.jpg" class="picture" alt="gato" />
+                </div>
+                <div class="discription">
+                    <p class="name">Картофельный "Гато"</p>
+                    <ul>
+                        <li>6 порции</li>
+                        <li>60 минут</li>
+                        <li>11 ингредиентов</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="recipe">
+                <div class="favorite" onclick="toggleFavorite(event)"></div>
+                <div class="image">
+                    <img src="https://i.postimg.cc/pLwhyHK1/vinaigrette.jpg" class="picture" alt="vinaigrette" />
+                </div>
+                <div class="discription">
+                    <p class="name">Салат "Винегрет"</p>
+                    <ul>
+                        <li>4 порции</li>
+                        <li>1 час 40 минут</li>
+                        <li>10 ингредиентов</li>
+                    </ul>
+                </div>
+            </div>
+
+
+            <div class="recipe">
+                <div class="favorite" onclick="toggleFavorite(event)"></div>
+                <div class="image">
+                    <img src="https://i.postimg.cc/brmSvSRQ/bits.jpg"  class="picture" alt="bits" />
+                </div>
+                <div class="discription">
+                    <p class="name">Пшённые биточки с грибами</p>
+                    <ul>
+                        <li>7 порций</li>
+                        <li>45 минут</li>
+                        <li>7 ингредиентов</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        <div class="footer">
+            <div class="col1">
+                <a href="navigation/calendars.html">
+                    <p class="footer-contact">Посмотреть календарь праздников</p>
+                </a>
+                <br>
+            </div>
+
+            <div class="col2">
+                <p class="footer-contact">Контакты для связи</p>
+                <p>dr1305@bk.ru</p>
+                <p>kcyxa.boychenko@gmail.com</p>
+                <p>+79-04-121-04-00</p>
+                <p>+79-02-765-81-29</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleFavorite(event) {
+            // Останавливаем всплытие события, чтобы не сработал переход по ссылке
+            event.stopPropagation();
+            event.preventDefault();
+            // Переключаем класс checked у элемента favorite
+            event.currentTarget.classList.toggle('checked');
+            // Здесь можно добавить логику сохранения в избранное
+            // Например, через localStorage или отправку на сервер
+        }
+    </script>
+
+    <script src="js/utils.js" defer></script>
+    <script src="js/theme.js" type="text/javascript" defer></script>
+    <script src="js/userName.js" defer></script>
+</body>
+
+</html>
