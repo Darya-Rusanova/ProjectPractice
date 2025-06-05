@@ -99,11 +99,6 @@
     grid-area: img;
     margin: 0 auto;
 }
-.image img {
-    border-radius: 20px;
-    outline: 15px solid var(--color-primary-a50);
-    margin-bottom: 30px;
-}
 .recipes > p {
   margin: 0 auto;
   font-size: 25px;
