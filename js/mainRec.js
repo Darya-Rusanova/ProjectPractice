@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 2) Запрашиваем все опубликованные рецепты через админский роут
     //    GET /api/recipes/user/all?status=published
     const response = await fetchWithRetry(
-      `${API_BASE_URL}/api/recipes/user/all?status=published`,
+      `${API_BASE_URL}/api/recipes/public`,
       {
         method: 'GET',
         headers: {
