@@ -9,15 +9,6 @@ const favoriteIcon = document.getElementById('favorite-icon');
 let pendingRecipeToRemove = null;
 let recipeData = null;
 
-// Функция debounce для ограничения частоты вызовов
-function debounce(func, wait) {
-  let timeout;
-  return function (...args) {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(this, args), wait);
-  };
-}
-
 async function toggleFavorite(event, recipeId) {
   event.stopPropagation();
   event.preventDefault();
@@ -128,10 +119,10 @@ function generateIngredients(ingredients, quantities, units, baseServings, userS
 function countGrams(baseServings) {
   const portionInput = document.getElementById('portion');
   const userPortion = parseInt(portionInput.value);
-  
+
   if (isNaN(userPortion) || userPortion < 1) {
     showNotification('Введите количество порций (не менее 1)', 'error');
-    portionInput.value = baseServings; // Сбрасываем на базовое значение
+    portionInput.value = baseServings;
     generateIngredients(recipeData.ingredients, recipeData.ingredientQuantities, recipeData.ingredientUnits, baseServings, baseServings);
     return;
   }
@@ -217,34 +208,33 @@ async function fetchRecipe() {
       const portionInput = document.getElementById('portion');
       portionInput.value = baseServings;
 
-      // Запрет ввода не-цифр
+      // Запрет ввода не-цифр и обработка Enter
       portionInput.addEventListener('keypress', (event) => {
         const charCode = event.charCode || event.keyCode;
-        if (charCode < 48 || charCode > 57) { // Разрешены только 0-9
+        if (charCode === 13) { // Клавиша Enter
+          event.preventDefault();
+          countGrams(baseServings);
+        } else if (charCode < 48 || charCode > 57) { // Разрешены только 0-9
           event.preventDefault();
         }
       });
 
-      // Очистка нечисловых символов
+      // Очистка нечисловых символов (для вставки текста)
       portionInput.addEventListener('input', () => {
         const cleanedValue = portionInput.value.replace(/[^0-9]/g, '');
         if (cleanedValue !== portionInput.value) {
           portionInput.value = cleanedValue;
         }
       });
-      
+
       // Обработчик клика на кнопку
       document.getElementById('count').addEventListener('click', () => countGrams(baseServings));
-      
-      // Обработчик изменения поля ввода
-      const debouncedCountGrams = debounce(() => countGrams(baseServings), 300);
-      portionInput.addEventListener('input', debouncedCountGrams);
     } else {
       document.getElementById('grams').innerHTML = '<p>Ингредиенты не указаны.</p>';
     }
 
     const stagesContainer = document.getElementById('recipe-stages');
-    if (recipeData.steps && Array.isArray(recipeData.steps)) {
+    if (stagesContainer && recipeData.steps && Array.isArray(recipeData.steps)) {
       recipeData.steps.forEach((step, index) => {
         const stepDiv = document.createElement('div');
         stepDiv.className = 'step';
@@ -265,11 +255,13 @@ async function fetchRecipe() {
         stepDiv.appendChild(stepText);
         stagesContainer.appendChild(stepDiv);
       });
-    } else {
+    } else if (stagesContainer) {
       stagesContainer.innerHTML = '<p>Шаги приготовления не указаны.</p>';
     }
 
-    favoriteIcon.addEventListener('click', (event) => toggleFavorite(event, recipeId));
+    if (favoriteIcon) {
+      favoriteIcon.addEventListener('click', (event) => toggleFavorite(event, recipeId));
+    }
 
   } catch (err) {
     console.error('Ошибка загрузки рецепта:', err.message);
