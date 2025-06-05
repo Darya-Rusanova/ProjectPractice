@@ -3,32 +3,48 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!container) return;
 
   try {
-    // 1) Получаем все опубликованные рецепты
-    // Предполагаем, что ваш бэкенд отдаёт все рецепты по GET /api/recipes (только с status = "published").
-    // Если у вас роут другой, замените URL на корректный.
-    const response = await fetch(`${API_BASE_URL}/recipes`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    });
+    // 1) Читаем токен из localStorage (если он там есть)
+    const token = localStorage.getItem('token') || '';
+
+    // 2) Запрашиваем все опубликованные рецепты через админский роут
+    //    GET /api/recipes/user/all?status=published
+    const response = await fetchWithRetry(
+      `${API_BASE_URL}/api/recipes/user/all?status=published`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        }
+      }
+    );
 
     if (!response.ok) {
+      // Если нет токена или недостаточно прав → 401/403/404/500
       throw new Error(`Ошибка при получении рецептов: ${response.status}`);
     }
 
+    // 3) Извлекаем JSON-массив рецептов
     const recipes = await response.json();
-    // Если ваш бэкенд отдаёт вместе с рецептом поле author (ObjectId), нам нужно получить имя автора.
-    // Собираем массив уникальных authorId (чтобы не запрашивать одного и того же автора дважды)
+
+    // 4) Собираем массив уникальных authorId
     const uniqueAuthors = Array.from(new Set(recipes.map(r => r.author)));
 
-    // 2) Параллельно запрашиваем имена авторов по их ID
-    const authorNameMap = {}; // словарь: authorId → username
+    // 5) Параллельно запрашиваем имя каждого автора
+    const authorNameMap = {}; // словарь authorId → username
     await Promise.all(
       uniqueAuthors.map(async authorId => {
         try {
-          const userResp = await fetch(`${API_BASE_URL}/users/${authorId}`, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-          });
+          const userResp = await fetchWithRetry(
+            `${API_BASE_URL}/api/users/${authorId}`,
+            {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                ...(token ? { Authorization: `Bearer ${token}` } : {})
+              }
+            }
+          );
           if (userResp.ok) {
             const userData = await userResp.json();
             authorNameMap[authorId] = userData.username || 'Неизвестный автор';
@@ -41,31 +57,30 @@ document.addEventListener('DOMContentLoaded', async () => {
       })
     );
 
-    // 3) Для каждого рецепта создаём HTML‐блок и вставляем его в контейнер
+    // 6) Для каждого рецепта формируем карточку
     recipes.forEach(recipe => {
-      // Создаём ссылку-обёртку (пока href="#", но вы можете поставить любой URL)
+      // 6.1) Создаём ссылку-обёртку (href="#" оставляем пустым для примера)
       const link = document.createElement('a');
       link.href = '#';
       link.classList.add('recipe');
 
-      // 3.1) Блок «избранное»
+      // 6.2) Иконка «избранное»
       const fav = document.createElement('div');
       fav.classList.add('favorite');
-      // toggleFavorite определён прямо в index.html, оставляем поведение «при клике»:
       fav.setAttribute('onclick', 'toggleFavorite(event)');
       link.appendChild(fav);
 
-      // 3.2) Блок с изображением
+      // 6.3) Блок с изображением
       const imageWrapper = document.createElement('div');
       imageWrapper.classList.add('image');
       const img = document.createElement('img');
       img.classList.add('picture');
       img.alt = recipe.title;
-      img.src = recipe.image || ''; // если нет картинки, src пустой
+      img.src = recipe.image || ''; // если картинки нет, src пусто
       imageWrapper.appendChild(img);
       link.appendChild(imageWrapper);
 
-      // 3.3) Блок описания
+      // 6.4) Блок описания
       const desc = document.createElement('div');
       desc.classList.add('discription');
 
@@ -75,14 +90,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       titleP.textContent = recipe.title;
       desc.appendChild(titleP);
 
-      // Добавляем строку с автором
+      // Автор
       const authorP = document.createElement('p');
       authorP.classList.add('author');
       const authorName = authorNameMap[recipe.author] || 'Неизвестный автор';
       authorP.textContent = `Автор: ${authorName}`;
       desc.appendChild(authorP);
 
-      // Список параметров: порции, время, количество ингредиентов
+      // Список: порции, время, число ингредиентов
       const ul = document.createElement('ul');
 
       const liServings = document.createElement('li');
@@ -100,12 +115,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       desc.appendChild(ul);
       link.appendChild(desc);
 
-      // Вставляем готовую карточку в контейнер
+      // 6.5) Вставляем готовую карточку в контейнер
       container.appendChild(link);
     });
   } catch (err) {
     console.error(err);
-    // Можно показать уведомление об ошибке для пользователя
+    // Если есть элемент с id="error", выводим туда сообщение
     const errorDiv = document.querySelector('#error');
     if (errorDiv) {
       errorDiv.textContent = 'Не удалось загрузить рецепты. Попробуйте позже.';
