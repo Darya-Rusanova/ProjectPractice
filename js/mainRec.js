@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       uniqueAuthors.map(async authorId => {
         try {
           const userResp = await fetchWithRetry(
-            `${API_BASE_URL}/api/users/${authorId}`,
+            `${API_BASE_URL}/api/recipes/public/${authorId}`,
             {
               method: 'GET',
               headers: {
