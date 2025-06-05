@@ -1,12 +1,15 @@
 const token = localStorage.getItem('token') || '';
 const currentUserId = localStorage.getItem('userId') || '';
 
-const recipesSection = document.getElementById('recipes');
+const recipesSection = document.querySelector('.recipes');
 const errorDiv = document.getElementById('error');
 const logoutButton = document.getElementById('logout');
 
 const deleteDialog = document.getElementById('delete');
 const confirmRemoveButton = document.getElementById('confirm-remove');
+const cancelRemoveButton = document.getElementById('cancel-remove');
+
+let pendingRecipeToRemove = null;
 
 async function checkToken() {
   if (!token || !currentUserId) {
@@ -14,11 +17,8 @@ async function checkToken() {
     return;
   }
   try {
-    const resp = await fetch(`${API_BASE_URL}/api/users/${currentUserId}`, {
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-    }
+    const resp = await fetchWithRetry(`${API_BASE_URL}/api/users/${currentUserId}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
     });
     if (!resp.ok) {
       throw new Error(`HTTP ${resp.status}`);
@@ -27,6 +27,7 @@ async function checkToken() {
     console.error('Ошибка проверки токена:', err.message);
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
+    localStorage.removeItem('favoritesCount');
     window.location.href = 'index.html';
     showNotification('Ошибка авторизации: ' + err.message, 'error');
   }
@@ -44,7 +45,7 @@ if (logoutButton) {
 
 async function removeFromFavorites(recipeId, cardElement) {
   try {
-    const resp = await fetch(`${API_BASE_URL}/api/users/${currentUserId}/favorites/${recipeId}`, {
+    const resp = await fetchWithRetry(`${API_BASE_URL}/api/users/${currentUserId}/favorites/${recipeId}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`
@@ -56,11 +57,9 @@ async function removeFromFavorites(recipeId, cardElement) {
     }
     cardElement.remove();
     showNotification('Рецепт удалён из избранного', 'success');
-    // Обновляем saveCount
     localStorage.setItem('favoritesCount', data.favoritesCount.toString());
     document.getElementById('saveCount').textContent = data.favoritesCount;
     window.dispatchEvent(new Event('favoritesUpdated'));
-    // Проверяем, остались ли рецепты
     if (recipesSection.getElementsByClassName('recipe').length === 0) {
       recipesSection.innerHTML = '<p>У вас пока нет избранных рецептов.</p>';
     }
@@ -80,11 +79,8 @@ function createRecipeCard(recipe, authorName) {
   fav.addEventListener('click', (event) => {
     event.stopPropagation();
     event.preventDefault();
+    pendingRecipeToRemove = { recipeId: recipe._id, cardElement: link };
     deleteDialog.showModal();
-    confirmRemoveButton.onclick = () => {
-      removeFromFavorites(recipe._id, link);
-      deleteDialog.close();
-    };
   });
   link.appendChild(fav);
 
@@ -125,51 +121,83 @@ function createRecipeCard(recipe, authorName) {
   return link;
 }
 
+// Обработчик подтверждения удаления
+if (confirmRemoveButton) {
+  confirmRemoveButton.addEventListener('click', async () => {
+    if (!pendingRecipeToRemove) return;
+    const { recipeId, cardElement } = pendingRecipeToRemove;
+    await removeFromFavorites(recipeId, cardElement);
+    pendingRecipeToRemove = null;
+    deleteDialog.close();
+  });
+}
+
+// Обработчик отмены
+if (cancelRemoveButton) {
+  cancelRemoveButton.addEventListener('click', () => {
+    pendingRecipeToRemove = null;
+    deleteDialog.close();
+  });
+}
+
 async function fetchFavoriteRecipes() {
   recipesSection.innerHTML = '';
   try {
-    const favResp = await fetch(`${API_BASE_URL}/api/users/${currentUserId}/favorites`, {
+    const favResp = await fetchWithRetry(`${API_BASE_URL}/api/users/${currentUserId}/favorites`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     if (!favResp.ok) {
       throw new Error(`Ошибка при получении избранного: ${favResp.status}`);
     }
     const favoriteRecipes = await favResp.json();
+    console.log('Favorite recipes received:', favoriteRecipes);
     if (!Array.isArray(favoriteRecipes) || favoriteRecipes.length === 0) {
       recipesSection.innerHTML = '<p>У вас пока нет избранных рецептов.</p>';
       return;
     }
     const uniqueAuthors = Array.from(new Set(favoriteRecipes.map(r => r.author)));
-    const authorNameMap = {};
+    const authorNameMap = new Map();
     await Promise.all(
       uniqueAuthors.map(async authorId => {
         try {
-          const userResp = await fetch(`${API_BASE_URL}/api/users/${authorId}`, {
-            headers: { 'Authorization': `Bearer ${token}` }
+          const userResp = await fetchWithRetry(`${API_BASE_URL}/api/recipes/public/${authorId}`, {
+            headers: {
+              'Content-Type': 'application/json',
+              ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+            }
           });
           if (userResp.ok) {
             const userData = await userResp.json();
-            authorNameMap[authorId] = userData.username;
+            authorNameMap.set(authorId, userData.username || 'Неизвестный автор');
           } else {
-            authorNameMap[authorId] = 'Неизвестный автор';
+            authorNameMap.set(authorId, 'Неизвестный автор');
           }
-        } catch {
-          authorNameMap[authorId] = 'Неизвестный автор';
+        } catch (err) {
+          console.warn(`Не удалось получить имя автора ${authorId}:`, err.message);
+          authorNameMap.set(authorId, 'Неизвестный автор');
         }
       })
     );
     favoriteRecipes.forEach(recipe => {
-      const authorName = authorNameMap[recipe.author] || 'Неизвестный автор';
+      const authorName = authorNameMap.get(recipe.author) || 'Неизвестный автор';
       const card = createRecipeCard(recipe, authorName);
       recipesSection.appendChild(card);
     });
   } catch (err) {
     console.error('Ошибка при загрузке избранных рецептов:', err.message);
-    showNotification('Не удалось загрузить избранные рецепты. Попробуйте позже.', 'error');
+    if (errorDiv) {
+      errorDiv.textContent = 'Не удалось загрузить избранные рецепты. Попробуйте позже.';
+    }
+    showNotification('Не удалось загрузить избранные рецепты: ' + err.message, 'error');
   }
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
   await checkToken();
   await fetchFavoriteRecipes();
+});
+
+// Обновляем список при изменении избранного
+window.addEventListener('favoritesUpdated', () => {
+  fetchFavoriteRecipes();
 });
