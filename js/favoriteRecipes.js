@@ -15,7 +15,10 @@ async function checkToken() {
   }
   try {
     const resp = await fetch(`${API_BASE_URL}/api/users/${currentUserId}`, {
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    }
     });
     if (!resp.ok) {
       throw new Error(`HTTP ${resp.status}`);
