@@ -1,7 +1,7 @@
 const token = localStorage.getItem('token') || '';
 const currentUserId = localStorage.getItem('userId') || '';
 
-const recipesSection = document.getElementById('recipes-section');
+const recipesSection = document.getElementById('recipes');
 const errorDiv = document.getElementById('error');
 const logoutButton = document.getElementById('logout');
 
