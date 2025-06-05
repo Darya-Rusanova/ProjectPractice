@@ -93,6 +93,17 @@
         border-radius: 20px;
     }
 }
+
+.recipes > p {
+  margin: 0 auto;
+  font-size: 25px;
+  margin-top: 10px;
+  margin-bottom: 50px;
+  grid-column: 1 / -1; 
+  text-align: center; 
+  width: 100%;
+}
+
 .recipe {
     transition: outline 0.3s;
     position: relative; /* Это создает контекст позиционирования для absolute-потомков */
