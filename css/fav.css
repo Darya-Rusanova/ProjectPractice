@@ -1,3 +1,13 @@
+:root {
+    --star: url('../images/functional/starLight.png');
+    --star-checked: url('../images/functional/starLightChecked.png');
+
+}
+[data-theme="dark"] {  
+    --star: url('../images/functional/starDark.png');
+    --star-checked: url('../images/functional/starDarkChecked.png');    
+}
+
 @media (min-width:1300px){
     .recipes {
         grid-area: recipes;
