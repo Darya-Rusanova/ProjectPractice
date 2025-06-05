@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     recipes.forEach(recipe => {
       const link = document.createElement('a');
-      link.href = "/recipe.html?id={recipe._id}";
+      link.href = `/recipe.html?id=${recipe._id}`;
       link.classList.add('recipe');
 
       const fav = document.createElement('div');
