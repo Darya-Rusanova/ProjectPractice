@@ -33,7 +33,6 @@
     .image img{
         max-width: 300px;
         height: 200px;
-        border-radius: 20px;
     }
 }
 
@@ -62,7 +61,6 @@
     .image img {
         max-width: 350px;
         height: 250px;
-        border-radius: 20px;
     }
 }
 @media (width < 800px){
@@ -84,20 +82,22 @@
                 "discription"
     }
     .favorite{
-        top: 250px;
+        top: 190px;
         right: auto;
     }
     .recipe-image img {
         margin: 10px;
         max-width: 300px;
         height: 200px;
-        border-radius: 20px;
     }
 }
 .image {
     padding: 30px;
     grid-area: img;
     margin: 0 auto;
+}
+.image img{
+    border-radius: 20px;
 }
 .recipes > p {
   margin: 0 auto;
