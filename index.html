@@ -26,11 +26,6 @@
                     </span>
                 </button>
             </div>
-            
-            <!-- <div class="user">
-                <div class="user-bg" href="#" id="lk"></div>
-                <a class="text-toggle" href="#" id="lk-text"></a>
-            </div> -->
 
             <div class="user">
                 <a href="#" id="lk">
@@ -79,6 +74,8 @@
             </div>
         </div>
 
+        <div id="error" class="error-notification" aria-live="polite"></div>
+
         <div class="recipes"></div>
         
         <div class="footer">
@@ -98,18 +95,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        function toggleFavorite(event) {
-            // Останавливаем всплытие события, чтобы не сработал переход по ссылке
-            event.stopPropagation();
-            event.preventDefault();
-            // Переключаем класс checked у элемента favorite
-            event.currentTarget.classList.toggle('checked');
-            // Здесь можно добавить логику сохранения в избранное
-            // Например, через localStorage или отправку на сервер
-        }
-    </script>
 
     <script src="js/utils.js" defer></script>
     <script src="js/theme.js" type="text/javascript" defer></script>

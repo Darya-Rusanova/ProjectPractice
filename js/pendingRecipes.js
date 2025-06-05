@@ -154,6 +154,7 @@ async function approveRecipe() {
             updateEmptyListMessage(pendingRecipesList);
         }
         acceptDialog.close();
+        window.dispatchEvent(new Event('recipesUpdated')); // Уведомляем об изменении
     } catch (err) {
         showNotification(`Ошибка: ${err.message}`, 'error');
         acceptDialog.close();
@@ -184,6 +185,7 @@ async function rejectRecipe() {
             updateEmptyListMessage(pendingRecipesList);
         }
         deleteDialog2.close();
+        window.dispatchEvent(new Event('recipesUpdated')); // Уведомляем об изменении
     } catch (err) {
         showNotification(`Ошибка: ${err.message}`, 'error');
         deleteDialog2.close();

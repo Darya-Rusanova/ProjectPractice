@@ -204,6 +204,7 @@ async function reconsiderRecipe() {
             }
         }
         returnDialog.close();
+        window.dispatchEvent(new Event('recipesUpdated')); // Уведомляем об изменении
     } catch (err) {
         showNotification(`Ошибка: ${err.message}`, 'error');
         returnDialog.close();

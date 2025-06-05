@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Личный кабинет | ЧудоБлюдо</title>
+
+  <link href="css/theme.css" type="text/css" rel="stylesheet" media="screen">
+  <link href="css/cabinet.css" type="text/css" rel="stylesheet" media="screen">
+  <link rel="icon" href="images/functional/logo.png" type="image/png">
+</head>
+<body>
+  <div class="container">
+    
+    <div class="start">
+
+      <div class="header">
+        <a href="index.html">
+          <div class="theme-bg"></div>
+        </a>
+      </div>
+
+      <div class="theme-switcher-wrapper">
+        <button id="theme-toggle" class="theme-toggle">
+          <span class="sun">
+            <img src="images/functional/sun.png" alt="Светлая тема"/>
+          </span>
+          <span class="moon">
+            <img src="images/functional/moon.png" width="40px" height="40px" alt="Тёмная тема"/>
+          </span>
+        </button>
+      </div>
+
+      <div class="user">
+        <div class="user-bg"></div>
+        <div class="user-content">
+            <h3>Мой профиль</h3>
+            <p>Пользовательское имя:</p> 
+            <span id="username"></span>
+            <p>Почта: </p>
+            <span id="email"></span>
+            <p>Количество опубликованных рецептов: </p><span id="recipeCount"></span>
+            <p>Количество избранных рецептов: </p><span id="saveCount"></span>
+        </div>
+      </div>
+
+      <div class="exit">
+        <div class="exit-bg" onclick="window.exit.showModal()"></div>
+      </div>
+
+    <dialog id="exit" class="exit-dialog">
+        <div class="dialog-content">
+          <h4>Выйти из личного кабинета?</h4>
+          <div class="dialog-buttons">
+            <button class="cancel-btn" onclick="window.exit.close()">Отмена</button>
+            <button class="confirm-btn" id="logout">Выйти</button>
+          </div>
+        </div>
+      </dialog>
+
+      <div class="navigation">
+                <div class="dropdown" id="dropdown1">
+                    <button class="dropbtn" id="toCabinet">Мои рецепты</button>
+                </div>
+        
+                <div class="dropdown" id="dropdown2">
+                    <button class="dropbtn">Избранные рецепты</button>
+                </div>
+        </div>
+    </div>
+    <div class="information" >
+        <div class="main-text">
+            <p id="head">ИЗБРАННЫЕ РЕЦЕПТЫ</p>
+            <p id="body">Добро пожаловать!</p>
+            <p id="inf">Здесь вы можете посмотреть ваши любимые рецепты, которые вы сохранили</p>
+        </div>
+    </div>
+
+    <dialog id="delete">
+        <div class="dialog-content">
+          <h4>Убрать рецепт из избранных?</h4>
+          <div class="dialog-buttons">
+            <button class="cancel-btn" onclick="window.delete.close()">Отмена</button>
+            <button class="confirm-btn" id="confirm-remove">Убрать</button>
+          </div>
+        </div>
+    </dialog>
+
+    <div id="error" class="error-notification" aria-live="polite"></div>
+    
+    <div id="cabinet-section" class="cabinet-section section">
+
+    <div id="recipes-section" class="section"></div>
+
+    </div>
+
+      <div class="footer">
+            <div class="col1">
+                <a href="navigation/calendars.html">
+                    <p class="footer-contact">Посмотреть календарь праздников</p>
+                </a>
+                <br>
+            </div>
+
+            <div class="col2">
+                <p class="footer-contact">Контакты для связи</p>
+                <p>dr1305@bk.ru</p>
+                <p>kcyxa.boychenko@gmail.com</p>
+                <p>+79-04-121-04-00</p>
+                <p>+79-02-765-81-29</p>
+            </div>
+      </div>
+</div>
+
+<script src="js/utils.js" defer></script>
+<script src="js/theme.js" type="text/javascript" defer></script>
+<script src="js/showNotif.js" defer></script>
+<script src="js/userInfo.js" defer></script>
+<script src="js/favoriteRecipes.js" defer></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toCabinetBtn = document.getElementById('toCabinet');
+      if (toCabinetBtn) {
+        toCabinetBtn.addEventListener('click', () => {
+          window.location.href = 'kabinet.html';
+        });
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,13 +1,92 @@
+const currentUserId = localStorage.getItem('userId') || '';
+
+async function toggleFavorite(event, recipeId) {
+  event.stopPropagation();
+  event.preventDefault();
+
+  // Если не залогинен, перенаправить на страницу входа
+  if (!currentUserId) {
+    showNotification('Пожалуйста, войдите, чтобы добавлять рецепты в избранное', 'error');
+    return;
+  }
+
+  const favIcon = event.currentTarget;
+  const isChecked = favIcon.classList.contains('checked');
+  const token = localStorage.getItem('token') || '';
+
+  try {
+    if (!isChecked) {
+      // Добавляем в избранное: PUT /api/users/:id/favorites/:recipeId
+      const addResp = await fetch(`${API_BASE_URL}/api/users/${currentUserId}/favorites/${recipeId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!addResp.ok) {
+        const errData = await addResp.json();
+        throw new Error(errData.message || `Ошибка ${addResp.status}`);
+      }
+
+      favIcon.classList.add('checked');
+      showNotification('Рецепт добавлен в избранное', 'success');
+      window.dispatchEvent(new Event('favoritesUpdated'));
+    } else {
+      // Убираем из избранного: DELETE /api/users/:id/favorites/:recipeId
+      const delResp = await fetch(`${API_BASE_URL}/api/users/${currentUserId}/favorites/${recipeId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!delResp.ok) {
+        const errData = await delResp.json();
+        throw new Error(errData.message || `Ошибка ${delResp.status}`);
+      }
+
+      favIcon.classList.remove('checked');
+      showNotification('Рецепт удалён из избранного', 'success');
+    }
+  } catch (err) {
+    console.error('Ошибка при работе с избранным:', err);
+    showNotification('Не удалось обновить избранное: ' + err.message, 'error');
+  }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   const container = document.querySelector('.recipes');
   if (!container) return;
 
   try {
-    // 1) Читаем токен из localStorage (если он там есть)
     const token = localStorage.getItem('token') || '';
+    let favoriteRecipeIds = [];
 
-    // 2) Запрашиваем все опубликованные рецепты через админский роут
-    //    GET /api/recipes/user/all?status=published
+    // Запрашиваем избранные рецепты пользователя, если он авторизован
+    if (currentUserId && token) {
+      try {
+        const favoritesResp = await fetchWithRetry(
+          `${API_BASE_URL}/api/users/${currentUserId}/favorites`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            }
+          }
+        );
+        if (favoritesResp.ok) {
+          const favorites = await favoritesResp.json();
+          favoriteRecipeIds = favorites.map(recipe => recipe._id);
+        }
+      } catch (err) {
+        console.warn('Не удалось загрузить избранные рецепты:', err);
+      }
+    }
+
+    // Запрашиваем опубликованные рецепты
     const response = await fetchWithRetry(
       `${API_BASE_URL}/api/recipes/public`,
       {
@@ -24,14 +103,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       throw new Error(`Ошибка при получении рецептов: ${response.status}`);
     }
 
-    // 3) Извлекаем JSON-массив рецептов
-    const recipes = await response.json();
+    const { recipes, total } = await response.json();
+    if (recipes.length === 0) {
+      container.innerHTML = '<p>Рецепты не найдены.</p>';
+      return;
+    }
 
-    // 4) Собираем массив уникальных authorId
+    // const recipes = await response.json();
     const uniqueAuthors = Array.from(new Set(recipes.map(r => r.author)));
-
-    // 5) Параллельно запрашиваем имя каждого автора
     const authorNameMap = {}; // словарь authorId → username
+
+    // Запрашиваем имена авторов
     await Promise.all(
       uniqueAuthors.map(async authorId => {
         try {
@@ -57,30 +139,33 @@ document.addEventListener('DOMContentLoaded', async () => {
       })
     );
 
-    // 6) Для каждого рецепта формируем карточку
+    // Для каждого рецепта формируем карточку
     recipes.forEach(recipe => {
-      // 6.1) Создаём ссылку-обёртку (href="#" оставляем пустым для примера)
+      // 1) Создаём ссылку-обёртку (href="#" пока оставляем пустым)
       const link = document.createElement('a');
       link.href = '#';
       link.classList.add('recipe');
 
-      // 6.2) Иконка «избранное»
+      // 2) Иконка «избранное»
       const fav = document.createElement('div');
       fav.classList.add('favorite');
-      fav.setAttribute('onclick', 'toggleFavorite(event)');
+      if (favoriteRecipeIds.includes(recipe._id)) {
+        fav.classList.add('checked');
+      }
+      fav.setAttribute('onclick', `toggleFavorite(event, '${recipe._id}')`);
       link.appendChild(fav);
 
-      // 6.3) Блок с изображением
+      // 3) Блок с изображением
       const imageWrapper = document.createElement('div');
       imageWrapper.classList.add('image');
       const img = document.createElement('img');
       img.classList.add('picture');
       img.alt = recipe.title;
-      img.src = recipe.image || ''; // если картинки нет, src пусто
+      img.src = recipe.image || '';
       imageWrapper.appendChild(img);
       link.appendChild(imageWrapper);
 
-      // 6.4) Блок описания
+      // 4) Блок описания
       const desc = document.createElement('div');
       desc.classList.add('discription');
 
@@ -115,7 +200,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       desc.appendChild(ul);
       link.appendChild(desc);
 
-      // 6.5) Вставляем готовую карточку в контейнер
+      // 5) Вставляем готовую карточку в контейнер
       container.appendChild(link);
     });
   } catch (err) {

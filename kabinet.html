@@ -39,7 +39,7 @@
             <span id="username"></span>
             <p>Почта: </p>
             <span id="email"></span>
-            <p>Количество собственных рецептов: </p><span id="recipeCount"></span>
+            <p>Количество опубликованных рецептов: </p><span id="recipeCount"></span>
             <p>Количество избранных рецептов: </p><span id="saveCount"></span>
         </div>
       </div>
@@ -64,7 +64,7 @@
                 </div>
         
                 <div class="dropdown" id="dropdown2">
-                    <button class="dropbtn">Избранные рецепты</button>
+                    <button class="dropbtn" id="toFavorites" >Избранные рецепты</button>
                 </div>
         </div>
     </div>
@@ -196,5 +196,15 @@
 <script src="js/showNotif.js" defer></script>
 <script src="js/userInfo.js" defer></script>
 <script src="js/kabinet.js" defer></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toFavBtn = document.getElementById('toFavorites');
+      if (toFavBtn) {
+        toFavBtn.addEventListener('click', () => {
+          window.location.href = 'favoriteRecipes.html';
+        });
+      }
+    });
+  </script>
 </body>
 </html>

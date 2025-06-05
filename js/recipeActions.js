@@ -494,6 +494,8 @@ editForm.onsubmit = async (e) => {
             if (typeof editCurrentFetchFunction === 'function') {
                 editCurrentFetchFunction();
             }
+            localStorage.removeItem('recipeCount');
+            window.dispatchEvent(new Event('recipesUpdated')); // Уведомляем об изменении
         } else {
             throw new Error(data.message || 'Ошибка обновления рецепта');
         }

@@ -516,11 +516,11 @@ async function fetchRecipes() {
                             showNotification('Рецепт удалён!', 'success');
                             deleteDialog.close();
                             fetchRecipes();
-
                             localStorage.removeItem('recipeCount');
                             console.log('recipeCount очищен перед обновлением');
                             const updated = await fetchAndUpdateUserInfo({ redirectOnError: false });
                             console.log('Обновление userInfo после удаления:', updated ? 'Успешно' : 'Не удалось');
+                            window.dispatchEvent(new Event('recipesUpdated')); // Добавляем событие
                         } catch (err) {
                             showNotification('Ошибка удаления: ' + err.message, 'error');
                         }
@@ -737,11 +737,7 @@ recipeForm.addEventListener('submit', async (e) => {
             stepsContainer.querySelectorAll('.remove-step-image-btn').forEach(btn => btn.style.display = 'none');
             showNotification('Рецепт добавлен!', 'success');
             fetchRecipes();
-            
-            localStorage.removeItem('recipeCount');
-            console.log('recipeCount очищен перед обновлением');
-            const updated = await fetchAndUpdateUserInfo({ redirectOnError: false });
-            console.log('Обновление userInfo после добавления:', updated ? 'Успешно' : 'Не удалось');
+            console.log('Новый рецепт создан (pending), recipeCount не обновляется');
         } else {
             showNotification(data.message || 'Ошибка добавления рецепта', 'error');
         }
