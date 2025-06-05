@@ -146,7 +146,7 @@ async function displayRejectedRecipes(recipes) {
         const recipeDiv = document.createElement('div');
         recipeDiv.className = 'recipe-card'; 
         recipeDiv.innerHTML = `
-            <a href="#" class="recipe-link">
+            <a href="/recipe.html?id={recipe._id}" class="recipe-link">
                 <div class="recipe-content">
                     <div class="recipe-image">
                         ${recipe.image ? `<img src="${recipe.image}" alt="${recipe.title}" />` : '<div class="no-image">Нет изображения</div>'}

@@ -459,7 +459,7 @@ async function fetchRecipes() {
                 recipeDiv.className = 'myRecipe';
                 
                 const recipeLink = document.createElement('a');
-                recipeLink.href = '#';
+                recipeLink.href = '/recipe.html?id={recipe._id}';
                 recipeLink.className = 'recipe-link';
                 
                 const recipeContent = document.createElement('div');

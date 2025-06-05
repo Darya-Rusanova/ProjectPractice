@@ -75,7 +75,7 @@ async function removeFromFavorites(recipeId, cardElement) {
 
 function createRecipeCard(recipe, authorName) {
   const link = document.createElement('a');
-  link.href = "#";
+  link.href = "/recipe.html?id={recipe._id}";
   link.classList.add('recipe');
 
   const fav = document.createElement('div');

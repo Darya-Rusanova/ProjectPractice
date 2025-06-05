@@ -1,95 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/semantic.min.css" />
-    <link href="../css/recipe.css" type="text/css" rel="stylesheet" media="screen">
-    <link href="../css/theme.css" type="text/css" rel="stylesheet" media="screen">
-    <script src="../js/theme.js" type="text/javascript"></script>
-    <script src="../js/form.js" type="text/javascript"></script>
-
-    <link rel="icon" href="../images/functional/logo.png" type="image/png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="css/semantic.min.css" />
+    <link href="css/recipe.css" type="text/css" rel="stylesheet" media="screen">
+    <link href="css/theme.css" type="text/css" rel="stylesheet" media="screen">
+    <link href="css/style.css" type="text/css" rel="stylesheet" media="screen">
+    <link rel="icon" href="images/functional/logo.png" type="image/png">
     <title>ЧудоБлюдо</title>
 </head>
-
 <body>
     <div class="container">
         <div class="start">
-           <div class="header">
-                 <a href="../index.html">
+            <div class="header">
+                <a href="index.html">
                     <div class="theme-bg"></div>
                 </a>
             </div>
-            
             <div class="theme-switcher-wrapper">
                 <button id="theme-toggle" class="theme-toggle">
-                <span class="sun">
-                    <img src="../images/functional/sun.png"/>
-                </span>
-                <span class="moon">
-                    <img src="../images/functional/moon.png" width="40px" height="40px"/>
-                </span>
+                    <span class="sun">
+                        <img src="images/functional/sun.png" alt="Светлая тема"/>
+                    </span>
+                    <span class="moon">
+                        <img src="images/functional/moon.png" width="40px" height="40px" alt="Тёмная тема"/>
+                    </span>
                 </button>
             </div>
-
             <div class="user">
-                <a href="#" id="lk">
+                <a href="signIn.html" id="lk">
                     <div class="user-bg"></div>
                     <span class="text-toggle" id="lk-text"></span>
                 </a>
             </div>
-
             <div class="navigation">
                 <div class="dropdown" id="dropdown1">
                     <button class="dropbtn">Выбери прием пищи</button>
                     <div class="dropdown-content">
-                        <a href="../navigation/breakfast.html">Завтрак</a>
-                        <a href="../navigation/lanch.html">Обед</a>
-                        <a href="../navigation/dinner.html">Ужин</a>
+                        <a href="navigation/breakfast.html">Завтрак</a>
+                        <a href="navigation/lanch.html">Обед</a>
+                        <a href="navigation/dinner.html">Ужин</a>
                     </div>
                 </div>
-        
                 <div class="dropdown" id="dropdown2">
                     <button class="dropbtn">Выбери кухню</button>
                     <div class="dropdown-content">
-                        <a href="../navigation/china.html">Китайская кухня</a>
-                        <a href="../navigation/italy.html">Итальянская кухня</a>
-                        <a href="../navigation/russia.html">Русская кухня</a>
+                        <a href="navigation/china.html">Китайская кухня</a>
+                        <a href="navigation/italy.html">Итальянская кухня</a>
+                        <a href="navigation/russia.html">Русская кухня</a>
                     </div>
                 </div>
-
                 <div class="dropdown" id="dropdown3">
                     <button class="dropbtn">Выбери тип блюда</button>
                     <div class="dropdown-content">
-                        <a href="../navigation/hot.html">Горячее блюдо</a>
-                        <a href="../navigation/snack.html">Закуски</a>
-                        <a href="../navigation/dessert.html">Десерт</a>
-                        <a href="../navigation/drink.html">Напитки</a>
+                        <a href="navigation/hot.html">Горячее блюдо</a>
+                        <a href="navigation/snack.html">Закуски</a>
+                        <a href="navigation/dessert.html">Десерт</a>
+                        <a href="navigation/drink.html">Напитки</a>
                     </div>
                 </div>
             </div>
         </div>
-
+        <div id="error" class="error-notification" aria-live="polite"></div>
+        <dialog id="delete">
+            <div class="dialog-content">
+                <h4>Убрать рецепт из избранных?</h4>
+                <div class="dialog-buttons">
+                    <button class="cancel-btn" id="cancel-remove">Отмена</button>
+                    <button class="confirm-btn" id="confirm-remove">Убрать</button>
+                </div>
+            </div>
+        </dialog>
         <div class="description">
+            <h1 id="recipe-title"></h1>
+            <div class="recipe-header">
+                <img id="main-image" alt="Рецепт" src="images/placeholder.png">
+                <div class="favorite" id="favorite-icon"></div>
+            </div>
+            <p id="recipe-description"></p>
+            <div class="recipe-info">
+                <p><strong>Автор:</strong> <span id="recipe-author"></span></p>
+                <p><strong>Время приготовления:</strong> <span id="recipe-time"></span> минут</p>
+                <p><strong>Порции:</strong> <span id="recipe-servings"></span></p>
+            </div>
         </div>
-
         <div class="gramm">
+            <form>
+                <div class="field">
+                    <strong><label for="portion">Введите количество порций</label></strong>
+                    <input type="number" placeholder="Количество порций" name="count" id="portion" min="1" />
+                </div>
+                <div id="grams"></div>
+                <button id="count" type="button">Рассчитать</button>
+            </form>
         </div>
-
-        <div class="stages">
-        </div>
-       
-
+        <div class="stages" id="recipe-stages"></div>
         <div class="footer">
             <div class="col1">
-                <a href="../navigation/calendars.html">
+                <a href="navigation/calendars.html">
                     <p class="footer-contact">Посмотреть календарь праздников</p>
                 </a>
                 <br>
             </div>
-
             <div class="col2">
                 <p class="footer-contact">Контакты для связи</p>
                 <p>dr1305@bk.ru</p>
@@ -99,8 +112,10 @@
             </div>
         </div>
     </div>
-    <script src="../js/utils.js" defer></script>
-    <script src="../js/userName.js" defer></script>
+    <script src="js/utils.js" defer></script>
+    <script src="js/theme.js" defer></script>
+    <script src="js/userName.js" defer></script>
+    <script src="js/showNotif.js" defer></script>
+    <script src="js/recipe.js" defer></script>
 </body>
-
 </html>
