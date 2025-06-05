@@ -25,6 +25,7 @@ async function toggleFavorite(event, recipeId) {
     deleteDialog.showModal();
   } else {
     try {
+      console.log('Adding recipe to favorites:', recipeId);
       const addResp = await fetchWithRetry(`${API_BASE_URL}/api/users/${currentUserId}/favorites/${recipeId}`, {
         method: 'PUT',
         headers: {
@@ -39,10 +40,7 @@ async function toggleFavorite(event, recipeId) {
       favoriteIcon.classList.add('checked');
       showNotification('Рецепт добавлен в избранное', 'success');
       localStorage.setItem('favoritesCount', data.favoritesCount.toString());
-      const saveCountElement = document.getElementById('saveCount');
-      if (saveCountElement) {
-        saveCountElement.textContent = data.favoritesCount;
-      }
+      window.dispatchEvent(new Event('favoritesUpdated')); // Триггерит обновление в userInfo.js
     } catch (err) {
       console.error('Ошибка при добавлении в избранное:', err.message);
       showNotification('Не удалось добавить в избранное: ' + err.message, 'error');
@@ -57,6 +55,7 @@ if (confirmRemoveButton) {
     const { recipeId } = pendingRecipeToRemove;
 
     try {
+      console.log('Removing recipe from favorites:', recipeId);
       const delResp = await fetchWithRetry(`${API_BASE_URL}/api/users/${currentUserId}/favorites/${recipeId}`, {
         method: 'DELETE',
         headers: {
@@ -70,10 +69,7 @@ if (confirmRemoveButton) {
       favoriteIcon.classList.remove('checked');
       showNotification('Рецепт удалён из избранного', 'success');
       localStorage.setItem('favoritesCount', data.favoritesCount.toString());
-      const saveCountElement = document.getElementById('saveCount');
-      if (saveCountElement) {
-        saveCountElement.textContent = data.favoritesCount;
-      }
+      window.dispatchEvent(new Event('favoritesUpdated')); // Триггерит обновление в userInfo.js
     } catch (err) {
       console.error('Ошибка при удалении из избранного:', err.message);
       showNotification('Не удалось удалить из избранного: ' + err.message, 'error');
@@ -121,7 +117,7 @@ function generateIngredients(ingredients, quantities, units, baseServings, userS
 
 function countGrams(baseServings) {
   const userPortion = parseInt(document.getElementById('portion').value) || baseServings;
-  generateIngredients(recipeData.ingredients, recipeData.ingredientQuantities, recipeData.ingredientUnits, baseServings, userPortion);
+  generateIngredients(recipeData.ingredients, recipeData.ingredientQuantities, recipeData.ingredientUnits, baseServings, userServings);
 }
 
 async function fetchRecipe() {
