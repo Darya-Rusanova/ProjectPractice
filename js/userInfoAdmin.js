@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function immediatelyShowStoredInfo() {
   const usernameElement    = document.getElementById('username');
   const emailElement       = document.getElementById('email');
-  
+  const recipeCountElement = document.getElementById('recipeCount'); 
 
   if (!usernameElement || !emailElement) {
     console.error('Элементы для отображения информации не найдены');
@@ -18,12 +18,19 @@ function immediatelyShowStoredInfo() {
   // Если при входе мы сохранили имя и email в localStorage, сразу их покажем:
   const storedName  = localStorage.getItem('username');
   const storedEmail = localStorage.getItem('email');
+  const storedRecipeCount = localStorage.getItem('recipeCount');
 
   if (storedName) {
     usernameElement.textContent = storedName;
   }
   if (storedEmail) {
     emailElement.textContent = storedEmail;
+  }
+
+  if (storedRecipeCount !== null) {
+    recipeCountElement.textContent = storedRecipeCount;
+  } else {
+    recipeCountElement.textContent = '0';
   }
 }
 
