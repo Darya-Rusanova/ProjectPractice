@@ -640,7 +640,6 @@ recipeForm.addEventListener('submit', async (e) => {
                 return;
             }
         }
-
         const recipe = {
             title,
             categories: selectedCategories,
@@ -652,7 +651,6 @@ recipeForm.addEventListener('submit', async (e) => {
             ingredientUnits: [],
             steps: []
         };
-
         for (let div of ingredientDivs) {
             const name = div.querySelector('.ingredient-name').value;
             let quantity = div.querySelector('.quantity-input').value;
@@ -665,28 +663,23 @@ recipeForm.addEventListener('submit', async (e) => {
             recipe.ingredientQuantities.push(quantity);
             recipe.ingredientUnits.push(unit);
         }
-
         // Записываем шаги
         stepDivs.forEach((div, index) => {
             const desc = div.querySelector('.step-description').value;
             recipe.steps.push({ description: desc, image: '' });
         });
-
         const formData = new FormData();
         formData.append('recipeData', JSON.stringify(recipe));
-
         // Обязательное изображение самого рецепта
         if (recipeImageInput.files[0]) {
             formData.append('recipeImage', recipeImageInput.files[0]);
         }
-
         stepDivs.forEach((div) => {
             const file = div.querySelector('.step-image')?.files[0];
             if (file) {
                 formData.append('step-image', file);
             }
         });
-
         const response = await fetch(`${API_BASE_URL}/api/recipes`, {
             method: 'POST',
             headers: {
@@ -722,13 +715,11 @@ recipeForm.addEventListener('submit', async (e) => {
             `;
             ingredientsContainer.appendChild(ingredientDiv);
             initializeIngredient(ingredientDiv);
-
             stepsContainer.innerHTML = '';
             const stepDiv = createStep(1);
             stepsContainer.appendChild(stepDiv);
             initializeStep(stepDiv);
             updateStepLabels();
-
             recipeImagePreview.innerHTML = '';
             removeRecipeImageButton.style.display = 'none';
             stepsContainer.querySelectorAll('.step-image-preview').forEach(preview => preview.innerHTML = '');
