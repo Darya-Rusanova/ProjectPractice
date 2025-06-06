@@ -9,6 +9,18 @@ const favoriteIcon = document.getElementById('favorite-icon');
 let pendingRecipeToRemove = null;
 let recipeData = null;
 
+const unitMapping = {
+  'г': 'г',
+  'кг': 'кг',
+  'мл': 'мл',
+  'л': 'л',
+  'шт': 'шт.',
+  'ст': 'ст.',
+  'стл': 'ст.л.',
+  'чл': 'ч.л.',
+  'пв': 'по вкусу'
+};
+
 async function toggleFavorite(event, recipeId) {
   event.stopPropagation();
   event.preventDefault();
@@ -96,7 +108,8 @@ function generateIngredients(ingredients, quantities, units, baseServings, userS
     div.className = 'menu';
     const pName = document.createElement('p');
     pName.className = 'pName';
-    pName.textContent = `${name} (${units[index]})`;
+    const displayUnit = unitMapping[units[index]] || units[index];
+    pName.textContent = `${name} (${displayUnit})`;
     div.appendChild(pName);
 
     const pGram = document.createElement('p');
