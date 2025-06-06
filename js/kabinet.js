@@ -517,10 +517,12 @@ async function fetchRecipes() {
                             deleteDialog.close();
                             fetchRecipes();
                             localStorage.removeItem('recipeCount');
+                            localStorage.removeItem('favoritesCount');
                             console.log('recipeCount очищен перед обновлением');
                             const updated = await fetchAndUpdateUserInfo({ redirectOnError: false });
                             console.log('Обновление userInfo после удаления:', updated ? 'Успешно' : 'Не удалось');
-                            window.dispatchEvent(new Event('recipesUpdated')); // Добавляем событие
+                            window.dispatchEvent(new Event('recipesUpdated'));
+                            window.dispatchEvent(new Event('favoritesUpdated'));
                         } catch (err) {
                             showNotification('Ошибка удаления: ' + err.message, 'error');
                         }
