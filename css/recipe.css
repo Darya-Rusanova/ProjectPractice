@@ -132,7 +132,7 @@ a, a:hover {
                 "stages stages"
                 "footer footer"         
     }
-    #main {
+    #main-image {
         margin-left: 5%;
         width: 600px;
         height: 400px;
@@ -215,7 +215,7 @@ a, a:hover {
             "btn1 btn2 btn3"
     }
     
-    #main {
+    #main-image {
         margin-left: 5%;
         width: 400px;
         height: 300px;
@@ -292,7 +292,7 @@ a, a:hover {
             "stages stages"
             "footer footer"         
     }
-    #main {
+    #main-image {
         margin-left: 5%;
         width: 600px;
         height: 400px;
@@ -371,7 +371,7 @@ a, a:hover {
             "stages"
             "footer"         
     }
-    #main {
+    #main-image {
         width: 90%;
         height: auto;
     }
