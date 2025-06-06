@@ -143,7 +143,7 @@ async function fetchRecipe() {
 
   try {
     console.log('Fetching recipe with ID:', recipeId);
-    const response = await fetchWithRetry(`${API_BASE_URL}/api/recipes/public/recipe/${recipeId}`, {
+    const response = await fetchWithRetry(`${API_BASE_URL}/api/recipes/${recipeId}`, {
       headers: {
         'Content-Type': 'application/json',
         ...(token ? { 'Authorization': `Bearer ${token}` } : {})
