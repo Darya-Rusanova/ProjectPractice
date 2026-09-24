@@ -4,7 +4,6 @@
 
 ## Ссылки
 
-- [Наш сайт в интернете](https://chudobludo.fun/)  
 - [Backend репозиторий](https://github.com/KseniyaBoychenko2023/chudobludo-backend)
 
 
